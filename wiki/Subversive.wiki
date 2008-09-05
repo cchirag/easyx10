@@ -19,8 +19,9 @@ on how to use the Subversive Plugin with the Eclipse IDE.
   * Select the 'New Repository Location' icon.
   * Enter the following data:
     * URL: https://easyx10.googlecode.com/svn
-    * User: Your google account
-    * Password: Go to the easyx10 project page and retrieve your password.
+    * User: Your google account id
+    * Password: Go to the easyx10 project page and retrieve your password from the source tab.
+  * Select 'Finish'
 
 ==Useful Links==
   * Subversion eBook - http://svnbook.red-bean.com/
