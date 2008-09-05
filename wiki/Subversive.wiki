@@ -8,13 +8,19 @@ on how to use the Subversive Plugin with the Eclipse IDE.
 = Details =
 
 ==Installation Steps==
-  # Download latest version of eclipse [http://www.eclipse.org here]
-  # Unzip eclipse to a folder on hard drive.
-  # Follow steps [http://www.eclipse.org/subversive/documentation/gettingStarted/aboutSubversive/install.php here] to install subversive
-  # Restart Eclipse
+  * Download latest version of eclipse [http://www.eclipse.org here]
+  * Unzip eclipse to a folder on hard drive.
+  * Follow steps [http://www.eclipse.org/subversive/documentation/gettingStarted/aboutSubversive/install.php here] to install subversive
+  * Restart Eclipse
 
 ==Steps to Connect to easyx10 Repository==
-
+  * Start Eclipse
+  * Change to SVN Perspective (Select Window->Open Perspective ....)
+  * Select the 'New Repository Location' icon.
+  * Enter the following data:
+    * URL: https://easyx10.googlecode.com/svn
+    * User: Your google account
+    * Password: Go to the easyx10 project page and retrieve your password.
 
 ==Useful Links==
   * Subversion eBook - http://svnbook.red-bean.com/
