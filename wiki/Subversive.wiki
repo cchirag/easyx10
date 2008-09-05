@@ -10,7 +10,7 @@ on how to use the Subversive Plugin with the Eclipse IDE.
 ==Installation Steps==
   * Download latest version of eclipse [http://www.eclipse.org here]
   * Unzip eclipse to a folder on hard drive.
-  * Follow steps[http://www.eclipse.org/subversive/documentation/gettingStarted/aboutSubversive/install.php here] to install subversive
+  * Follow steps [http://www.eclipse.org/subversive/documentation/gettingStarted/aboutSubversive/install.php here] to install subversive
   * Restart Eclipse
 
 ==Steps to Connect to easyx10 Repository==
