@@ -36,7 +36,7 @@ on how to use the Subversive Plugin with the Eclipse IDE.
   * You should now see the checked out directories.  You can work with the selected directories.
 
 ==Adding/Modifying Files in Source Control==
-  * New files can be added to your local copy of the directory through the eclipse Java perspective.  Once the file is ready to be added right click on the file, select team->add to version control.
+  * New files can be added to your local copy of the directory through the eclipse Java perspective.  Once the file is ready to be added right click on the file, select team->add to version control. (Then commit your changes from the team menu)
   * To update a file that was modified, right click on the file, select team->commit
 
 ==Useful Links==
