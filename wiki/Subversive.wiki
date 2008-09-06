@@ -31,11 +31,9 @@ on how to use the Subversive Plugin with the Eclipse IDE.
 ==How to Checkout from Google Code==
   * Open the SVN Perspective
   * Right Click on a directory structure you wish to have access to
-  * Select 'Checkout'
-    * This will copy the selected directory structure to your computer
+  * Select 'Checkout' - This will copy the selected directory structure to your computer
   * Now, select Window->Open Perspective->Java
-    * You should now see the checked out directories.  You can now work with
-      the selected directories.
+  * You should now see the checked out directories.  You can work with the selected directories.
 
 ==Useful Links==
   * Subversion eBook - http://svnbook.red-bean.com/
