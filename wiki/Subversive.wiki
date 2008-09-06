@@ -15,8 +15,10 @@ on how to use the Subversive Plugin with the Eclipse IDE.
 
 ==Steps to Connect to easyx10 Repository==
   * Start Eclipse
-  * Change to SVN Perspective (Select Window->Open Perspective ....)
-  * Select the 'New Repository Location' icon.
+  * Create SVN Perspective by (Select Window->Open Perspective -> Other)
+  * Choose SVN Repository Exploring from the dialog
+  * Change to SVN Perspective if not already shown (Select Window->Open Perspective ....)
+  * Click the File Menu-> New -> Repository Location.  A SVN repository dialog will open.
   * Enter the following data:
     * URL: https://easyx10.googlecode.com/svn
     * User: Your google account id
