@@ -12,6 +12,12 @@ public class TestMain {
 		System.out.println("This is a test");
 		
 		System.out.println("Version 2");
+		
+		Car johnsCar = new Car();
+		johnsCar.setMake("Ford");
+		
+		System.out.println("John's Car is a " 
+				+ johnsCar.getMake());
 	}
 
 }
