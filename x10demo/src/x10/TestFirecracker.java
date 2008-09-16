@@ -1,3 +1,6 @@
+package x10;
+
+
 // Copyright (C) 1999  Moss Prescott
 // 
 // This program is free software; you can redistribute it and/or
@@ -15,20 +18,17 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //package x10;
 import java.util.Enumeration;
-
-//import javax.comm.PortInUseException;
-//import javax.comm.NoSuchPortException;
-
 import x10.FireCracker;
 import x10.X10Command;
 import java.io.*;
-import java.io.IOException;
+import javax.comm.NoSuchPortException;
+import javax.comm.PortInUseException;
 
 /**
  Application which exercises the FireCracker library, as well as providing
  a command-line interface to the FireCracker interface.
  */
-public class TestFireCracker
+public class TestFirecracker
 {
 
 	public static void main(String args[]) throws IOException
@@ -183,7 +183,7 @@ public class TestFireCracker
 
 	private static void
 	usage() {
-		System.out.println("usage: java " + TestFireCracker.class.getName() + 
+		System.out.println("usage: java " + TestFirecracker.class.getName() + 
 						" [-l] [port_name cmd*]");
 		System.out.println("    command examples: A1_ON B15_OFF J_DIM K_BRIGHT");
 		System.out.println("    or, equivalently: a1n b15f jd kb");
