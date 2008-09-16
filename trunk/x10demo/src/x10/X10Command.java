@@ -1,3 +1,5 @@
+package x10;
+
 // Copyright (C) 1999  Moss Prescott
 // 
 // This program is free software; you can redistribute it and/or
