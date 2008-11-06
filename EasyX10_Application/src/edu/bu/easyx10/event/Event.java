@@ -11,7 +11,7 @@ package edu.bu.easyx10.event;
  * @date:    10/30/08
  *
  */
-abstract class Event {
+public abstract class Event {
 
 	// Declare the private member variables.
 	private String m_deviceName;

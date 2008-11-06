@@ -12,7 +12,7 @@ import java.util.*;
  * @date:    10/30/08
  *
  */
-interface EventHandlerListener extends EventListener {
+public interface EventHandlerListener extends EventListener {
 	public void processDeviceEvent( Event e );
 	public void processProtocolEvent( Event e );
 	public void processTimerEvent( Event e );
