@@ -5,7 +5,9 @@ package edu.bu.easyx10.event;
  * All classes which desire to use the EventGenerator should fetch the object
  * reference using the getEventGenerator method.
  * 
- * @author jduda
+ * @author   Jim Duda
+ * @revision please refer to sub version
+ * @data     11/5/08 
  *
  */
 public class EventGeneratorFactory {
