@@ -20,14 +20,17 @@ import java.util.concurrent.*;
 public class EventGenerator {
 
 	// Declare the private member variables.
-	private List<EventHandlerListener> m_eventListeners;
+	private static List<EventHandlerListener> m_eventListeners;
 	private static Semaphore listSemaphore;
 
 	/**
 	 * Constructor - default implicit constructor
 	 */
 	public EventGenerator ( ) {
-		// create Q Mutex using the static semaphore
+		// Create a new empty List
+		m_eventListeners = new ArrayList<EventHandlerListener>( );
+		
+		// create a Mutex using the static semaphore
 		listSemaphore = new Semaphore(1);
 	}
 
