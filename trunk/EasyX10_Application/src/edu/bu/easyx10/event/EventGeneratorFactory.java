@@ -13,7 +13,7 @@ package edu.bu.easyx10.event;
 public class EventGeneratorFactory {
 
 	// declare our private variables
-	private static EventGenerator eventGenerator;
+	private static EventGenerator eventGenerator = null;
 
 	// create a static default constructor which is the singleton design pattern
 	private EventGeneratorFactory ( ) {
