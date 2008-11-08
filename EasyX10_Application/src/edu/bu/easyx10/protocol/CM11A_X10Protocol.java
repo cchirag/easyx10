@@ -3,8 +3,8 @@ package edu.bu.easyx10.protocol;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-//import javax.comm.*;
-import gnu.io.*;
+import javax.comm.*;
+//import gnu.io.*;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 
@@ -37,11 +37,11 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	private static final byte X10_POWER_FAIL_ACK  = (byte)0x9b;
 
 	// Private Member Classes and Variables
-	private SerialPort         serialPort;
-	private InputStream        inputStream;
-	private OutputStream       outputStream;
-
+	private SerialPort          serialPort;
+	private InputStream         inputStream;
+	private OutputStream        outputStream;
 	private BlockingQueue<Byte> rxTxQueue;
+	private Thread              x10Thread;
 
 	/**
 	 * Convert X10Event House Code enumeration to X10 binary code
@@ -235,6 +235,12 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	public CM11A_X10Protocol (String portName) throws java.io.IOException {
 
+		// Create base class
+		super( );
+
+		// Enable Debugging
+//		System.setProperty("DEBUG", "1");
+
 		CommPortIdentifier portId;
 
 		// Attempt to find the SerialPort identified by portName
@@ -274,10 +280,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Define notification events
 		serialPort.notifyOnDataAvailable(true);
+		serialPort.notifyOnFramingError(true);
+		serialPort.notifyOnParityError(true);
+		serialPort.notifyOnOverrunError(true);
 
 		// Configure the serial port
 		try {
-			serialPort.setSerialPortParams(4800,
+			serialPort.setSerialPortParams(
+					4800,
 					SerialPort.DATABITS_8,
 					SerialPort.STOPBITS_1,
 					SerialPort.PARITY_NONE);
@@ -288,8 +298,10 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		// Create the rxTxQueue
 		rxTxQueue = new LinkedBlockingQueue<Byte>( );
 
-		// Enable Debugging
-		System.setProperty("DEBUG", "1");
+		// Create a new runnable thread.  For some reason, I cannot get Runnable to work properly.
+		x10Thread = new Thread(this);
+		x10Thread.start( );
+
 	}
 
 	/**
@@ -324,10 +336,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	public void processProtocolEvent ( X10ProtocolEvent protocolEvent ) {
 		// Copy the object and stuff the object into the txQueue
-		debug ("send:: " + protocolEvent );
-		try {
-			txQueue.put ( protocolEvent );
-		} catch ( InterruptedException e) {}
+		debug ("processProtocolEvent:: " + protocolEvent );
+		if (protocolEvent instanceof X10ProtocolEvent) {
+			try {
+				txQueue.put ( protocolEvent );
+			} catch ( InterruptedException e) {
+				debug ( e.toString( ) );
+			}
+		}
 	}
 
 	/**
@@ -526,11 +542,15 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		debug ( "handleStatusPoll:: addrFunctionMask: " + Integer.toHexString(addrFunctionMask));
 
 		// Read the remaining bytes address and function bytes
-		try {
-			numBytes = inputStream.read ( readBuffer, 0, responseBytes-1 );
-		} catch ( Exception e ) {
-			throw new IOException ( "handleStatusPoll:: read: " + e );
+		numBytes = 0;
+		while (numBytes < responseBytes-1) {
+			try {
+				numBytes += inputStream.read ( readBuffer, numBytes, responseBytes-1-numBytes );
+			} catch ( Exception e ) {
+				throw new IOException ( "handleStatusPoll:: read: " + e );
+			}
 		}
+		debug ( "handleStatusPoll:: numBytes: " + Integer.toHexString(numBytes));
 
 		// create a vector which contains all the address bytes
 		addrList = new Vector<Byte>();
@@ -559,6 +579,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 					try {
 						X10DeviceEvent deviceEvent = new X10DeviceEvent ( "", houseCode, deviceCode, eventCode );
 						// Send the deviceEvent to the recipient
+						debug ("handleStatusPoll:: fire: " + deviceEvent );
 						eventGenerator.fireEvent ( deviceEvent );
 					} catch ( Exception e ) {
 						debug ( "handleStatusPoll:: processAddresses: X10ProtocolEvent exception: " + e);
@@ -638,15 +659,15 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 					// Send OKAY
 					sendOkay ( );
 				} catch ( Exception e ) {
-					debug ( "Send:: " + protocolEvent + " EXCEPTION: " + e );
+					debug ( "run:: " + protocolEvent + " EXCEPTION: " + e );
 					failures++;
 					if (failures >= X10_MAX_RETRIES) {
-						debug ( "Send:: " + protocolEvent + "FAILED!!");
+						debug ( "run:: " + protocolEvent + "FAILED!!");
 						break;
 					}
 					continue;
 				}
-				debug ( "Send:: " + protocolEvent + " SUCCESS!!");
+				debug ( "run:: " + protocolEvent + " SUCCESS!!");
 				break;
 			}
 		}
@@ -669,15 +690,25 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		int readByte = 0;
 
 		switch (event.getEventType()) {
-		case SerialPortEvent.BI:
 		case SerialPortEvent.OE:
+			debug ("serialEvent:: overrunError");
+			break;
+
 		case SerialPortEvent.FE:
+			debug ("serialEvent:: framingError");
+			break;
+
 		case SerialPortEvent.PE:
+			debug ("serialEvent:: parityError");
+			break;
+
 		case SerialPortEvent.CD:
 		case SerialPortEvent.CTS:
 		case SerialPortEvent.DSR:
 		case SerialPortEvent.RI:
+		case SerialPortEvent.BI:
 		case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+			debug ("serialEvent:: otherError");
 			break;
 
 		case SerialPortEvent.DATA_AVAILABLE:
@@ -699,17 +730,17 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 							handleStatusPoll ( );
 							break;
 
-					    // Handle the power fail poll command
+							// Handle the power fail poll command
 						case X10_POWER_FAIL_POLL:
 							debug ( "SerialPortEvent:: X10_POWER_FAIL_POLL");
 							handlePowerFailPoll ( );
 							break;
 
-						// Dump the unknown bytes into the rxTxQueue for the Send process
+							// Dump the unknown bytes into the rxTxQueue for the Send process
 						default:
 							debug ( "SerialPortEvent:: unknown received byte: " + Integer.toHexString( readByte ) );
-						    rxTxQueue.put ( (byte)readByte );
-						    break;
+						rxTxQueue.put ( (byte)readByte );
+						break;
 						}
 					}
 				}
