@@ -71,7 +71,6 @@ public abstract class X10Event extends Event {
 	 * @param houseCode  - char House code value between 'A' and 'P' inclusive.
 	 * @param deviceCode - integer Unit code value between 1 and 16 inclusive.
 	 * @param commmand   - String ON, OFF, DIM, BRIGHT
-	 * @see
 	 */
 	public X10Event(String deviceName, char houseCode, int deviceCode, String eventCode) throws IllegalArgumentException {
 
