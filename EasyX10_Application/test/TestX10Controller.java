@@ -11,7 +11,6 @@ import edu.bu.easyx10.event.EventHandlerListener;
  */
 public class TestX10Controller implements EventHandlerListener {
 
-	private static CM11A_X10Protocol Controller;
 	private static EventGenerator eventGenerator;
 
 	/**
@@ -22,15 +21,15 @@ public class TestX10Controller implements EventHandlerListener {
 		// fetch the EventGenerator
 		eventGenerator = EventGeneratorFactory.getEventGenerator( );
 		eventGenerator.addEventListener(this);
-
+		
+		// initialize the ProtocolFactory
+		System.out.println ("Attempting to initialize the ProtocolFactory\n");
 		try {
-			System.out.println("Connecting to CM11A on port " + portName);
-			Controller = new CM11A_X10Protocol(portName);
-		} catch (IOException e) {
-			//  listPorts( );
-			System.exit(1);
+		    ProtocolFactory.initProtocols();
+		} catch ( Exception e ) {
+			System.out.println ("\nExiting program due to trouble initializing ProtocolFactory");
+			System.exit (-1);
 		}
-
 
 	}
 
@@ -69,9 +68,6 @@ public class TestX10Controller implements EventHandlerListener {
 						usage( );
 					} else {
 						eventGenerator.fireEvent( protocolEvent );
-						if (Controller != null) {
-							Controller.processProtocolEvent(protocolEvent );
-						}
 						//********************************************
 						//Tell the user their command was queued
 						//********************************************
@@ -81,8 +77,10 @@ public class TestX10Controller implements EventHandlerListener {
 				}
 			}
 		} finally {
-			System.out.println("\nDisconnecting from CM11A");
-			Controller.close( );
+			System.out.println("\nDisconnecting from ProtocolFactory");
+			try {
+			    ProtocolFactory.shutdown( );
+			} catch ( Exception e ) {};
 		}
 	}
 
