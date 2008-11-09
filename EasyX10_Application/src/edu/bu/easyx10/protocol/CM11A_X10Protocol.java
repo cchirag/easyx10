@@ -239,7 +239,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		super( );
 
 		// Enable Debugging
-//		System.setProperty("DEBUG", "1");
+		System.setProperty("DEBUG", "1");
 
 		CommPortIdentifier portId;
 
@@ -301,7 +301,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		// Create a new runnable thread.  For some reason, I cannot get Runnable to work properly.
 		x10Thread = new Thread(this);
 		x10Thread.start( );
-
+		
 	}
 
 	/**
@@ -334,12 +334,12 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 *
 	 * @param protocolEvent - X10ProtocolEvent class which provides House/Device/Function codes.
 	 */
-	public void processProtocolEvent ( X10ProtocolEvent protocolEvent ) {
+	public void processProtocolEvent ( Event protocolEvent ) {
 		// Copy the object and stuff the object into the txQueue
 		debug ("processProtocolEvent:: " + protocolEvent );
 		if (protocolEvent instanceof X10ProtocolEvent) {
 			try {
-				txQueue.put ( protocolEvent );
+				txQueue.put ( (X10ProtocolEvent)protocolEvent );
 			} catch ( InterruptedException e) {
 				debug ( e.toString( ) );
 			}
@@ -541,7 +541,9 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		}
 		debug ( "handleStatusPoll:: addrFunctionMask: " + Integer.toHexString(addrFunctionMask));
 
-		// Read the remaining bytes address and function bytes
+		// Read the remaining bytes address and function bytes.  Each read can return less than
+		// the desired result.  Therefore, we need to loop until all the required bytes have been
+		// received.
 		numBytes = 0;
 		while (numBytes < responseBytes-1) {
 			try {
@@ -738,7 +740,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 							// Dump the unknown bytes into the rxTxQueue for the Send process
 						default:
-							debug ( "SerialPortEvent:: unknown received byte: " + Integer.toHexString( readByte ) );
+							debug ( "SerialPortEvent:: forwarding received byte to transmit: " + Integer.toHexString( readByte ) );
 						rxTxQueue.put ( (byte)readByte );
 						break;
 						}

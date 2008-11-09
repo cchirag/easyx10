@@ -27,12 +27,33 @@ public class ProtocolFactory {
 	 * The initProtocol method is responsible for instantiating all the 
 	 * available protocols.
 	 */
-	public static void initProtocol( ) {
+	public synchronized static void initProtocols( ) throws Exception {
 		// instantiate all the possible protocols here
+		// @TODO - the serial port needs to come from the configuration package
 		if (protocolInitialized == false) {
 			try {
 			    x10Protocol = new CM11A_X10Protocol( "/dev/ttyUSB0" );
-			} catch ( Exception e ) {};
+			} catch ( Exception e ) {
+				System.out.println ( "Error attempting to initialize CM11A_X10Protocol\n");
+				System.out.println ( e );
+				throw e;
+			};
+			// mark the protocol factory as initialized
+			protocolInitialized = true;
+		}
+	}
+	
+	/**
+	 * The shutdown method is responsible for shuting down each of the various
+	 * protocols by simply removing their references which should result in the
+	 * orderly shutdown of each protocol class via their finalize methods.
+	 * 
+	 */
+	public synchronized static void shutdown( ) {
+		// Shutdown all the various protocols by deleting their references.
+		if (protocolInitialized) {
+			x10Protocol.close();
+		    x10Protocol = null;
 		}
 	}
 }
