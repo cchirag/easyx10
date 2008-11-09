@@ -51,7 +51,9 @@ public class ProtocolFactory {
  			// Determine the default portName
  			if (osType.equals("linux")) {
  			    x10Port = "/dev/ttyUSB0";
- 			} else if (osType.equals("amd64")) {
+			} else if (osType.equals("i386")) {
+ 			    x10Port = "/dev/ttyUSB0";
+			} else if (osType.equals("amd64")) {
  			    x10Port = "/dev/ttyUSB0";
  			} else {
  			    x10Port = "COM4";
