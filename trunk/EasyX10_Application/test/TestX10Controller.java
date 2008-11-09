@@ -1,9 +1,6 @@
 import java.io.*;
 import edu.bu.easyx10.protocol.*;
 import edu.bu.easyx10.event.*;
-import edu.bu.easyx10.event.EventGenerator;
-import edu.bu.easyx10.event.X10ProtocolEvent;
-import edu.bu.easyx10.event.EventHandlerListener;
 
 /**
  Application which exercises the FireCracker library, as well as providing
@@ -16,7 +13,7 @@ public class TestX10Controller implements EventHandlerListener {
 	/**
 	 * Constructor
 	 */
-	TestX10Controller ( String portName ) {
+	TestX10Controller ( ) {
 
 		// fetch the EventGenerator
 		eventGenerator = EventGeneratorFactory.getEventGenerator( );
@@ -35,13 +32,11 @@ public class TestX10Controller implements EventHandlerListener {
 
 	public static void main(String args[]) throws IOException {
 
-		String portName = "/dev/ttyUSB0";
-		if (args.length > 0) {
-			portName = args[0];
-		}
+		// Enable Debugging
+//		System.setProperty("DEBUG", "1");
 
 		// Instantiate the Test Controller
-		TestX10Controller Test = new TestX10Controller(portName );
+		new TestX10Controller( );
 
 		//********************************************
 		// Prompt to enter a command
@@ -142,16 +137,4 @@ public class TestX10Controller implements EventHandlerListener {
 		System.out.println("usage: java " + TestX10Controller.class.getName());
 		System.out.println("    command examples: A1_ON B15_OFF A9_DIM B10_BRIGHT");
 	}
-
-	/*
-    private static void listPorts() {
-        System.out.println("Listing available ports (possibly including fictional ones):");
-        Enumeration e = FireCracker.getPorts();
-        while(e.hasMoreElements()) {
-            System.out.println("   " + e.nextElement());
-        }
-        System.out.println();
-    }
-	 */
-
 }
