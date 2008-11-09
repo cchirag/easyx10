@@ -37,7 +37,7 @@ public abstract class Event {
 	 *
 	 * @param name String which identifies the Device destination for this Event.
 	 */
-	public void setName ( String name ) {
+	public void setDeviceName ( String name ) {
 		m_deviceName = name;
 	}
 
@@ -51,6 +51,21 @@ public abstract class Event {
 	}
 
 	/**
+	 * Override the equality operator for the TimerEvent
+	 * 
+	 * @param timerEvent
+	 * @return boolean true when objects are equivalent.
+	 */
+	public boolean equals ( Event event ) {
+		boolean equivalent = true;
+		// check the local class for its fields
+		if (event.getDeviceName() != this.getDeviceName()) {
+			equivalent = false;
+		}
+		return(equivalent);
+	}
+	
+	/**
 	 * The fireEvent method must be implemented by any concrete class.
 	 * This method will make a call to one of the methods provided by
 	 * the EventHandlerListener interface.  The proper method called is
@@ -59,6 +74,6 @@ public abstract class Event {
 	 * @param e Event which is to be sent to EventHandlerListener.
 	 */
 	abstract protected void fireEvent ( EventHandlerListener object );
-
+	
 };
 

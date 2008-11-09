@@ -12,6 +12,10 @@ import edu.bu.easyx10.event.Event;
  * @date:    10/30/08
  *
  */
+/**
+ * @author jduda
+ *
+ */
 public class TimerEvent extends Event {
 
 	// Create the private member variables for this class.
@@ -36,6 +40,15 @@ public class TimerEvent extends Event {
 	}
 
 	/**
+	 * Copy constructor
+	 * 
+	 * @param timerEvent
+	 */
+	public TimerEvent ( TimerEvent timerEvent ) {
+		this(timerEvent.getDeviceName(), timerEvent.getEventName());
+	}
+	
+	/**
 	 * Accessor for the member variable m_eventName.
 	 *
 	 * @param eventName - String which identifies the event for the recipient.
@@ -52,13 +65,32 @@ public class TimerEvent extends Event {
 	public String getEventName ( ) {
 		return m_eventName;
 	}
-
+	
+	/**
+	 * Override the equality operator for the TimerEvent
+	 * 
+	 * @param timerEvent
+	 * @return boolean true when objects are equivalent.
+	 */
+	public boolean equals ( TimerEvent timerEvent ) {
+		boolean equivalent = true;
+		// check the base class for its fields
+		if (!super.equals(timerEvent)) {
+	       equivalent = false;		
+		}
+		// check the local class for its fields
+		if (timerEvent.getEventName() != this.getEventName()) {
+			equivalent = false;
+		}
+		return(equivalent);
+	}
+	
 	/**
 	 * Implementation of the fireEvent abstract method.  Call the processTimerEvent( )
 	 * method in the EventClassListener.
 	 */
 	protected void fireEvent ( EventHandlerListener object ) {
-		object.processDeviceEvent ( this ) ;
+		object.processTimerEvent ( this ) ;
 	}
 
 }
