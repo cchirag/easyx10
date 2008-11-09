@@ -366,4 +366,29 @@ public abstract class X10Event extends Event {
 		return s;
 	}
 
+	/**
+	 * Override the equality operator for the X10Event
+	 * 
+	 * @param X10Event
+	 * @return boolean true when objects are equivalent.
+	 */
+	public boolean equals ( X10Event x10Event ) {
+		boolean equivalent = true;
+		// check the base class for its fields
+		if (!super.equals(x10Event)) {
+	       equivalent = false;		
+		}
+		// check the local class for its fields
+		if (x10Event.getHouseCode() != this.getHouseCode()) {
+			equivalent = false;
+		}
+		if (x10Event.getDeviceCode() != this.getDeviceCode()) {
+			equivalent = false;
+		}
+		if (x10Event.getEventCode() != this.getEventCode()) {
+			equivalent = false;
+		}
+		return(equivalent);
+	}
+	
 }
