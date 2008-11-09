@@ -3,8 +3,8 @@ package edu.bu.easyx10.protocol;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-import javax.comm.*;
-//import gnu.io.*;
+//import javax.comm.*;
+import gnu.io.*;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 
@@ -23,9 +23,9 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 	// Define some X10 Protocol Constants
 	private static final byte X10_STANDARD_HEADER_ADDRESS  = (byte)0x04;
-	private static final byte X10_EXTENDED_HEADER_ADDRESS  = (byte)0x05;
+//	private static final byte X10_EXTENDED_HEADER_ADDRESS  = (byte)0x05;
 	private static final byte X10_STANDARD_HEADER_FUNCTION = (byte)0x06;
-	private static final byte X10_EXTENDED_HEADER_FUNCTION = (byte)0x07;
+//	private static final byte X10_EXTENDED_HEADER_FUNCTION = (byte)0x07;
 
 	private static final int  X10_MAX_RETRIES     = 20;
 
@@ -238,9 +238,6 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		// Create base class
 		super( );
 
-		// Enable Debugging
-		System.setProperty("DEBUG", "1");
-
 		CommPortIdentifier portId;
 
 		// Attempt to find the SerialPort identified by portName
@@ -275,7 +272,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		try {
 			serialPort.addEventListener(this);
 		} catch (TooManyListenersException e) {
-			throw new java.io.IOException ("Unable to create Event Listener: " + portName );
+			throw new java.io.IOException ("Unable to create Event Listener: " + e);
 		}
 
 		// Define notification events
@@ -298,10 +295,10 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		// Create the rxTxQueue
 		rxTxQueue = new LinkedBlockingQueue<Byte>( );
 
-		// Create a new runnable thread.  For some reason, I cannot get Runnable to work properly.
+		// Create a new runnable thread.
 		x10Thread = new Thread(this);
 		x10Thread.start( );
-		
+
 	}
 
 	/**
