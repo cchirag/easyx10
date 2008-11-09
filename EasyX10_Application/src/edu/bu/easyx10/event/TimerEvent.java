@@ -12,7 +12,7 @@ import edu.bu.easyx10.event.Event;
  * @date:    10/30/08
  *
  */
-public abstract class TimerEvent extends Event {
+public class TimerEvent extends Event {
 
 	// Create the private member variables for this class.
 	private String  m_eventName;
@@ -51,6 +51,14 @@ public abstract class TimerEvent extends Event {
 	 */
 	public String getEventName ( ) {
 		return m_eventName;
+	}
+
+	/**
+	 * Implementation of the fireEvent abstract method.  Call the processTimerEvent( )
+	 * method in the EventClassListener.
+	 */
+	protected void fireEvent ( EventHandlerListener object ) {
+		object.processDeviceEvent ( this ) ;
 	}
 
 }
