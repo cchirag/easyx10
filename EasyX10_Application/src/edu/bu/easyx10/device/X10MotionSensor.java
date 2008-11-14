@@ -37,10 +37,10 @@ public class X10MotionSensor extends X10Device{
 	private Time mEndTime;                    // End of motion Detection Period
 	
 	private boolean mDetectionPeriodEnabled;  // If Enabled Motion Detector will only 
-                                      // send Device events between mStartime
-	                                  // and mEndTime. 
-									  // Incoming motion events still
-									  // can change the Motion sensors state 
+                                              // send Device events between mStartime
+	                                          // and mEndTime. 
+									          // Incoming motion events still
+									          // can change the Motion sensors state 
 	
 	/**
 	 * Construct for a new X10MotionSensor class.  The constructor 
@@ -54,7 +54,7 @@ public class X10MotionSensor extends X10Device{
 		
 		//Code needed to Iterate through the X10Appliance set
 		//and check for a duplicate before inserting a new entry
-
+		
         /* TODO Continue ironing out Iterating HashSet Container
 		for (X10Appliance app : proxyDevice.getApplianceList()){
             if (!mApplianceList.add(proxyDevice)){
@@ -66,7 +66,11 @@ public class X10MotionSensor extends X10Device{
         }
         
         */
-	
+		
+		//set the initial device state
+		//mState =  MotionState.ACTIVE;
+
+		
 	}
 	
 	public void setInactivityTime(int seconds){
@@ -148,12 +152,15 @@ public class X10MotionSensor extends X10Device{
 	@Override
 	public String getState() {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return mState.toString();
 	}
 
 	@Override
-	public boolean setState() {
-		// TODO Auto-generated method stub
+	public synchronized boolean setState( X10DeviceState state ) {
+		// TODO Must insert setState logic
+		// just set it to eliminate compilation warnings for now.
+		mState = state;
 		return false;
 	}
 
