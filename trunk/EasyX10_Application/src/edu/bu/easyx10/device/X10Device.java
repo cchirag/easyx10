@@ -17,8 +17,15 @@ package edu.bu.easyx10.device;
 public abstract class X10Device extends Device{
 
 	// Declare Private Member Variables
-	private int mDeviceCode;
-	private char mHouseCode;
+	private int mDeviceCode;                         //The Devices Device Code
+	                                                 //1 thru 16 are valid
+	
+	private char mHouseCode;                         //The Devices house code
+	                                                 //A thru P are valid
+	
+	protected static enum X10DeviceState {ON, OFF};   //Valid states of X10 Devices
+	
+	protected X10DeviceState mState;                  //The state of the device
 		
 	/**
 	 * @return Returns a char containing the X10 Devices HouseCode
@@ -58,7 +65,7 @@ public abstract class X10Device extends Device{
 	 * the derived class since they are specific to that device.
 	 * 
 	 */
-	public abstract boolean setState();
+	public abstract boolean setState(X10DeviceState state );
 	
 	
 	/**
