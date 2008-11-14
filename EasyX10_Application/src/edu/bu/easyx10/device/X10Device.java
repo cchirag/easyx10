@@ -23,7 +23,7 @@ public abstract class X10Device extends Device{
 	private char mHouseCode;                         //The Devices house code
 	                                                 //A thru P are valid
 	
-	protected static enum X10DeviceState {ON, OFF};   //Valid states of X10 Devices
+	public static enum X10DeviceState {ON, OFF};   //Valid states of X10 Devices
 	
 	protected X10DeviceState mState;                  //The state of the device
 		
