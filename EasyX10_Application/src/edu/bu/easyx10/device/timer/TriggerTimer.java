@@ -8,6 +8,13 @@ public class TriggerTimer extends DeviceTimer{
 	
 	private Time mTriggerTime;
 	
+	public TriggerTimer(Time triggerTime, Event eventToFire){
+		super(eventToFire);
+		setTriggerTime(triggerTime);
+		
+		startTimer();
+	}
+	
 	public Time getTriggerTime() {
 		return mTriggerTime;
 	}
@@ -35,7 +42,7 @@ public class TriggerTimer extends DeviceTimer{
 	}
 
 	@Override
-	protected void startTimer() {
+	public void startTimer() {
 		// TODO Auto-generated method stub
 		
 	}
