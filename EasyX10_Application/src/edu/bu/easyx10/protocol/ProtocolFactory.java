@@ -1,5 +1,9 @@
 package edu.bu.easyx10.protocol;
 
+import java.util.Enumeration;
+
+import gnu.io.CommPortIdentifier;
+
 import edu.bu.easyx10.protocol.CM11A_X10Protocol;
 
 /**
@@ -17,6 +21,7 @@ public class ProtocolFactory {
 	// declare our private variables
 	private static boolean protocolInitialized = false;
 	private static CM11A_X10Protocol x10Protocol;
+    private static Enumeration m_portIDs;
 
 	// create a static default constructor which is the singleton design pattern
 	private ProtocolFactory ( ) {
@@ -56,9 +61,18 @@ public class ProtocolFactory {
 			} else if (osType.equals("amd64")) {
  			    x10Port = "/dev/ttyUSB0";
  			} else {
- 			    x10Port = "COM4";
+ 			    x10Port = "COM3";
  			}
 
+			m_portIDs = CommPortIdentifier.getPortIdentifiers();
+			while (m_portIDs.hasMoreElements()) {
+				CommPortIdentifier portID = (CommPortIdentifier) m_portIDs.nextElement();
+			//	if (portID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+					System.out.println ( portID.getName());
+			//		break;
+			//	}
+			}
+			
  		    // Now instantiate the x10Protocol using our default port name.
  		    try {
 			    x10Protocol = new CM11A_X10Protocol( x10Port );
