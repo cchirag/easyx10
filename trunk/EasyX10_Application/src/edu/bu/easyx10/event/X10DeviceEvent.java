@@ -46,6 +46,19 @@ public class X10DeviceEvent extends X10Event {
 	}
 
 	/**
+	 * Construct a new X10DeviceEvent using enumerations with only a 
+	 * deviceName and an Event.
+	 * 
+	 * @param deviceName - String which defines the destination device for the event
+	 * @param eventCode  - X10_EVENT_CODE  X10 event code
+	 * @throws IllegalArgumentException
+	 */
+	public X10DeviceEvent(String deviceName, X10_EVENT_CODE eventCode)
+			throws IllegalArgumentException {
+		super(deviceName, eventCode);
+	}
+
+	/**
 	 * Copy constructor
 	 * 	 * 
 	 * @param e X10DeviceEvent

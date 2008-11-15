@@ -124,6 +124,22 @@ public abstract class X10Event extends Event {
 	}
 
 	/**
+	 * Construct a new X10Event using enumerations with only a 
+	 * deviceName and an Event.
+	 * 
+	 * @param deviceName - String which defines the destination device for the event
+	 * @param eventCode  - X10_EVENT_CODE  X10 event code
+	 * @throws IllegalArgumentException
+	 */
+	public X10Event(String deviceName, X10_EVENT_CODE eventCode)
+			throws IllegalArgumentException {
+		super(deviceName);
+	    
+		setEventCode ( eventCode );
+	
+	}
+
+	/**
 	 * Copy Constructor for X10Event Object
 	 *
 	 * @param e X10Event
