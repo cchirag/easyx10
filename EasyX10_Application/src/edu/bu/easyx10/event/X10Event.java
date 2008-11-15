@@ -214,6 +214,35 @@ public abstract class X10Event extends Event {
 	}
 
 	/**
+	 * Accessor for the m_houseCode member variable.
+	 *
+	 * @return char - House Code values 'A' through 'P' inclusive.
+	 */
+	public char getHouseCodeChar( ) {
+		char houseCode = ' ';
+		switch (m_houseCode) {
+		case X10_A: houseCode = 'A'; break;
+		case X10_B: houseCode = 'B'; break;
+		case X10_C: houseCode = 'C'; break;
+		case X10_D: houseCode = 'D'; break;
+		case X10_E: houseCode = 'E'; break;
+		case X10_F: houseCode = 'F'; break;
+		case X10_G: houseCode = 'G'; break;
+		case X10_H: houseCode = 'H'; break;
+		case X10_I: houseCode = 'I'; break;
+		case X10_J: houseCode = 'J'; break;
+		case X10_K: houseCode = 'K'; break;
+		case X10_L: houseCode = 'L'; break;
+		case X10_M: houseCode = 'M'; break;
+		case X10_N: houseCode = 'N'; break;
+		case X10_O: houseCode = 'O'; break;
+		case X10_P: houseCode = 'P'; break;
+		default: assert(false);
+		}
+		return houseCode;
+	}
+
+	/**
 	 * Accessor for the m_deviceCode member variable.
 	 *
 	 * @param deviceCode - integer Device Code values 1 through 16 inclusive.
@@ -283,6 +312,35 @@ public abstract class X10Event extends Event {
 		case X10_14: deviceCode = "14"; break;
 		case X10_15: deviceCode = "15"; break;
 		case X10_16: deviceCode = "16"; break;
+		default: assert(false);
+		}
+		return deviceCode;
+	}
+
+	/**
+	 * Accessor for the m_deviceCode member variable.
+	 *
+	 * @return String for Device Code "1" through "16" inclusive.
+	 */
+	public int getDeviceCodeInt( ) {
+		int deviceCode = 0;
+		switch (m_deviceCode) {
+		case X10_1: deviceCode = 1; break;
+		case X10_2: deviceCode = 2; break;
+		case X10_3: deviceCode = 3; break;
+		case X10_4: deviceCode = 4; break;
+		case X10_5: deviceCode = 5; break;
+		case X10_6: deviceCode = 6; break;
+		case X10_7: deviceCode = 7; break;
+		case X10_8: deviceCode = 8; break;
+		case X10_9: deviceCode = 9; break;
+		case X10_10: deviceCode = 10; break;
+		case X10_11: deviceCode = 11; break;
+		case X10_12: deviceCode = 12; break;
+		case X10_13: deviceCode = 13; break;
+		case X10_14: deviceCode = 14; break;
+		case X10_15: deviceCode = 15; break;
+		case X10_16: deviceCode = 16; break;
 		default: assert(false);
 		}
 		return deviceCode;
