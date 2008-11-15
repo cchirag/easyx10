@@ -3,8 +3,8 @@ package edu.bu.easyx10.protocol;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-//import javax.comm.*;
-import gnu.io.*;
+import javax.comm.*;
+//import gnu.io.*;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 
@@ -37,11 +37,11 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	private static final byte X10_POWER_FAIL_ACK  = (byte)0x9b;
 
 	// Private Member Classes and Variables
-	private SerialPort          serialPort;
-	private InputStream         inputStream;
-	private OutputStream        outputStream;
-	private BlockingQueue<Byte> rxTxQueue;
-	private Thread              x10Thread;
+	private SerialPort          m_serialPort;
+	private InputStream         m_inputStream;
+	private OutputStream        m_outputStream;
+	private BlockingQueue<Byte> m_rxTxQueue;
+	private Thread              m_txThread;
 
 	/**
 	 * Convert X10Event House Code enumeration to X10 binary code
@@ -235,9 +235,6 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	public CM11A_X10Protocol (String portName) throws java.io.IOException {
 
-		// Create base class
-		super( );
-
 		CommPortIdentifier portId;
 
 		// Attempt to find the SerialPort identified by portName
@@ -249,41 +246,41 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Attempt to open the SerialPort
 		try {
-			serialPort = (SerialPort) portId.open("CM11aApp", 2000);
+			m_serialPort = (SerialPort) portId.open("CM11A_X10Controller", 2000);
 		} catch (PortInUseException e) {
 			throw new java.io.IOException ("Serial port is in use: " + portName );
 		}
 
-		// Attempt to create the InputStream
+		// Attempt to create the m_inputStream
 		try {
-			inputStream = serialPort.getInputStream();
+			m_inputStream = m_serialPort.getInputStream();
 		} catch (IOException e) {
 			throw new java.io.IOException ("Unable to create Input Stream: " + portName );
 		}
 
 		// Attempt to create the OutputStream
 		try {
-			outputStream = serialPort.getOutputStream();
+			m_outputStream = m_serialPort.getOutputStream();
 		} catch (IOException e) {
 			throw new java.io.IOException ("Unable to create Output Stream: " + portName );
 		}
 
 		// Attempt to create the event listener
 		try {
-			serialPort.addEventListener(this);
+			m_serialPort.addEventListener(this);
 		} catch (TooManyListenersException e) {
 			throw new java.io.IOException ("Unable to create Event Listener: " + e);
 		}
 
 		// Define notification events
-		serialPort.notifyOnDataAvailable(true);
-		serialPort.notifyOnFramingError(true);
-		serialPort.notifyOnParityError(true);
-		serialPort.notifyOnOverrunError(true);
+		m_serialPort.notifyOnDataAvailable(true);
+		m_serialPort.notifyOnFramingError(true);
+		m_serialPort.notifyOnParityError(true);
+		m_serialPort.notifyOnOverrunError(true);
 
 		// Configure the serial port
 		try {
-			serialPort.setSerialPortParams(
+			m_serialPort.setSerialPortParams(
 					4800,
 					SerialPort.DATABITS_8,
 					SerialPort.STOPBITS_1,
@@ -293,11 +290,11 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		}
 
 		// Create the rxTxQueue
-		rxTxQueue = new LinkedBlockingQueue<Byte>( );
+		m_rxTxQueue = new LinkedBlockingQueue<Byte>( );
 
 		// Create a new runnable thread.
-		x10Thread = new Thread(this);
-		x10Thread.start( );
+		m_txThread = new Thread(this);
+		m_txThread.start( );
 
 	}
 
@@ -310,7 +307,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	public void finalize( )
 	{
-		serialPort.close( );
+		m_serialPort.close( );
 	}
 
 	/**
@@ -322,7 +319,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	public void close()
 	{
-		serialPort.close( );
+		m_serialPort.close( );
 	}
 
 	/**
@@ -336,7 +333,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		debug ("processProtocolEvent:: " + protocolEvent );
 		if (protocolEvent instanceof X10ProtocolEvent) {
 			try {
-				txQueue.put ( (X10ProtocolEvent)protocolEvent );
+				m_txQueue.put ( (X10ProtocolEvent)protocolEvent );
 			} catch ( InterruptedException e) {
 				debug ( e.toString( ) );
 			}
@@ -379,15 +376,15 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		header = X10_STANDARD_HEADER_ADDRESS;
 		code   = (houseCode << 4) | deviceCode;
 		try {
-			outputStream.write ( header );
-			outputStream.write ( (byte)code );
+			m_outputStream.write ( header );
+			m_outputStream.write ( (byte)code );
 		} catch (Exception e) {
 			throw new IOException ( "sendDeviceAddress write:: " + e );
 		};
 
 		// Fetch checksum and validate
 		try {
-			readByte = rxTxQueue.take();
+			readByte = m_rxTxQueue.take();
 		} catch (Exception e) {
 			throw new IOException ( "sendDeviceAddress readByte:: " + e );
 		};
@@ -412,14 +409,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		debug ("sendOkay:: ");
 
 		try {
-			outputStream.write ( X10_INTERFACE_OKAY );
+			m_outputStream.write ( X10_INTERFACE_OKAY );
 		} catch (Exception e) {
 			throw new IOException ( "sendOkay write:: " + e );
 		};
 
 		// Fetch READY
 		try {
-			readByte = rxTxQueue.take( );
+			readByte = m_rxTxQueue.take( );
 		} catch (Exception e) {
 			throw new IOException ( "sendOkay read:: " + e );
 		};
@@ -448,15 +445,15 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		header = X10_STANDARD_HEADER_FUNCTION;
 		code   = (houseCode << 4) | eventCode;
 		try {
-			outputStream.write ( header );
-			outputStream.write ( (byte)code );
+			m_outputStream.write ( header );
+			m_outputStream.write ( (byte)code );
 		} catch (Exception e) {
 			throw new IOException ( "sendFunction write:: " + e );
 		};
 
 		// Fetch checksum
 		try {
-			readByte = rxTxQueue.take( );
+			readByte = m_rxTxQueue.take( );
 		} catch (Exception e) {
 			throw new IOException ( "sendFunction read:: " + e );
 		};
@@ -485,13 +482,13 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 				0,                    // day mask (SMTWTFS)
 				0x67};                // house code "A", ack battery timer, moniotored status, timer purge
 		try {
-			outputStream.write (powerFail);
+			m_outputStream.write (powerFail);
 		} catch ( Exception e ) {
 			throw new IOException ( "handlePowerFailPoll:: " + e );
 		}
 		// Read and discard the checksum
 		try {
-			inputStream.read( );
+			m_inputStream.read( );
 		} catch ( Exception e ) {
 			throw new IOException ( "handlePowerFailPoll:: read: " + e );
 		}
@@ -517,14 +514,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Send the STATUS ACK byte
 		try {
-			outputStream.write (X10_STATUS_ACK);
+			m_outputStream.write (X10_STATUS_ACK);
 		} catch ( Exception e ) {
 			throw new IOException ( "handleStatusPoll:: " + e );
 		}
 
 		// Fetch the number of Response Bytes
 		try {
-			responseBytes = (byte)inputStream.read( );
+			responseBytes = (byte)m_inputStream.read( );
 		} catch ( Exception e ) {
 			throw new IOException ( "handleStatusPoll:: read: " + e );
 		}
@@ -532,7 +529,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Fetch the address/function mask byte
 		try {
-			addrFunctionMask = (byte)inputStream.read( );
+			addrFunctionMask = (byte)m_inputStream.read( );
 		} catch ( Exception e ) {
 			throw new IOException ( "handleStatusPoll:: read: " + e );
 		}
@@ -544,7 +541,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		numBytes = 0;
 		while (numBytes < responseBytes-1) {
 			try {
-				numBytes += inputStream.read ( readBuffer, numBytes, responseBytes-1-numBytes );
+				numBytes += m_inputStream.read ( readBuffer, numBytes, responseBytes-1-numBytes );
 			} catch ( Exception e ) {
 				throw new IOException ( "handleStatusPoll:: read: " + e );
 			}
@@ -579,7 +576,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 						X10DeviceEvent deviceEvent = new X10DeviceEvent ( "", houseCode, deviceCode, eventCode );
 						// Send the deviceEvent to the recipient
 						debug ("handleStatusPoll:: fire: " + deviceEvent );
-						eventGenerator.fireEvent ( deviceEvent );
+						m_eventGenerator.fireEvent ( deviceEvent );
 					} catch ( Exception e ) {
 						debug ( "handleStatusPoll:: processAddresses: X10ProtocolEvent exception: " + e);
 					}
@@ -619,7 +616,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 			// get the next command to send from the queue
 			try {
-				protocolEvent = txQueue.take( );
+				protocolEvent = m_txQueue.take( );
 				debug ("run:: processing: " + protocolEvent );
 			} catch (Exception e) {
 				break;
@@ -712,10 +709,10 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		case SerialPortEvent.DATA_AVAILABLE:
 			try {
-				while (inputStream.available() > 0) {
+				while (m_inputStream.available() > 0) {
 					// Fetch the next byte from the I/O stream
 					try {
-						readByte = inputStream.read( );
+						readByte = m_inputStream.read( );
 					} catch (Exception e) {}
 					// -1 indicates no data is available, other it's the read value
 					if (readByte >= 0) {
@@ -725,20 +722,20 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 						// Handle the status poll command
 						case X10_STATUS_POLL:
-							debug ( "SerialPortEvent:: X10_STATUS_POLL");
+							debug ( "m_serialPortEvent:: X10_STATUS_POLL");
 							handleStatusPoll ( );
 							break;
 
 							// Handle the power fail poll command
 						case X10_POWER_FAIL_POLL:
-							debug ( "SerialPortEvent:: X10_POWER_FAIL_POLL");
+							debug ( "m_serialPortEvent:: X10_POWER_FAIL_POLL");
 							handlePowerFailPoll ( );
 							break;
 
 							// Dump the unknown bytes into the rxTxQueue for the Send process
 						default:
-							debug ( "SerialPortEvent:: forwarding received byte to transmit: " + Integer.toHexString( readByte ) );
-						rxTxQueue.put ( (byte)readByte );
+							debug ( "m_serialPortEvent:: forwarding received byte to transmit: " + Integer.toHexString( readByte ) );
+						m_rxTxQueue.put ( (byte)readByte );
 						break;
 						}
 					}
