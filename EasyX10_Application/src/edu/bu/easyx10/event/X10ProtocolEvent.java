@@ -51,9 +51,9 @@ public class X10ProtocolEvent extends X10Event {
 	}
 
 	/**
-	 * Construct a new X10DeviceEvent using implicit X10ProtocolEvent
+	 * Copy constructor
 	 * 
-	 * @param e X10Event
+	 * @param e X10ProtocolEvent
 	 */
 	public X10ProtocolEvent(X10ProtocolEvent e) {
 		super(e);
