@@ -9,20 +9,22 @@ public abstract class DeviceTimer extends TimerTask {
 	
 	// private member variables
 	Event mEventToFire;
+	
 	protected final EventGenerator eventGenerator;
 	
 	/**
 	 * Construct a new DeviceTimer. While this class is abstract, always
 	 * call the super classes constructor to in
 	 */
-	public DeviceTimer(){
+	public DeviceTimer(Event eventToFire){
 		
+		setEventToFire(eventToFire);
 		// fetch the eventGenerator instance from the EventGeneratorFactory
 		eventGenerator = EventGeneratorFactory.getEventGenerator( );
 		
 	}
 	
-	protected abstract void startTimer();
+	public abstract void startTimer();
 	
 	protected abstract Event getEventToFire();
 

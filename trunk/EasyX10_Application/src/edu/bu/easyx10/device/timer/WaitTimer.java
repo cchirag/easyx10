@@ -7,9 +7,10 @@ public class WaitTimer extends DeviceTimer{
 	// private member variables
 	int mSecondsToWait;
 	
-	public WaitTimer(int secondsToWait){
-		super();
-		mSecondsToWait=secondsToWait;
+	public WaitTimer(int secondsToWait, Event eventToFire){
+		super(eventToFire);
+		setSecondsToWait(secondsToWait);
+		
 		startTimer();
 	}
 		
@@ -48,7 +49,7 @@ public class WaitTimer extends DeviceTimer{
 
 
 	@Override
-	protected void startTimer() {
+	public void startTimer() {
 		// TODO Auto-generated method stub
 		
 	}
