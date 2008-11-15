@@ -46,8 +46,8 @@ public class X10DeviceEvent extends X10Event {
 	}
 
 	/**
-	 * Construct a new X10DeviceEvent using implicit X10DeviceEvent
-	 * 
+	 * Copy constructor
+	 * 	 * 
 	 * @param e X10DeviceEvent
 	 */
 	public X10DeviceEvent(X10DeviceEvent e) {

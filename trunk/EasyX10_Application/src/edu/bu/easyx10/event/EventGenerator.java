@@ -21,7 +21,7 @@ public class EventGenerator {
 
 	// Declare the private member variables.
 	private static List<EventHandlerListener> m_eventListeners;
-	private static Semaphore listSemaphore;
+	private static Semaphore m_listSemaphore;
 
 	/**
 	 * Constructor - default implicit constructor
@@ -31,7 +31,7 @@ public class EventGenerator {
 		m_eventListeners = new ArrayList<EventHandlerListener>( );
 		
 		// create a Mutex using the static semaphore
-		listSemaphore = new Semaphore(1);
+		m_listSemaphore = new Semaphore(1);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class EventGenerator {
 	public void addEventListener ( EventHandlerListener listener ) {
 
 		// First, let's acquire the Mutex to allow only one updater of the list
-		listSemaphore.acquireUninterruptibly();
+		m_listSemaphore.acquireUninterruptibly();
 
 		// Iterate though our existing m_eventListeners and determine if the
 		// new object is already in the list.
@@ -61,7 +61,7 @@ public class EventGenerator {
 		}
 
 		// return the Mutex now
-		listSemaphore.release();
+		m_listSemaphore.release();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class EventGenerator {
 	public void deleteEventListener ( EventHandlerListener listener ) {
 
 		// First, let's acquire the Mutex to allow only one updater of the list
-		listSemaphore.acquireUninterruptibly();
+		m_listSemaphore.acquireUninterruptibly();
 
 		// Iterate though our existing m_eventListeners and determine if the
 		// object is in the list.  If so, simply remove it.
@@ -83,7 +83,7 @@ public class EventGenerator {
 			}
 		}
 		// return the Mutex now
-		listSemaphore.release();
+		m_listSemaphore.release();
 	}
 
 	/**

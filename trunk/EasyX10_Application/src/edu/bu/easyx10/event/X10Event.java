@@ -130,10 +130,10 @@ public abstract class X10Event extends Event {
 	 *
 	 */
 	public X10Event( X10Event e ) {
-		super ( e.getDeviceName( ) );
-		setHouseCode ( e.getHouseCode( ) );
-		setDeviceCode ( e.getDeviceCode( ) );
-		setEventCode ( e.getEventCode( ) );
+		this (  e.getDeviceName( ),
+				e.getHouseCode( ),
+				e.getDeviceCode( ),
+				e.getEventCode( ) );
 	}
 
 	/**
@@ -376,7 +376,7 @@ public abstract class X10Event extends Event {
 		boolean equivalent = true;
 		// check the base class for its fields
 		if (!super.equals(x10Event)) {
-	       equivalent = false;		
+			equivalent = false;		
 		}
 		// check the local class for its fields
 		if (x10Event.getHouseCode() != this.getHouseCode()) {
@@ -390,5 +390,5 @@ public abstract class X10Event extends Event {
 		}
 		return(equivalent);
 	}
-	
+
 }
