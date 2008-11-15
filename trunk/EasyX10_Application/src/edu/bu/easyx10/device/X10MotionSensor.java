@@ -65,9 +65,9 @@ public class X10MotionSensor extends X10Device {
 	public X10MotionSensor ( ProxyX10MotionSensor proxyDevice ) {
 
 		// Create the super X10Device class and pass to it its attributes
-		super (proxyDevice.getName( ),
-				proxyDevice.getHouseCode( ),
-				proxyDevice.getDeviceCode( ) );
+		super ( proxyDevice.getName( ),
+	            proxyDevice.getHouseCode( ),
+			    proxyDevice.getDeviceCode( ) );
 
 		// create any required member classes
 		mApplianceList = new HashSet<String>( );
@@ -283,9 +283,10 @@ public class X10MotionSensor extends X10Device {
 					Iterator<String> i = mApplianceList.iterator( );
 					while (i.hasNext()) {
 						String deviceName = i.next();
-						// Fetch the appliance reference from the DeviceManager
-						X10Appliance appliance = DeviceManager.getDevice ( deviceName );
-						appliance.setState ( X10DeviceState.ON );
+						// Create an X10DeviceEvent to turn on the Appliance
+						X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_ON );
+						// Send the Event to the X10Appliance object through EventGenerator
+						eventGenerator.fireEvent ( deviceEvent );
 					}
 					/* set a member variable to identify that we have turned ON all
 					 * of the associated appliance devices.  Also, we need to remember
@@ -314,8 +315,10 @@ public class X10MotionSensor extends X10Device {
 			while (i.hasNext()) {
 				String deviceName = i.next();
 				// Fetch the appliance reference from the DeviceManager
-				X10Appliance appliance = DeviceManager.getDevice ( deviceName );
-				appliance.setState ( X10DeviceState.OFF );
+				// Create an X10DeviceEvent to turn on the Appliance
+				X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_ON );
+				// Send the Event to the X10Appliance object through EventGenerator
+				eventGenerator.fireEvent ( deviceEvent );
 			}
 		}
 	}
