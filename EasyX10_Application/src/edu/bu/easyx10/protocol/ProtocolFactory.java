@@ -1,9 +1,7 @@
 package edu.bu.easyx10.protocol;
 
 import java.util.Enumeration;
-
 import gnu.io.CommPortIdentifier;
-
 import edu.bu.easyx10.protocol.CM11A_X10Protocol;
 
 /**
@@ -19,13 +17,13 @@ import edu.bu.easyx10.protocol.CM11A_X10Protocol;
 public class ProtocolFactory {
 
 	// declare our private variables
-	private static boolean protocolInitialized = false;
-	private static CM11A_X10Protocol x10Protocol;
-    private static Enumeration m_portIDs;
+	private static boolean m_protocolInitialized = false;
+	private static CM11A_X10Protocol m_x10Protocol;
+	private static Enumeration<Object> m_portIDs;
 
 	// create a static default constructor which is the singleton design pattern
 	private ProtocolFactory ( ) {
-		
+
 	}
 
 	/**
@@ -34,59 +32,66 @@ public class ProtocolFactory {
 	 * it with synchronized and a boolean control flag.
 	 */
 	public synchronized static void initProtocols( ) throws Exception {
-		
+
 		// create some local method variables    
 		String osType = "";
-		
-        // Determine our operating system environment			
+
+		// Determine our operating system environment			
 		try {
-	      osType= System.getProperty("os.arch");
-	      System.out.println("Operating system type =>" + osType);
-	    } catch (Exception e) {
-	      System.out.println("Exception caught =" + e.getMessage());
-	    }
+			osType= System.getProperty("os.arch");
+			System.out.println("Operating system type =>" + osType);
+		} catch (Exception e) {
+			System.out.println("Exception caught =" + e.getMessage());
+		}
 
 		// instantiate all the possible protocols here
 		// @TODO - the serial port needs to come from the configuration package
- 		if (protocolInitialized == false) {
+		if (m_protocolInitialized == false) {
 
- 			// Initialize the X10 Protocol Driver
- 			String x10Port;
+			// Initialize the X10 Protocol Driver
+			String x10Port;
 
- 			// Determine the default portName
- 			if (osType.equals("linux")) {
- 			    x10Port = "/dev/ttyUSB0";
+			// Determine the default portName
+			if (osType.equals("linux")) {
+				x10Port = "/dev/ttyUSB0";
 			} else if (osType.equals("i386")) {
- 			    x10Port = "/dev/ttyUSB0";
+				x10Port = "/dev/ttyUSB0";
 			} else if (osType.equals("amd64")) {
- 			    x10Port = "/dev/ttyUSB0";
- 			} else {
- 			    x10Port = "COM3";
- 			}
-
-			m_portIDs = CommPortIdentifier.getPortIdentifiers();
-			while (m_portIDs.hasMoreElements()) {
-				CommPortIdentifier portID = (CommPortIdentifier) m_portIDs.nextElement();
-			//	if (portID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-					System.out.println ( portID.getName());
-			//		break;
-			//	}
+				x10Port = "/dev/ttyUSB0";
+			} else {
+				x10Port = "COM3";
 			}
-			
- 		    // Now instantiate the x10Protocol using our default port name.
- 		    try {
-			    x10Protocol = new CM11A_X10Protocol( x10Port );
+
+			/*
+			 * This next block of code is used for debugging only.
+			 * When debug is turned on, we dump all of the available
+			 * COM port names to the console display.
+			 */
+			if (System.getProperty("DEBUG") != null) {
+				m_portIDs = (Enumeration<Object>)CommPortIdentifier.getPortIdentifiers();
+				while (m_portIDs.hasMoreElements()) {
+					CommPortIdentifier portID = (CommPortIdentifier) m_portIDs.nextElement();
+					if (portID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+						System.out.println ( portID.getName());
+						break;
+					}
+				}
+			}
+
+			// Now instantiate the x10Protocol using our default port name.
+			try {
+				m_x10Protocol = new CM11A_X10Protocol( x10Port );
 			} catch ( Exception e ) {
 				System.out.println ( "Error attempting to initialize CM11A_X10Protocol\n");
 				System.out.println ( e );
 				throw e;
 			};
-			
+
 			// finish by marking the protocol factory as initialized
-			protocolInitialized = true;
+			m_protocolInitialized = true;
 		}
 	}
-	
+
 	/**
 	 * The shutdown method is responsible for shuting down each of the various
 	 * protocols by simply removing their references which should result in the
@@ -95,9 +100,9 @@ public class ProtocolFactory {
 	 */
 	public synchronized static void shutdown( ) {
 		// Shutdown all the various protocols by deleting their references.
-		if (protocolInitialized) {
-			x10Protocol.close();
-		    x10Protocol = null;
+		if (m_protocolInitialized) {
+			m_x10Protocol.close();
+			m_x10Protocol = null;
 		}
 	}
 }
