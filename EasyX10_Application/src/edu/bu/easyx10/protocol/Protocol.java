@@ -23,8 +23,8 @@ import edu.bu.easyx10.event.EventHandlerListener;
 public abstract class Protocol implements EventHandlerListener {
 	
 	// private member variables
-	protected BlockingQueue<X10ProtocolEvent> txQueue;
-	protected EventGenerator eventGenerator;
+	protected BlockingQueue<X10ProtocolEvent> m_txQueue;
+	protected EventGenerator m_eventGenerator;
 
 	/**
 	 * Construct a new Protocol class.  The constructor always registers
@@ -33,13 +33,13 @@ public abstract class Protocol implements EventHandlerListener {
 	public Protocol ( ) {
 		
 		// fetch the eventGenerator instance from the EventGeneratorFactory
-		eventGenerator = EventGeneratorFactory.getEventGenerator( );
+		m_eventGenerator = EventGeneratorFactory.getEventGenerator( );
 		
 		// register the Protocol class with the EventGenerator
-		eventGenerator.addEventListener(this);
+		m_eventGenerator.addEventListener(this);
 		
 		// Create the txQueue
-		txQueue = new LinkedBlockingQueue<X10ProtocolEvent>( );
+		m_txQueue = new LinkedBlockingQueue<X10ProtocolEvent>( );
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public abstract class Protocol implements EventHandlerListener {
 	 */
 	public void finalize ( ) {
 		// unregister the Protocol class with the EventGenerator
-        eventGenerator.deleteEventListener(this);
+		m_eventGenerator.deleteEventListener(this);
 	}
 	
 	/**
