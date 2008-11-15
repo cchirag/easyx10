@@ -3,6 +3,10 @@ package edu.bu.easyx10.event;
 import junit.framework.TestCase;
 import java.util.*;
 
+/**
+ * @author jduda
+ *
+ */
 public class TestEventGenerator extends TestCase {
 
 	private EventGenerator eventGenerator;
@@ -99,6 +103,11 @@ public class TestEventGenerator extends TestCase {
 		listOfObservers = null;
 	} 
 
+	/**
+	 * Create a random X10DeviceEvent
+	 * 
+	 * @return
+	 */
 	private X10DeviceEvent randomX10DeviceEvent ( ) {
 		char houseCode = 'A';
 		switch (m_rv.nextInt( ) & 0xf) {
@@ -136,12 +145,21 @@ public class TestEventGenerator extends TestCase {
 		return (deviceEvent);
 	}
 
+	/**
+	 * Create a random TimerEvent
+	 * 
+	 * @return
+	 */
 	private TimerEvent randomTimerEvent( ) {
 		X10DeviceEvent deviceEvent = randomX10DeviceEvent( );
 		TimerEvent timerEvent = new TimerEvent ( deviceEvent.getDeviceName(), deviceEvent.getEventCodeString() );
 		return (timerEvent);
 	}
 
+	/**
+	 * DIrected test for a single X10DeviceEvent.  The Event is sent out through fireEVent
+	 * and received from processDeviceEvent( ).
+	 */
 	public void testDeviceEvent ( ) {
 		expectedDeviceEvent = randomX10DeviceEvent( );
 		X10DeviceEvent sendDeviceEvent = new X10DeviceEvent(expectedDeviceEvent);
@@ -149,6 +167,10 @@ public class TestEventGenerator extends TestCase {
 		assertEquals ( "Unexpected number of X10DeviceEvents", numberOfDeviceEvents, numberOfObservers);
 	}
 
+	/**
+	 * Directed test for a single X10ProtocolEvent.  The Event is sent out through fireEVent
+	 * and received from processDeviceEvent( ).
+	 */
 	public void testProtocolEvent ( ) {
 		X10DeviceEvent deviceEvent = randomX10DeviceEvent( );
 		expectedProtocolEvent = new X10ProtocolEvent (
@@ -162,6 +184,10 @@ public class TestEventGenerator extends TestCase {
 		assertEquals ( "Unexpected number of X10ProtocolEvents", numberOfProtocolEvents, numberOfObservers);
 	}
 
+	/**
+	 * Directed test for a single TimerEvent.  The Event is sent out through fireEVent
+	 * and received from processTimerEvent( ).
+	 */
 	public void testTimerEvent ( ) {
 		expectedTimerEvent = randomTimerEvent( );
 		TimerEvent sendTimerEvent = new TimerEvent(expectedTimerEvent);
@@ -169,9 +195,14 @@ public class TestEventGenerator extends TestCase {
 		assertEquals ( "Unexpected number of TimerEvents", numberOfTimerEvents, numberOfObservers);
 	}
 
+	public static final int numberOfRandomRuns = 10000;
+	
+	/**
+	 * Test various random events in some random order.
+	 */
 	public void testRandomEvent ( ) {
 		tearDown( );
-		for (int i = 0; i < (m_rv.nextInt( ) & 0xff); i++) {
+		for (int i = 0; i < numberOfRandomRuns; i++) {
 			setUp( );
 			switch (m_rv.nextInt( ) & 0x3) {
 			case 0: testDeviceEvent( ); break;
