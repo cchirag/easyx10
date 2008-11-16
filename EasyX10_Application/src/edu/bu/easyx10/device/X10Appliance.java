@@ -24,6 +24,9 @@ public class X10Appliance extends X10Device{
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
 
 
+	public X10Appliance(String name, char houseCode, int deviceCode){
+		super(name,houseCode,deviceCode);
+	}
 	
 	private Time getOnTimer(Time anOnTime){
 		// TODO Implement getOnTimer Method
