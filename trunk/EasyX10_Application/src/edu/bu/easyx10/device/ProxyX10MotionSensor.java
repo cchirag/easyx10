@@ -20,12 +20,17 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	private Set<String> mApplianceList;       // List of Appliances to send events to
 
 	/**
-	 * Construct for a new ProxyX10MotionSensor class.  The constructor is provided
+	 * Construct a new ProxyX10MotionSensor class.  The constructor is provided
 	 * with a X10MotionSensor object which contains all of the desired 
 	 * attributes as defined by the higher level GUI.  The constructor must
 	 * transfer all the attributes to the local object.  
 	 */
 	public ProxyX10MotionSensor ( X10MotionSensor motionDevice ) {	
+
+		// Create the super X10MotionDevice class and pass to it its attributes
+		super ( motionDevice.getName( ), 
+				motionDevice.getHouseCode( ), 
+				motionDevice.getDeviceCode( ) );
 
 		// create any required member classes
 		mApplianceList = new HashSet<String>( );

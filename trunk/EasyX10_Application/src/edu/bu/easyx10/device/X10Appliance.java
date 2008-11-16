@@ -5,7 +5,7 @@ import edu.bu.easyx10.device.timer.*;
 import java.sql.Time;
 
 /* The X10Appliance class is derived from the abstract class X10DeviceClass. 
- * It’s purpose is to model the state and behavior of X10 appliance modules.
+ * Itï¿½s purpose is to model the state and behavior of X10 appliance modules.
  * The state of X10 devices are controlled either by device updates coming
  * down from the Device manager from the gui package, or from incoming
  * DeviceEvents published by EventGenerator. X10Applianc objects also implement
@@ -70,7 +70,7 @@ public class X10Appliance extends X10Device{
 	}
 
 	@Override
-	public String getState() {
+	public X10DeviceState getState() {
 		// TODO Auto-generated method stub
 		return null;
 	}
