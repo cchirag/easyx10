@@ -3,7 +3,6 @@ package edu.bu.easyx10.device;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.device.timer.*;
-import gnu.io.CommPortIdentifier;
 
 import java.util.*;
 import java.sql.Time;
@@ -31,28 +30,48 @@ import java.util.concurrent.Semaphore;
 public class X10MotionSensor extends X10Device {
 
 	//Declare Private Member Variables
-	protected int mInactivityTime;              // Seconds before Sensor is marked inactive
+	
+	// Seconds before Sensor is marked inactive
+	protected int mInactivityTime;              
 
-	private WaitTimer mInactivityTimer;	      // Timer to instantiate with mInactivitTime
+	// Timer to instantiate with mInactivitTime
+	private WaitTimer mInactivityTimer;	      
 
-	protected Set<String> mApplianceList;       // List of Appliances to send events to
+	// List of Appliances to send events to
+	protected Set<String> mApplianceList;       
 
-	protected Time mStartTime;                  // Beginning of Motion Detection Period
+	// Beginning of Motion Detection Period
+	protected Time mStartTime;                  
 
-	protected Time mEndTime;                    // End of motion Detection Period
+	// End of motion Detection Period
+	protected Time mEndTime;                    
 
-	protected boolean mDetectionPeriodEnabled;  // If Enabled Motion Detector will only 
-	// send Device events between mStartime
-	// and mEndTime. 
-	// Incoming motion events still
-	// can change the Motion sensors state 
+	/* If Enabled Motion Detector will only 
+	 * send Device events between mStartime
+	 * and mEndTime. 
+	 * Incoming motion events still
+	 * can change the Motion sensors state
+	 */ 
+	protected boolean mDetectionPeriodEnabled;  
 
-	private boolean mDetectionWindowTrigger;   // Simple state variable for Detection Window logic
-	private List<String> mDetectionWindowList; // Set of appliances which have been turned on
+	// Simple state variable for Detection Window logic
+	private boolean mDetectionWindowTrigger;  
+	
+	// Set of appliances which have been turned on
+	private List<String> mDetectionWindowList; 
 
-	private Calendar calendar;                 // system time
+	// system time
+	private Calendar calendar;                 
 
-	private static Semaphore mListSemaphore;   // Use a semaphore to protect mApplianceList
+	// Use a semaphore to protect mApplianceList
+	private static Semaphore mListSemaphore;   
+
+	/**
+	 * Implicit constructor of a new X10MotionSensor object.
+	 */
+	public X10MotionSensor ( ) {
+		
+	}
 
 	/**
 	 * Construct for a new X10MotionSensor class.  The constructor is provided
