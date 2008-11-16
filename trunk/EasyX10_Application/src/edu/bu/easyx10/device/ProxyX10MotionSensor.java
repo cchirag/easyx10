@@ -18,6 +18,13 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 
 	// local member variables
 	private Set<String> mApplianceList;       // List of Appliances to send events to
+	
+	/**
+	 * Implicit constructor of a new ProxyX10MotionSensor object.
+	 */
+	public ProxyX10MotionSensor ( ) {
+		
+	}
 
 	/**
 	 * Construct a new ProxyX10MotionSensor class.  The constructor is provided
