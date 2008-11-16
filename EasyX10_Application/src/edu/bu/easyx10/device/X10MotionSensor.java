@@ -100,10 +100,13 @@ public class X10MotionSensor extends X10Device {
 	}
 	
 	/**
-	 * This implicit constructor is required by the ProxyX10MotionSensor 
+	 * This simple constructor is required by the ProxyX10MotionSensor.
+	 * All we need to do here is load the baseline name, houseCode, and
+	 * deviceCode attributes. 
 	 */
-	public X10MotionSensor ( ) {
-		
+	public X10MotionSensor ( String name, char houseCode, int deviceCode ) {
+		// Create the super X10Device class and pass to it its attributes
+		super ( name, houseCode, deviceCode );
 	}
 
 	/*
@@ -331,23 +334,6 @@ public class X10MotionSensor extends X10Device {
 	 */
 	public X10DeviceState getState( ) {	
 		return mState;
-	}
-
-	/** 
-	 * Implementation of the toString method.  This method
-	 * will return a String representation of the current
-	 * state.
-	 *
-	 * @return String
-	 */
-	public String toString ( ) {
-		String state;
-		switch (getState( )) {
-		case ON:  state = "ON"; break;
-		case OFF: state = "OFF"; break;
-		default: state = "UNKNOWN"; break;
-		}
-		return ( state );
 	}
 
 	/**
