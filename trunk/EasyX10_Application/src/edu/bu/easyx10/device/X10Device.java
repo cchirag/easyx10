@@ -23,10 +23,22 @@ public abstract class X10Device extends Device{
 	private char mHouseCode;                         //The Devices house code
 	                                                 //A thru P are valid
 	
-	public static enum X10DeviceState {ON, OFF};   //Valid states of X10 Devices
+	public static enum X10DeviceState {ON, OFF};     //Valid states of X10 Devices
 	
-	protected X10DeviceState mState;                  //The state of the device
+	protected X10DeviceState mState;                 //The state of the device
+
+	
+	//Constructor
+	
+	public X10Device(String name, char houseCode, int deviceCode){
 		
+		this.setName(name);
+		this.setHouseCode(houseCode);
+		this.setDeviceCode(deviceCode);
+		
+	}
+	
+	
 	/**
 	 * @return Returns a char containing the X10 Devices HouseCode
 	 */	
@@ -73,7 +85,27 @@ public abstract class X10Device extends Device{
 	 * The purpose of this method is to return the Devices State
 	 * 
 	 */
-	public abstract String getState();
+	public abstract X10DeviceState getState();
+	
+	
+	/** 
+	 * Implementation of the toString method.  This method
+	 * will return a String representation of the current
+	 * state.
+	 *
+	 * @return String
+	 */
+	public String toString(){
+		
+			String state;
+			switch (getState( )) {
+			
+				case ON:  state = "ON"; break;
+				case OFF: state = "OFF"; break;
+				default: state = "UNKNOWN"; break;
+			}
+			return ( state );
+	}
 
 	
 }
