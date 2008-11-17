@@ -1,11 +1,11 @@
 package edu.bu.easyx10.device;
 
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.Set;
 
-import edu.bu.easyx10.device.X10Device.X10DeviceState;
-import edu.bu.easyx10.device.timer.*;
-import java.sql.Time;
+//import edu.bu.easyx10.device.X10Device.X10DeviceState;
+//import edu.bu.easyx10.device.timer.*;
+//import java.sql.Time;
 
 
 /* 
@@ -59,8 +59,10 @@ public final class DeviceManager {
 		return true;		
 	}
 	
+	/*
 	private final void loadConfig(){
 		
 	}
+	*/
 	
 }
