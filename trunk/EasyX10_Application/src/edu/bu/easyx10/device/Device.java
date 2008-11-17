@@ -46,6 +46,16 @@ public abstract class Device implements EventHandlerListener{
 	    eventGenerator.deleteEventListener(this);
 	}
 	
+	/**
+	 * 
+	 * This method sets the location of Device. Location is implementation 
+	 * specific. For instance this can be used to represent where the device 
+	 * is physically located within a GUI or where it's located within the home. 
+	 * 
+	 * @return Return true if the location is successfully set or false if it isn't.
+	 * Currently as long as it's a valid string it should never return false as
+	 * there are no restrictions on length enforced at this level.
+	 */	
 	
 	public boolean setLocation(String location) {
 		this.mLocation = location;
@@ -60,7 +70,12 @@ public abstract class Device implements EventHandlerListener{
 	}
 	
 	/**
+	 * 
+	 * This method is used to set the name of the Device.
+	 * 
 	 * @param Sets the Device name and return true if successful
+	 * 
+	 * @return Returns true if the name is successfully set and false if it isn't.
 	 */
 	public boolean setName(String name) {
 		this.mName = name;
@@ -68,19 +83,23 @@ public abstract class Device implements EventHandlerListener{
 	}
 	
 	/**
-	 * @return the name of the Device
+	 * @return Returns the name of the Device
 	 */
 	public String getName() {
 		return mName;
 	}
 
 	/**
+	 * The Derived class must implement this method.
+	 * 
 	 * @param update this device by reading in the attributes of a proxyDevice
 	 */
 	public abstract void updateDevice(Device proxyDevice);
 
 	
 	/**
+	 * The Derived class must implement this method.
+	 * 
 	 * @return a copy of the Device in the form of a ProxyDevice
 	 */
 	public abstract Device getProxyDevice(); 

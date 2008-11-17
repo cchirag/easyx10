@@ -26,10 +26,14 @@ public abstract class X10Device extends Device{
 	public static enum X10DeviceState {ON, OFF};     //Valid states of X10 Devices
 	
 	protected X10DeviceState mState;                 //The state of the device
+	
 
 	
-	//Constructor
-	
+	/** 
+	 * Constructor for X10Devices must have a device name,
+	 * and a corresponding house and device codes.
+	 */
+	 
 	public X10Device(String name, char houseCode, int deviceCode){
 		
 		this.setName(name);
@@ -40,6 +44,9 @@ public abstract class X10Device extends Device{
 	
 	
 	/**
+	 * This method returns the HouseCode char that corresponds to
+	 * the housecode set on the physical device.
+	 * 
 	 * @return Returns a char containing the X10 Devices HouseCode
 	 */	
 	public char getHouseCode(){
@@ -47,28 +54,83 @@ public abstract class X10Device extends Device{
 	}
 	
 	/**
+	 * This method sets the HouseCode member variable.
+	 * The value passed should correspond to the value
+	 * on the actual device.
+	 * 
 	 * @param Set the  a char containing the X10 Devices HouseCode
 	 * Valid mHouseCode values range from A thru P
+	 * 
+	 * @return Return True if houseCode is successfully set otherwise
+	 * return false and print an error message.
+	 *
 	 */
 	public boolean setHouseCode(char houseCode) {
-		mHouseCode = houseCode;
-		return true;
+		
+		
+		//convert char to uppercase in case it was lowercase when passed in
+		Character.toUpperCase(houseCode);
+		
+		//Verify the passed in value is a valid houseCode
+
+		switch (houseCode) {
+		
+			case 'A':  mHouseCode = houseCode; return true;
+			case 'B':  mHouseCode = houseCode; return true;
+			case 'C':  mHouseCode = houseCode; return true;
+			case 'D':  mHouseCode = houseCode; return true;
+			case 'E':  mHouseCode = houseCode; return true;
+			case 'F':  mHouseCode = houseCode; return true;
+			case 'G':  mHouseCode = houseCode; return true;
+			case 'H':  mHouseCode = houseCode; return true;
+			case 'I':  mHouseCode = houseCode; return true;
+			case 'J':  mHouseCode = houseCode; return true;
+			case 'K':  mHouseCode = houseCode; return true;
+			case 'L':  mHouseCode = houseCode; return true;
+			case 'M':  mHouseCode = houseCode; return true;
+			case 'N':  mHouseCode = houseCode; return true;
+			case 'O':  mHouseCode = houseCode; return true;
+			case 'P':  mHouseCode = houseCode; return true;
+			default: System.out.println(" Error: You entered an invalid houseCode"); 
+			return false;
+		}
+
 	}
 	
 	/**
-	 * @return Returns a char containing the X10 Devices HouseCode
+	 * 
+	 * @return Returns a integer value between 1 and 16 representing Device's
+	 * corresponding Device Code.
 	 */	
 	public int getDeviceCode(){
 		return mDeviceCode;
 	}
 
 	/**
-	 * @param Set the  a char containing the X10 Devices HouseCode
+	 * 
+	 * This method takes in an integer value and sets the deviceCode
+	 * to the passed in value if and only if the value is between 1 and 16.
+	 *  
+	 * @param Set the  a char containing the X10 Devices DeviceCode
 	 * Valid device codes range from 1 to 16
+	 * 
+	 * @return Returns a integer value between 1 and 16 representing Device's
+	 * corresponding Device Code.
+	 * 
 	 */
 	public boolean setDeviceCode(int deviceCode) {
+		
+		if (deviceCode >= 0 && deviceCode <=16){
 		mDeviceCode = deviceCode;
 		return true;
+		}
+		else{
+			System.out.println("Error: The DeviceCode value" +
+								deviceCode + " for " + this.getName() +
+								" is not within the acceptable value range");
+			return false;
+		}
+	
 	}
 	
 	/**
