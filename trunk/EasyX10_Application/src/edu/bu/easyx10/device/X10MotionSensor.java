@@ -300,9 +300,19 @@ public class X10MotionSensor extends X10Device {
 
 					// First, let's acquire the Mutex to allow only one updater of the list
 					mListSemaphore.acquireUninterruptibly();
+					/* set a member variable to identify that we have turned ON all
+					 * of the associated appliance devices.  Also, we need to remember
+					 * which appliance devices we have turned off.  We'll use the copy
+					 * of the list when we turn appliances off.
+					 */
+					mDetectionWindowTrigger = true;
+					mDetectionWindowList.clear( );
+					mDetectionWindowList.addAll ( mApplianceList );
+					// return the Mutex now
+					mListSemaphore.release();
 
 					// Iterate through our mApplianceList and turn on all the Appliances now
-					Iterator<String> i = mApplianceList.iterator( );
+					Iterator<String> i = mDetectionWindowList.iterator( );
 					while (i.hasNext()) {
 						String deviceName = i.next();
 						// Create an X10DeviceEvent to turn on the Appliance
@@ -310,16 +320,6 @@ public class X10MotionSensor extends X10Device {
 						// Send the Event to the X10Appliance object through EventGenerator
 						eventGenerator.fireEvent ( deviceEvent );
 					}
-					/* set a member variable to identify that we have turned ON all
-					 * of the associated appliance devices.  Also, we need to remember
-					 * which appliance devices we have turned off. 
-					 */
-					mDetectionWindowTrigger = true;
-					mDetectionWindowList.clear( );
-					mDetectionWindowList.addAll ( mApplianceList );
-
-					// return the Mutex now
-					mListSemaphore.release();
 				}
 			}
 		}
