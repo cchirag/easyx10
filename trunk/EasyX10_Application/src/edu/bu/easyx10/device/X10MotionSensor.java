@@ -67,14 +67,16 @@ public class X10MotionSensor extends X10Device {
 	private static Semaphore mListSemaphore;   
 
 	/**
-	 * Implicit constructor of a new X10MotionSensor object.
+	 * Implicit constructor of a new X10MotionSensor object.  This constructor
+	 * should only be using by the ProxyX10MotionSensor class.
 	 */
-	public X10MotionSensor ( ) {
-		
+	protected X10MotionSensor ( ) {
+		// create any required member classes
+		mApplianceList = new HashSet<String>( );
 	}
 
 	/**
-	 * Construct for a new X10MotionSensor class.  The constructor is provided
+	 * Constructor for a new X10MotionSensor class.  The constructor is provided
 	 * with a ProxyX10MotionSensor object which contains all of the desired 
 	 * attributes as defined by the higher level gui.  The constructor must
 	 * transfer all the attributes to the local object.  Part of construction
@@ -84,16 +86,23 @@ public class X10MotionSensor extends X10Device {
 	public X10MotionSensor ( ProxyX10MotionSensor proxyDevice ) {
 
 		// Create the super X10Device class and pass to it its attributes
-		super ( proxyDevice.getName( ),
-	            proxyDevice.getHouseCode( ),
-			    proxyDevice.getDeviceCode( ) );
+		setName (proxyDevice.getName());
+		setLocation (proxyDevice.getLocation());
+		setHouseCode (proxyDevice.getHouseCode());
+		setDeviceCode (proxyDevice.getDeviceCode());
 
 		// create any required member classes
-		mApplianceList = new HashSet<String>( );
+		mApplianceList = new HashSet<String>( proxyDevice.getApplianceList() );
 		mDetectionWindowList = new ArrayList<String>( );
 
 		// create a Mutex using the static semaphore
 		mListSemaphore = new Semaphore(1);
+
+		// create a new TimerEvent for the WaitTimer to send
+		TimerEvent timerEvent = new TimerEvent ( getName( ), "EXPIRED" );
+
+		// Instantiate the WaitTimer to track inactivity time
+		mInactivityTimer = new WaitTimer ( proxyDevice.getInactivityTime( ), timerEvent );
 
 		// load our member variables from the ProxyDevice
 		setInactivityTime ( proxyDevice.getInactivityTime( ) );
@@ -105,12 +114,6 @@ public class X10MotionSensor extends X10Device {
 		// initialize some miscellaneous state variables.
 		mDetectionWindowTrigger = false;
 
-		// create a new TimerEvent for the WaitTimer to send
-		TimerEvent timerEvent = new TimerEvent ( getName( ), "EXPIRED" );
-
-		// Instantiate the WaitTimer to track inactivity time
-		mInactivityTimer = new WaitTimer ( getInactivityTime( ), timerEvent );
-
 		// Setup the calendar for time
 		calendar = Calendar.getInstance( );
 
@@ -118,16 +121,6 @@ public class X10MotionSensor extends X10Device {
 		mState =  X10DeviceState.OFF;
 	}
 	
-	/**
-	 * This simple constructor is required by the ProxyX10MotionSensor.
-	 * All we need to do here is load the baseline name, houseCode, and
-	 * deviceCode attributes. 
-	 */
-	public X10MotionSensor ( String name, char houseCode, int deviceCode ) {
-		// Create the super X10Device class and pass to it its attributes
-		super ( name, houseCode, deviceCode );
-	}
-
 	/*
 	 * Defined access methods for all of the member variables.
 	 */
@@ -362,7 +355,6 @@ public class X10MotionSensor extends X10Device {
 	 * @return ProxyX10MotionSensor
 	 */
 	public ProxyX10MotionSensor getProxyDevice( ) {
-
 		return new ProxyX10MotionSensor(this);
 	}
 
@@ -376,7 +368,7 @@ public class X10MotionSensor extends X10Device {
 	public void updateDevice(Device proxyDevice) {
 
 		/*
-		 * We need to crash if we get an update for a device which
+		 * We needer to crash if we get an update for a device which
 		 * is not a ProxyX10MotionSensor.  This means we found a bug.
 		 */
 	    assert(proxyDevice instanceof ProxyX10MotionSensor);
@@ -388,6 +380,7 @@ public class X10MotionSensor extends X10Device {
 		assert(proxyDevice.getName( ).equals(getName( )));
 
 		// Update the various attributes from the Proxy object
+		setLocation ( ((ProxyX10MotionSensor)proxyDevice).getLocation( ) );
 		setHouseCode ( ((ProxyX10MotionSensor)proxyDevice).getHouseCode( ) );
 		setDeviceCode ( ((ProxyX10MotionSensor)proxyDevice).getDeviceCode( ) );
 		setApplianceList ( ((ProxyX10MotionSensor)proxyDevice).getApplianceList( ) );
