@@ -35,7 +35,7 @@ public class X10MotionSensor extends X10Device {
 	protected int mInactivityTime;              
 
 	// Timer to instantiate with mInactivitTime
-	private WaitTimer mInactivityTimer;	      
+	protected WaitTimer mInactivityTimer;	      
 
 	// List of Appliances to send events to
 	protected Set<String> mApplianceList;       
@@ -293,7 +293,7 @@ public class X10MotionSensor extends X10Device {
 			mInactivityTimer.startTimer( );
 
 			// On transition to MOTION, we need to turn on appliances.
-			if (mDetectionWindowTrigger = false) {
+			if (mDetectionWindowTrigger == false) {
 
 				// Check the detection window
 				if (getDetectionPeriodEnabled( ) && calendar.after(getStartTime( )) && calendar.before(getEndTime( )) ) {
@@ -379,16 +379,13 @@ public class X10MotionSensor extends X10Device {
 		 * We need to crash if we get an update for a device which
 		 * is not a ProxyX10MotionSensor.  This means we found a bug.
 		 */
-		if (!(proxyDevice instanceof ProxyX10MotionSensor) ) {
-			assert(false);
-		}
-		/*
+	    assert(proxyDevice instanceof ProxyX10MotionSensor);
+
+	    /*
 		 * We need to crash if we get an update for a device with a 
 		 * different name.  This means we found a bug.
 		 */
-		if ( proxyDevice.getName( ) != getName( ) ) {
-			assert(false);
-		}
+		assert(proxyDevice.getName( ).equals(getName( )));
 
 		// Update the various attributes from the Proxy object
 		setHouseCode ( ((ProxyX10MotionSensor)proxyDevice).getHouseCode( ) );
@@ -407,7 +404,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param Event e
 	 */
-	public void processDeviceEvent(Event e) {
+	public void processDeviceEvent(X10DeviceEvent e) {
 
 		/* We only deal with X10DeviceEvents with a matching House and Device code and
 		 *those events which are ON indicating motion.
@@ -424,7 +421,7 @@ public class X10MotionSensor extends X10Device {
 	 * The processTimeEvent method is used to listen for events from the Timer class.
 	 * We simply watch for events which match the same device Name.
 	 */
-	public void processTimerEvent(Event e) {
+	public void processTimerEvent(TimerEvent e) {
 		/* We only deal with timerEvents attached to this device name.  When
 		 * we get a timer event, we set our state to OFF to indicate no motion.
 		 */
@@ -437,7 +434,7 @@ public class X10MotionSensor extends X10Device {
 	 * The processProtocolEvent is not used by this class.  We simply need
 	 * to override it.
 	 */
-	public void processProtocolEvent(Event e) { 
+	public void processProtocolEvent(X10ProtocolEvent e) { 
 
 	}
 
