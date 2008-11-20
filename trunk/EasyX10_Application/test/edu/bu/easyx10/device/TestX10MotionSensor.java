@@ -1,7 +1,10 @@
 package edu.bu.easyx10.device;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.*;
 
+import edu.bu.easyx10.device.X10Device.*;
 import edu.bu.easyx10.event.EventGenerator;
 import edu.bu.easyx10.event.EventGeneratorFactory;
 import edu.bu.easyx10.event.EventHandlerListener;
@@ -94,12 +97,10 @@ public class TestX10MotionSensor extends TestCase {
 	} 
 
 	/**
-	 * Create a random ProxyX10MotionSensor
+	 * Create a random houseCode
 	 * 
-	 * @return
 	 */
-	private ProxyX10MotionSensor randomProxyX10MotionSensor ( ) {
-		
+	private char RandomHouseCode( ) {
 		// Randomize a houseCode
 		char houseCode = 'A';
 		switch (m_rv.nextInt( ) & 0xf) {
@@ -121,90 +122,85 @@ public class TestX10MotionSensor extends TestCase {
 		case 0xf: houseCode = 'P'; break;
 		default: assert(false);
 		}
-		
-		// Randomize a deviceCode
+        return (houseCode);
+	}
+	
+	/**
+	 * Create a random deviceCode
+	 */
+	private int RandomDeviceCode( ) {
 		int deviceCode = (m_rv.nextInt( ) & 0xf) + 1;
+        return (deviceCode);
+	}
+	
+	/**
+	 * Create a random X10DeviceState
+	 */
+	private X10DeviceState RandomX10DeviceState( ) {
+		X10DeviceState state = X10DeviceState.OFF;
+		switch (m_rv.nextInt( ) & 1) {
+		case 0: state = X10DeviceState.OFF;
+		case 1: state = X10DeviceState.ON;
+		}
+		return (state);
+	}
+	
+	/**
+	 * Create a random ProxyX10MotionSensor
+	 * 
+	 * @return
+	 */
+	private ProxyX10MotionSensor RandomProxyX10MotionSensor ( ) {
 
+		// Randomize a houseCode
+		char houseCode = RandomHouseCode( );
+
+		// Randomize a deviceCode
+		int deviceCode = RandomDeviceCode( );
+
+		Set<String> applianceList = new HashSet<String>( );
+		applianceList.clear( );
+		for (int i = 0; i < (m_rv.nextInt( ) & 7); i++) {
+			char house = RandomHouseCode( );
+			int device = RandomDeviceCode( );
+			applianceList.add( Character.toString(house) + Integer.toString(device));
+		}
+		
 		ProxyX10MotionSensor proxySensor = new ProxyX10MotionSensor ( );
+		proxySensor.setName(Character.toString(houseCode) + Integer.toString(deviceCode) );
+		proxySensor.setLocation(Integer.toString(deviceCode) + Character.toString(houseCode) );
 		proxySensor.setHouseCode(houseCode);
 		proxySensor.setDeviceCode(deviceCode);
+		proxySensor.setApplianceList(applianceList);
+		proxySensor.setDetectionPeriodEnabled(false);
+		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
+		proxySensor.setState(RandomX10DeviceState( ));
 		return (proxySensor);
 	}
+	
+	/**
+	 * Compare 2 proxy objects for equality.
+	 */
+    private boolean ProxyEqual ( ProxyX10MotionSensor a, ProxyX10MotionSensor b ) {
+    	boolean proxyEqual = true;
+    	if (!a.getName().equals(b.getName())) proxyEqual = false;
+    	if (!a.getLocation().equals(b.getLocation())) proxyEqual = false;
+    	if (a.getHouseCode() != b.getHouseCode()) proxyEqual = false;
+    	if (a.getDeviceCode() != b.getDeviceCode()) proxyEqual = false;
+    	if (!a.getApplianceList().equals(b.getApplianceList())) proxyEqual = false;
+    	if (a.getDetectionPeriodEnabled() != b.getDetectionPeriodEnabled()) proxyEqual = false;
+    	if (a.getInactivityTime() != b.getInactivityTime()) proxyEqual = false;
+    	if (a.getState() != b.getState()) proxyEqual = false;
+    	return (proxyEqual);
+    }
 
-	public void testUpdateDevice() {
-		fail("Not yet implemented");
+    public void testUpdateDevice() {
+		ProxyX10MotionSensor originalProxy = RandomProxyX10MotionSensor( );
+		X10MotionSensor testProxy = new X10MotionSensor ( originalProxy );
+		ProxyX10MotionSensor updatedProxy = RandomProxyX10MotionSensor( );
+		updatedProxy.setName(originalProxy.getName());
+		ProxyX10MotionSensor getProxy = testProxy.getProxyDevice( );
+		boolean proxyEqual = ProxyEqual ( updatedProxy, getProxy );
+		assertEquals ( "getProxyDevice not equal to updatedProxy", proxyEqual, true);
 	}
-
-	public void testGetProxyDevice() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetState() {
-		fail("Not yet implemented");
-	}
-
-	public void testX10MotionSensorProxyX10MotionSensor() {
-		fail("Not yet implemented");
-	}
-
-	public void testX10MotionSensorStringCharInt() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetInactivityTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetInactivityTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetDetectionPeriodEnabled() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetDetectionPeriodEnabled() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetStartTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetStartTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetEndTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetEndTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetApplianceList() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetApplianceList() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetStateX10DeviceState() {
-		fail("Not yet implemented");
-	}
-
-	public void testProcessDeviceEvent() {
-		fail("Not yet implemented");
-	}
-
-	public void testProcessTimerEvent() {
-		fail("Not yet implemented");
-	}
-
-	public void testProcessProtocolEvent() {
-		fail("Not yet implemented");
-	}
-
 }
