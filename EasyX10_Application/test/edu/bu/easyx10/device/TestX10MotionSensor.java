@@ -189,6 +189,8 @@ public class TestX10MotionSensor extends TestCase {
     	if (a.getDeviceCode() != b.getDeviceCode()) proxyEqual = false;
     	if (!a.getApplianceList().equals(b.getApplianceList())) proxyEqual = false;
     	if (a.getDetectionPeriodEnabled() != b.getDetectionPeriodEnabled()) proxyEqual = false;
+    	// mStartTime
+    	// mEndTime
     	if (a.getInactivityTime() != b.getInactivityTime()) proxyEqual = false;
     	if (a.getState() != b.getState()) proxyEqual = false;
     	return (proxyEqual);
@@ -196,10 +198,12 @@ public class TestX10MotionSensor extends TestCase {
 
     public void testUpdateDevice() {
 		ProxyX10MotionSensor originalProxy = RandomProxyX10MotionSensor( );
-		X10MotionSensor testProxy = new X10MotionSensor ( originalProxy );
+		X10MotionSensor testMotionSensor = new X10MotionSensor ( originalProxy );
 		ProxyX10MotionSensor updatedProxy = RandomProxyX10MotionSensor( );
 		updatedProxy.setName(originalProxy.getName());
-		ProxyX10MotionSensor getProxy = testProxy.getProxyDevice( );
+		updatedProxy.setState(originalProxy.getState());
+		testMotionSensor.updateDevice(updatedProxy);
+		ProxyX10MotionSensor getProxy = testMotionSensor.getProxyDevice( );
 		boolean proxyEqual = ProxyEqual ( updatedProxy, getProxy );
 		assertEquals ( "getProxyDevice not equal to updatedProxy", proxyEqual, true);
 	}
