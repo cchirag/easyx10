@@ -3,8 +3,9 @@ package edu.bu.easyx10.protocol;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import edu.bu.easyx10.event.Event;
 import edu.bu.easyx10.event.X10ProtocolEvent;
+import edu.bu.easyx10.event.X10DeviceEvent;
+import edu.bu.easyx10.event.TimerEvent;
 import edu.bu.easyx10.event.EventGeneratorFactory;
 import edu.bu.easyx10.event.EventGenerator;
 import edu.bu.easyx10.event.EventHandlerListener;
@@ -57,7 +58,7 @@ public abstract class Protocol implements EventHandlerListener {
 	 * 
 	 * @param listener
 	 */
-	public void processProtocolEvent ( Event e ) {
+	public void processProtocolEvent ( X10ProtocolEvent e ) {
 		
 	}
 	
@@ -67,7 +68,7 @@ public abstract class Protocol implements EventHandlerListener {
 	 * 
 	 * @param listener
 	 */
-	public void processDeviceEvent ( Event e ) {
+	public void processDeviceEvent ( X10DeviceEvent e ) {
 		
 	}
 	
@@ -77,7 +78,7 @@ public abstract class Protocol implements EventHandlerListener {
 	 * 
 	 * @param listener
 	 */
-	public void processTimerEvent ( Event e ) {
+	public void processTimerEvent ( TimerEvent e ) {
 		
 	}
 }
