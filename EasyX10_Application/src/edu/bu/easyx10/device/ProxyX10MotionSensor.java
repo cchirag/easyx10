@@ -23,7 +23,8 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * Implicit constructor of a new ProxyX10MotionSensor object.
 	 */
 	public ProxyX10MotionSensor ( ) {
-		
+		// create any required member classes
+		mApplianceList = new HashSet<String>( );
 	}
 
 	/**
@@ -34,23 +35,18 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 */
 	public ProxyX10MotionSensor ( X10MotionSensor motionDevice ) {	
 
-		// Create the super X10MotionDevice class and pass to it its attributes
-		super ( motionDevice.getName( ), 
-				motionDevice.getHouseCode( ), 
-				motionDevice.getDeviceCode( ) );
-
 		// create any required member classes
-		mApplianceList = new HashSet<String>( );
+		mApplianceList = new HashSet<String>( motionDevice.getApplianceList( ) );
 
 		// load our member variables from the X10MotionDevice
 		setName ( motionDevice.getName( ) );
+		setLocation (motionDevice.getLocation());
 		setHouseCode ( motionDevice.getHouseCode( ) );
 		setDeviceCode ( motionDevice.getDeviceCode( ) );
 		setInactivityTime ( motionDevice.getInactivityTime( ) );
 		setDetectionPeriodEnabled ( motionDevice.getDetectionPeriodEnabled( ) );
 		setStartTime ( motionDevice.getStartTime( ) );
 		setEndTime ( motionDevice.getEndTime( ) );
-		setApplianceList ( motionDevice.getApplianceList( ) );
 		setState ( motionDevice.getState( ) );
 	}
 
@@ -70,17 +66,6 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	}
 
 	/**
-	 * This method returns the Inactivity Time attribute.  The Inactivity Time
-	 * attribute defines the number of seconds for which a Motion Sensor will
-	 * be in the MOTION state.  
-	 * 
-	 * @return int Inactivity Time
-	 */
-	public int getInactivityTime( ) {
-		return mInactivityTime;
-	}
-
-	/**
 	 * This method loads the Detection Period Enable attribute.  This attribute
 	 * determines if the Motion Sensor is to determine if the current time is
 	 * within the Detection Period, which is bound by Start Time and End Time
@@ -95,20 +80,6 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	}
 
 	/**
-	 * This method returns the Detection Period Enable attribute.  This attribute
-	 * determines if the Motion Sensor is to determine if the current time is
-	 * within the Detection Period, which is bound by Start Time and End Time
-	 * attributes.  If the time is within the Detection Window and the Detection
-	 * Period is Enabled, the Motion Sensor will turn on any Appliances defined
-	 * by the Appliance List attribute.
-	 * 
-	 * @return boolean isEnabled
-	 */
-	public boolean getDetectionPeriodEnabled(){
-		return mDetectionPeriodEnabled;
-	}
-
-	/**
 	 * This method loads the Start Time attribute.  When the Motion Detection
 	 * Period Enable attribute is set TRUE, this attribute defines the start
 	 * time for a window in which motion activity for this object can cause
@@ -118,30 +89,6 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 */
 	public void setStartTime(Time startTime) {
 		mStartTime = startTime;
-	}
-
-	/**
-	 * This method returns the Start Time attribute.  When the Motion Detection
-	 * Period Enable attribute is set TRUE, this attribute defines the start
-	 * time for a window in which motion activity for this object can cause
-	 * an Appliance object to be turned ON.
-	 * 
-	 * @return Time Beginning time for Motion Activity Window
-	 */
-	public Time getStartTime() {
-		return mStartTime;
-	}
-
-	/**
-	 * This method loads the End Time attribute.  When the Motion Detection
-	 * Period Enable attribute is set TRUE, this attribute defines the end
-	 * time for a window in which motion activity for this object can cause
-	 * an Appliance object to be turned ON.
-	 * 
-	 * @param Time startTime Beginning time for Motion Activity Window
-	 */
-	public Time getEndTime() {
-		return mEndTime;
 	}
 
 	/**
@@ -170,18 +117,6 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 
 		// All all the new ones
 		mApplianceList.addAll ( applianceList );
-	}
-
-	/**
-	 * This method loads the Appliance List attribute.  The Appliance List
-	 * is a Set of Strings where each String identifies a Device Name of
-	 * an associated Appliance.  Each associated appliance can be controlled
-	 * by this Motion Sensor when motion activity is detected.
-	 * 
-	 * @return Set<String> 
-	 */
-	public Set<String> getApplianceList() {
-		return mApplianceList;
 	}
 
 	/**
