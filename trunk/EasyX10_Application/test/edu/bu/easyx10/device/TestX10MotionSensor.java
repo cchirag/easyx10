@@ -200,10 +200,11 @@ public class TestX10MotionSensor extends TestCase {
 		ProxyX10MotionSensor originalProxy = RandomProxyX10MotionSensor( );
 		X10MotionSensor testMotionSensor = new X10MotionSensor ( originalProxy );
 		ProxyX10MotionSensor updatedProxy = RandomProxyX10MotionSensor( );
-		updatedProxy.setName(originalProxy.getName());
-		updatedProxy.setState(originalProxy.getState());
+		updatedProxy.setName(testMotionSensor.getName());
+		updatedProxy.setState(testMotionSensor.getState());
 		testMotionSensor.updateDevice(updatedProxy);
 		ProxyX10MotionSensor getProxy = testMotionSensor.getProxyDevice( );
+		System.out.println("originalProxy.state " + originalProxy.getState() + " updateProxy.state " + updatedProxy.getState() + " getProxy " + getProxy.getState());
 		boolean proxyEqual = ProxyEqual ( updatedProxy, getProxy );
 		assertEquals ( "getProxyDevice not equal to updatedProxy", proxyEqual, true);
 	}
