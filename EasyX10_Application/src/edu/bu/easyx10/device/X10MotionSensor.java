@@ -361,7 +361,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @return ProxyX10MotionSensor
 	 */
-	public Device getProxyDevice( ) {
+	public ProxyX10MotionSensor getProxyDevice( ) {
 
 		return new ProxyX10MotionSensor(this);
 	}
