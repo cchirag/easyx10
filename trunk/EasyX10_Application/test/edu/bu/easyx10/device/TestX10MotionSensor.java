@@ -1,17 +1,13 @@
 package edu.bu.easyx10.device;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import edu.bu.easyx10.event.Event;
 import edu.bu.easyx10.event.EventGenerator;
 import edu.bu.easyx10.event.EventGeneratorFactory;
 import edu.bu.easyx10.event.EventHandlerListener;
 import edu.bu.easyx10.event.TimerEvent;
 import edu.bu.easyx10.event.X10DeviceEvent;
 import edu.bu.easyx10.event.X10ProtocolEvent;
-import edu.bu.easyx10.event.TestEventGenerator.Observer;
 
 import junit.framework.TestCase;
 
@@ -49,7 +45,7 @@ public class TestX10MotionSensor extends TestCase {
 		/**
 		 * Catch all DeviceEvents and check against expected.
 		 */
-		public void processDeviceEvent ( Event e ) {  	 
+		public void processDeviceEvent ( X10DeviceEvent e ) {  	 
 			boolean properClass = e instanceof X10DeviceEvent;
 			assertEquals ("Received Event not a X10DeviceEvent" + e, properClass, true );
 			boolean equivalent = ((X10DeviceEvent)e).equals(expectedDeviceEvent);
@@ -60,14 +56,14 @@ public class TestX10MotionSensor extends TestCase {
 		/**
 		 * Catch all ProtocolEvents and check against expected.
 		 */
-		public void processProtocolEvent ( Event e ) {
+		public void processProtocolEvent ( X10ProtocolEvent e ) {
 			numberOfProtocolEvents++;
 		}
 
 		/**
 		 * Catch all TimerEvents and check against expected.
 		 */
-		public void processTimerEvent ( Event e ) {
+		public void processTimerEvent ( TimerEvent e ) {
 			boolean properClass = e instanceof TimerEvent;
 			assertEquals ("Received Event not a TimerEvent" + e, properClass, true );
 			boolean equivalent = ((TimerEvent)e).equals(expectedTimerEvent);
@@ -128,19 +124,11 @@ public class TestX10MotionSensor extends TestCase {
 		
 		// Randomize a deviceCode
 		int deviceCode = (m_rv.nextInt( ) & 0xf) + 1;
-		String eventCode = "";
-		switch(m_rv.nextInt() & 0x3) {
-		case 0: eventCode = "ON"; break;
-		case 1: eventCode = "OFF"; break;
-		case 2: eventCode = "DIM"; break;
-		case 3: eventCode = "BRIGHT"; break;
-		default: assert(false);
-		}
 
-		X10DeviceEvent deviceEvent = new X10DeviceEvent (
-				Character.toString(houseCode) + Integer.toString(deviceCode), 
-				houseCode, deviceCode, eventCode);
-		return (deviceEvent);
+		ProxyX10MotionSensor proxySensor = new ProxyX10MotionSensor ( );
+		proxySensor.setHouseCode(houseCode);
+		proxySensor.setDeviceCode(deviceCode);
+		return (proxySensor);
 	}
 
 	public void testUpdateDevice() {

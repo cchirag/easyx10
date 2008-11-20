@@ -43,7 +43,7 @@ public class TestEventGenerator extends TestCase {
 		/**
 		 * Catch all DeviceEvents and check against expected.
 		 */
-		public void processDeviceEvent ( Event e ) {  	 
+		public void processDeviceEvent ( X10DeviceEvent e ) {  	 
 			boolean properClass = e instanceof X10DeviceEvent;
 			assertEquals ("Received Event not a X10DeviceEvent" + e, properClass, true );
 			boolean equivalent = ((X10DeviceEvent)e).equals(expectedDeviceEvent);
@@ -54,7 +54,7 @@ public class TestEventGenerator extends TestCase {
 		/**
 		 * Catch all ProtocolEvents and check against expected.
 		 */
-		public void processProtocolEvent ( Event e ) {
+		public void processProtocolEvent ( X10ProtocolEvent e ) {
 			boolean properClass = e instanceof X10ProtocolEvent;
 			assertEquals ("Received Event not a X10ProtocolEvent" + e, properClass, true );
 			boolean equivalent = ((X10ProtocolEvent)e).equals(expectedProtocolEvent);
@@ -65,7 +65,7 @@ public class TestEventGenerator extends TestCase {
 		/**
 		 * Catch all TimerEvents and check against expected.
 		 */
-		public void processTimerEvent ( Event e ) {
+		public void processTimerEvent ( TimerEvent e ) {
 			boolean properClass = e instanceof TimerEvent;
 			assertEquals ("Received Event not a TimerEvent" + e, properClass, true );
 			boolean equivalent = ((TimerEvent)e).equals(expectedTimerEvent);

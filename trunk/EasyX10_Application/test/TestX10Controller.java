@@ -79,16 +79,16 @@ public class TestX10Controller implements EventHandlerListener {
 		}
 	}
 
-	public void processProtocolEvent ( Event protocolEvent ) {
+	public void processProtocolEvent ( X10ProtocolEvent protocolEvent ) {
 
 	}
 
-	public void processTimerEvent ( Event timerEvent ) {
+	public void processTimerEvent ( TimerEvent timerEvent ) {
 
 	}
 
-	public void processDeviceEvent( Event deviceEvent ) {
-		System.out.println ( "Message Received:: " + (X10DeviceEvent)deviceEvent );
+	public void processDeviceEvent( X10DeviceEvent deviceEvent ) {
+		System.out.println ( "Message Received:: " + (X10DeviceEvent)(Event)deviceEvent );
 	}
 
 	private static X10ProtocolEvent decode(String str) {
