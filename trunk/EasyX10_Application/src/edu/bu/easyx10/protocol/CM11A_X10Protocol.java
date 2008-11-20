@@ -3,8 +3,8 @@ package edu.bu.easyx10.protocol;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-//import javax.comm.*;
-import gnu.io.*;
+import javax.comm.*;
+//import gnu.io.*;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 
@@ -328,7 +328,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 *
 	 * @param protocolEvent - X10ProtocolEvent class which provides House/Device/Function codes.
 	 */
-	public void processProtocolEvent ( Event protocolEvent ) {
+	public void processProtocolEvent ( X10ProtocolEvent protocolEvent ) {
 		// Copy the object and stuff the object into the txQueue
 		debug ("processProtocolEvent:: " + protocolEvent );
 		if (protocolEvent instanceof X10ProtocolEvent) {
