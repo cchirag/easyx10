@@ -28,14 +28,16 @@ public abstract class Device implements EventHandlerListener{
 	 * with the EventGenerator in order to receive inbound events.
 	 */
 	
-	public Device (){
+	public Device (String name){
 
 		// fetch the eventGenerator instance from the EventGeneratorFactory
 		eventGenerator = EventGeneratorFactory.getEventGenerator( );
 		
 		// register the Protocol class with the EventGenerator
 		eventGenerator.addEventListener(this);
-	
+
+		// set the name of the device
+		setName(name);
 	}
 	/**
 	 * Destructor for the Device.  The destructor always unregisters
@@ -58,7 +60,7 @@ public abstract class Device implements EventHandlerListener{
 	 */	
 	
 	public boolean setLocation(String location) {
-		this.mLocation = location;
+		mLocation = location;
 		return true;
 	}
 
@@ -78,7 +80,7 @@ public abstract class Device implements EventHandlerListener{
 	 * @return Returns true if the name is successfully set and false if it isn't.
 	 */
 	public boolean setName(String name) {
-		this.mName = name;
+		mName = name;
 		return true;
 	}
 	
