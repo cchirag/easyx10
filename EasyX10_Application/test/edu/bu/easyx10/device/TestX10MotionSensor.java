@@ -157,6 +157,9 @@ public class TestX10MotionSensor extends TestCase {
 
 		// Randomize a deviceCode
 		int deviceCode = RandomDeviceCode( );
+		
+		// Create the name
+		String name = Character.toString(houseCode) + Integer.toString(deviceCode);
 
 		Set<String> applianceList = new HashSet<String>( );
 		applianceList.clear( );
@@ -166,11 +169,8 @@ public class TestX10MotionSensor extends TestCase {
 			applianceList.add( Character.toString(house) + Integer.toString(device));
 		}
 		
-		ProxyX10MotionSensor proxySensor = new ProxyX10MotionSensor ( );
-		proxySensor.setName(Character.toString(houseCode) + Integer.toString(deviceCode) );
+		ProxyX10MotionSensor proxySensor = new ProxyX10MotionSensor ( name, houseCode, deviceCode );
 		proxySensor.setLocation(Integer.toString(deviceCode) + Character.toString(houseCode) );
-		proxySensor.setHouseCode(houseCode);
-		proxySensor.setDeviceCode(deviceCode);
 		proxySensor.setApplianceList(applianceList);
 		proxySensor.setDetectionPeriodEnabled(false);
 		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
