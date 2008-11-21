@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
 			GuiUtilities.updateSessionDeviceList(session);
 			
 			// Redirect the browser to the status page
-			response.sendRedirect("Status.htm");
+			response.sendRedirect("Status.jsp");
 		}
 		
 	}
