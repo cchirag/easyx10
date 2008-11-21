@@ -67,14 +67,15 @@ public class X10MotionSensor extends X10Device {
 	private static Semaphore mListSemaphore;   
 
 	/**
-	 * Implicit constructor of a new X10MotionSensor object.  This constructor
-	 * should only be using by the ProxyX10MotionSensor class.
+	 * Default constructor for the X10MotionSensor class.  The minimum
+	 * information required is a Name, HouseCode, and DeviceCode.
 	 */
-	protected X10MotionSensor ( ) {
+	public X10MotionSensor(String name, char houseCode, int deviceCode){
+		super ( name, houseCode, deviceCode );
 		// create any required member classes
 		mApplianceList = new HashSet<String>( );
 	}
-
+	
 	/**
 	 * Constructor for a new X10MotionSensor class.  The constructor is provided
 	 * with a ProxyX10MotionSensor object which contains all of the desired 
@@ -85,11 +86,13 @@ public class X10MotionSensor extends X10Device {
 	 */
 	public X10MotionSensor ( ProxyX10MotionSensor proxyDevice ) {
 
+		// Create the base class with the minimum information required.
+		super( proxyDevice.getName( ),
+			   proxyDevice.getHouseCode( ),
+			   proxyDevice.getDeviceCode( ) );
+
 		// Create the super X10Device class and pass to it its attributes
-		setName (proxyDevice.getName());
 		setLocation (proxyDevice.getLocation());
-		setHouseCode (proxyDevice.getHouseCode());
-		setDeviceCode (proxyDevice.getDeviceCode());
 
 		// create any required member classes
 		mApplianceList = new HashSet<String>( proxyDevice.getApplianceList() );
