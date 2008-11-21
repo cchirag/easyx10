@@ -1,7 +1,10 @@
 package edu.bu.easyx10.device;
 
 /**
- * Class used to store the location of a device in a building
+ * Class used to store the location of a device in a building.  
+ * 
+ * Note that the Origin of the Coordinate System is in the 
+ * upper left corner of the floor.
  *
  * @author winderjj
  * @version Please Refer to Subversion
@@ -15,12 +18,20 @@ public class DeviceLocation {
 	private int x;
 	private int y;
 	
+	/**
+	 * @param floor
+	 * @param x
+	 * @param y
+	 */
 	public DeviceLocation(int floor, int x, int y){
 		floorNumber = floor;
 		this.x = x;
 		this.y = y;
 	}
 	
+	/**
+	 * 
+	 */
 	public DeviceLocation(){
 		// Empty Constructor
 	}
