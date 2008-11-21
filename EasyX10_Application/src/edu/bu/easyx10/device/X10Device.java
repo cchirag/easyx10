@@ -17,15 +17,16 @@ package edu.bu.easyx10.device;
 public abstract class X10Device extends Device{
 
 	// Declare Private Member Variables
-	private int mDeviceCode;                         //The Devices Device Code
-	                                                 //1 thru 16 are valid
 	
-	private char mHouseCode;                         //The Devices house code
-	                                                 //A thru P are valid
+	private int mDeviceCode;                               //The Devices Device Code
+	                                                       //1 thru 16 are valid
 	
-	public static enum X10DeviceState {ON, OFF};     //Valid states of X10 Devices
+	private char mHouseCode;                               //The Devices house code
+	                                                       //A thru P are valid
 	
-	protected X10DeviceState mState;                 //The state of the device
+	public static enum X10DeviceState {ON, OFF};           //Valid states of X10 Devices
+	
+	protected X10DeviceState mState = X10DeviceState.OFF;  //The state of the device
 	
 
 	

@@ -2,6 +2,7 @@ package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
+import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
 
 //TODO Check to see if Java SQL time is required for a timer
@@ -22,8 +23,8 @@ public class X10Appliance extends X10Device{
 	//Declare Private Member Variables
 	private TriggerTimer mOnTimer;            // Timer used to trigger On Event
 	private TriggerTimer mOffTimer;           // Timer used to trigger Off Event
-	private Time mOnTime;                     // Time to turn appliance on
-	private Time mOffTime;                    // Time to shut appliance off
+	protected Time mOnTime;                   // Time to turn appliance on
+	protected Time mOffTime;                  // Time to shut appliance off
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
 	private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
 	private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
@@ -98,10 +99,11 @@ public class X10Appliance extends X10Device{
 	}
 	
 	//This constructor is required by ProxyX10Appliance
-	protected X10Appliance(String name, char houseCode, int deviceCode){
+	public X10Appliance(String name, char houseCode, int deviceCode){
 		
 		// Call super in X10Device and pass in the required attributes
 		super(name,houseCode,deviceCode);
+		
 		
 	}
 	
@@ -247,28 +249,29 @@ public class X10Appliance extends X10Device{
 			//set the new state of this X10Appliance
 			mState = state;
 			
-			//Fire an event to Protocol through the event generator
-			
+			/*
+			 * TODO I'm concerned about instantiating this event object here
+			 * I worry we're introducing a memory leak.
+			 */
+
 			// Create an X10Protocol Event to turn on the Appliance
-			//TODO I'm concerned about instantianting this event object here
-			// I worry we're introducing a memory leak.
-			
 			X10ProtocolEvent protocolEvent = new X10ProtocolEvent ( 
 										         getName(),
 										         getHouseCode(),
 										         getDeviceCode(),
 										         getState().toString());
 			
-			/* Send the Event out to EventGenerator, so that protocol picks
+			/* 
+			 * Send the Event out to EventGenerator, so that protocol picks
 			 * it up and send it out to the actual appliance.
 			 */
 			eventGenerator.fireEvent ( protocolEvent );
 			
 	    }
 		else{
-			System.out.println("INFO: The state of " + getName() + " was ignored" +
-					           "because the current state is already" + 
-					           getState().toString());
+			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+			 "setState()","INFO: The state of " + getName() + " was ignored " +
+			 "because the current state is already " + getState().toString());
 		}	
 			
 		
@@ -351,9 +354,9 @@ public class X10Appliance extends X10Device{
 			setState ( ((ProxyX10Appliance)proxyDevice).getState() );
 		}
 		else{
-			System.out.println("INFO: Skipping state change to " + 
-								proxyDeviceState + " on device " + 
-								this.getName() );
+			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+			 "processDeviceEvent()","INFO: Skipping state change to " + 
+			 proxyDeviceState + " on device " + getName() );
 		}
 	}
 
@@ -385,10 +388,10 @@ public class X10Appliance extends X10Device{
 						setState ( X10DeviceState.ON );
 					}
 					else{
-						System.out.println("Error: Device: " + getName() +
-								            " was unables to process " +
-								            ((X10DeviceEvent)e).toString() +
-								            " This is likely due to an unrecognized event type");
+						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+						 "processDeviceEvent()","Error: Device: " + getName() +
+						 " was unables to process " + ((X10DeviceEvent)e).toString() +
+						 " This is likely due to an unrecognized event type");
 					}
 		}
 	}
@@ -411,10 +414,10 @@ public class X10Appliance extends X10Device{
 						setState ( X10DeviceState.OFF );
 					}
 					else{
-						System.out.println("Error: Device: " + getName() +
-								            " was unables to process " +
-								            ((TimerEvent)e).toString() +
-								            " This is likely due to an unrecognized event type");
+						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+						 "processTimerEvent()","Error: Device: " + getName() +
+						 " was unables to process " + ((TimerEvent)e).toString() +
+						 " This is likely due to an unrecognized event type");
 					}
 		}
 	}
