@@ -170,7 +170,7 @@ public class TestX10MotionSensor extends TestCase {
 		}
 		
 		ProxyX10MotionSensor proxySensor = new ProxyX10MotionSensor ( name, houseCode, deviceCode );
-		proxySensor.setLocation(Integer.toString(deviceCode) + Character.toString(houseCode) );
+		proxySensor.setLocation(new DeviceLocation(1,20,50));
 		proxySensor.setApplianceList(applianceList);
 		proxySensor.setDetectionPeriodEnabled(false);
 		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
