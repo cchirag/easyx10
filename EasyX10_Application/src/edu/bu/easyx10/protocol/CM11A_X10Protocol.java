@@ -3,7 +3,6 @@ package edu.bu.easyx10.protocol;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-//import javax.comm.*;
 import gnu.io.*;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
