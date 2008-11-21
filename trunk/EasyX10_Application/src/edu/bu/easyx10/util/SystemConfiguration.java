@@ -13,7 +13,11 @@ import edu.bu.easyx10.gui.User;
  */
 public class SystemConfiguration {
 	
+	// GUI Configuration
 	private ArrayList<User> users;
+	private int floorCount = 0;
+	
+	// Protocol Configuration
 	private String cm11aPortName;
 	
 	/**
@@ -42,5 +46,19 @@ public class SystemConfiguration {
 	 */
 	public void setUsers(ArrayList<User> users) {
 		this.users = users;
+	}
+	
+	/**
+	 * @return
+	 */
+	public int getFloorCount(){
+		return floorCount; 
+	}
+	
+	/**
+	 * @param floorCount
+	 */
+	public void setFloorCount(int floorCount) {
+		this.floorCount = floorCount;
 	}
 }
