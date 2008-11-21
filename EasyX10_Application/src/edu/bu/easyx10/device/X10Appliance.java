@@ -1,15 +1,14 @@
 package edu.bu.easyx10.device;
 
-import edu.bu.easyx10.event.Event;
-import edu.bu.easyx10.event.TimerEvent;
-import edu.bu.easyx10.event.X10DeviceEvent;
-import edu.bu.easyx10.event.X10Event.X10_EVENT_CODE;
+import edu.bu.easyx10.event.*;
+import edu.bu.easyx10.event.X10Event.*;
+import edu.bu.easyx10.device.X10Device.X10DeviceState;
 import edu.bu.easyx10.device.timer.*;
 
 import java.sql.Time;
 
 /** The X10Appliance class is derived from the abstract class X10DeviceClass. 
- * It�s purpose is to model the state and behavior of X10 appliance modules.
+ * It's purpose is to model the state and behavior of X10 appliance modules.
  * The state of X10 devices are controlled either by device updates coming
  * down from the Device manager from the gui package, or from incoming
  * DeviceEvents published by EventGenerator. X10Applianc objects also implement
@@ -70,14 +69,9 @@ public class X10Appliance extends X10Device{
 			//Create the onEvent to be passed to the TriggerTimer
 			mOnEvent = new TimerEvent ( getName(), "ON" );
 			
-			//instantiate the member TriggerTimer mOnTimer
-			mOnTimer = new TriggerTimer (mOnEvent);
-			
 			//Create the onEvent to be passed to the TriggerTimer
 			mOffEvent = new TimerEvent ( getName(), "OFF" );
 			
-			//instantiate the member TriggerTimer mOnTimer
-			mOffTimer = new TriggerTimer (mOffEvent);
 		}
 		else {
 			setTriggerTimerEnabled(false);
@@ -96,6 +90,9 @@ public class X10Appliance extends X10Device{
 		// Call super in X10Device and pass in the required attributes
 		super(name,houseCode,deviceCode);
 		
+		//set the state to ON by default	
+		setState (X10DeviceState.ON);
+		
 	}
 	
 
@@ -107,12 +104,26 @@ public class X10Appliance extends X10Device{
 	 * @param Pass in a Time object equal to the time to turn the Appliance on.
 	 */
 	private void setOnTimer(Time anOnTime){
+
+		//If the mOnTimer is null setOnTimer is being called by the constructor
+		//So you must instantiate the TriggerTimer
 		
-		//set the time to fire the on event
-	    mOnTimer.setTriggerTime(anOnTime);
-	    
+		if(mOnTimer == null){
+		
+			//instantiate the member TriggerTimer mOnTimer
+			mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
+		}
+		else{  
+			
+			//If we're in here the TriggerTimer has already been instantiated
+			//so just set the TriggerTimer to it's new value
+			
+			mOnTimer.setTriggerTime(anOnTime);		
+		}
+		
 		//start up the timer
-		mOnTimer.startTimer();
+		
+		  mOnTimer.startTimer();
 		
 	}
 	
@@ -124,9 +135,20 @@ public class X10Appliance extends X10Device{
 	 * @param Pass in a Time object equal to the time to turn the Appliance on.
 	 */
 	private void setOffTimer(Time anOffTime){
-		//set the time to fire the on event
-	    mOffTimer.setTriggerTime(anOffTime);
-	    
+		
+		//If the mOffTimer is null setOffTimer is being called by the constructor
+		//So you must instantiate the TriggerTimer
+		if(mOffTimer == null){
+		//instantiate the member TriggerTimer mOffTimer
+		mOffTimer = new TriggerTimer (mOffEvent,anOffTime);
+		}
+		else{  
+			
+			//If we're in here the TriggerTimer has already been instantiated
+			//so just set the TriggerTimer to it's new value
+			mOffTimer.setTriggerTime(anOffTime);		
+		}
+		
 		//start up the timer
 		mOffTimer.startTimer();
 		
@@ -199,10 +221,47 @@ public class X10Appliance extends X10Device{
 		return mState;
 	}
 
-	@Override
-	public synchronized boolean setState( X10DeviceState state ) {
-		// TODO Auto-generated method stub
-		return false;
+	/**
+	 * This method is used to change the state of the X10Appliance.  The ON state 
+	 * is used to indicate that the appliance is on and OFF state is used to 
+	 * indicate that the appliance is off. When the Appliance state changes to ON
+	 * an event is fired. If the device is currently on, we do not fire an event
+	 * as to avoid sending unnecessary events to protocol.
+	 * @param X10DeviceState state - new state of ON (Appliance turn on) or OFF
+	 */
+	public synchronized void setState( X10DeviceState state ) {
+
+		//check to see if they're already the same
+		if (!getState().toString().equals(state.toString())){
+			
+			//set the new state of this X10Appliance
+			mState = state;
+			
+			//Fire an event to Protocol through the event generator
+			
+			// Create an X10Protocol Event to turn on the Appliance
+			//TODO I'm concerned about instantianting this event object here
+			// I worry we're introducing a memory leak.
+			
+			X10ProtocolEvent protocolEvent = new X10ProtocolEvent ( 
+										         getName(),
+										         getHouseCode(),
+										         getDeviceCode(),
+										         getState().toString());
+			
+			/* Send the Event out to EventGenerator, so that protocol picks
+			 * it up and send it out to the actual appliance.
+			 */
+			eventGenerator.fireEvent ( protocolEvent );
+			
+	    }
+		else{
+			System.out.println("INFO: The state of " + getName() + " was ignored" +
+					           "because the current state is already" + 
+					           getState().toString());
+		}	
+			
+		
 	}
 
 	/**
@@ -255,6 +314,18 @@ public class X10Appliance extends X10Device{
 			setOffTime(((ProxyX10Appliance)proxyDevice).getOffTime());
 		}
 		else {
+			//If we're in here we assume the TriggerTimer is not enabled
+			//However if it was previously enabled we need to shut the timer
+			//down otherwise we'll have a memory leak if subsequent updates
+			//instantiate new timers
+			if(getTriggerTimerEnabled()){
+				
+				//null it out
+				setOnTimer(null);
+				//mOnTimer = null;
+				
+			}
+				
 			setTriggerTimerEnabled(false);
 			//TODO Figure out how to stop the timer
 		}
