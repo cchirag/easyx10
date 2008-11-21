@@ -2,15 +2,15 @@ package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
-import edu.bu.easyx10.device.X10Device.X10DeviceState;
 import edu.bu.easyx10.device.timer.*;
 
+//TODO Check to see if Java SQL time is required for a timer
 import java.sql.Time;
 
 /** The X10Appliance class is derived from the abstract class X10DeviceClass. 
  * It's purpose is to model the state and behavior of X10 appliance modules.
  * The state of X10 devices are controlled either by device updates coming
- * down from the Device manager from the gui package, or from incoming
+ * down from the Device manager from the GUI package, or from incoming
  * DeviceEvents published by EventGenerator. X10Applianc objects also implement
  * TriggerTimers to turn lights on and off during a particular time period. It's 
  * important to note that incoming events are processed regardless of whatever
@@ -25,8 +25,8 @@ public class X10Appliance extends X10Device{
 	private Time mOnTime;                     // Time to turn appliance on
 	private Time mOffTime;                    // Time to shut appliance off
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
-	private TimerEvent mOnEvent;               // The  ON event riggerTimer will fire
-	private TimerEvent mOffEvent;              // The  OFF event riggerTimer will fire
+	private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
+	private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
 
 	/**
 	 * The default X10Appliance constructor. This takes in a device name
@@ -59,39 +59,49 @@ public class X10Appliance extends X10Device{
 		
 		// Set the member variables from the X10Appliance
 		
-		//If the triggerTimer is enabled proceed with setting 
-		// the onTimer, OffTimer, onTime and OffTime attributes.
-		if(proxyX10Appliance.getTriggerTimerEnabled()){
-			setTriggerTimerEnabled(true);
-			setOnTime(proxyX10Appliance.getOnTime());
-			setOffTime(proxyX10Appliance.getOffTime());
+			// Check to see if the location was instantiated in the proxyX10Appliance
+			if(proxyX10Appliance.getLocation()!= null){
+				
+				//Call base classes setMethod
+				setLocation(proxyX10Appliance.getLocation());			
+			}
+				
 			
-			//Create the onEvent to be passed to the TriggerTimer
-			mOnEvent = new TimerEvent ( getName(), "ON" );
-			
-			//Create the onEvent to be passed to the TriggerTimer
-			mOffEvent = new TimerEvent ( getName(), "OFF" );
-			
-		}
-		else {
-			setTriggerTimerEnabled(false);
-		}
-			
-		setState ( proxyX10Appliance.getState( ) );
+			/* If the triggerTimer is enabled proceed with setting onTime 
+			 *  offTime. setOnTimer and setOffTimer get called within
+			 *  setOnTime and setOffTime methods so there is no need to 
+			 *  set them here. 
+			 */
+			if(proxyX10Appliance.getTriggerTimerEnabled()){
+				
+				setTriggerTimerEnabled(true);                   //call to parent Method
+				
+				setOnTime(proxyX10Appliance.getOnTime());       //call to overridden Method
+				
+				setOffTime(proxyX10Appliance.getOffTime());     //call to overridden Method
+				
+				//Create the onEvent to be passed to the TriggerTimer
+				mOnEvent = new TimerEvent ( getName(), "ON" );
+				
+				//Create the onEvent to be passed to the TriggerTimer
+				mOffEvent = new TimerEvent ( getName(), "OFF" );
+				
+			}
+			else {
+				setTriggerTimerEnabled(false);
+			}
+				
+			setState ( proxyX10Appliance.getState( ) );
 		
 		
 		
 	}
 	
 	//This constructor is required by ProxyX10Appliance
-	//TODO finish constructor that's used  by proxyAppliance
-	public X10Appliance(String name, char houseCode, int deviceCode){
+	protected X10Appliance(String name, char houseCode, int deviceCode){
 		
 		// Call super in X10Device and pass in the required attributes
 		super(name,houseCode,deviceCode);
-		
-		//set the state to ON by default	
-		setState (X10DeviceState.ON);
 		
 	}
 	
@@ -354,7 +364,7 @@ public class X10Appliance extends X10Device{
 	 * 
 	 * @param Event e
 	 */
-	public void processDeviceEvent(Event e) {
+	public void processDeviceEvent(X10DeviceEvent e) {
 
 		/* 
 		 * Verify the incoming event was intended for this device by checking
@@ -363,7 +373,7 @@ public class X10Appliance extends X10Device{
 		 * events to all listeners so not all events heard are meant to be processed.
 		 */
 		if (e instanceof X10DeviceEvent &&
-				((X10DeviceEvent)e).getDeviceName().equals(getName()) &&
+				((X10DeviceEvent)e).equals(getName()) &&
 				((X10DeviceEvent)e).getHouseCodeChar( ) == getHouseCode( ) &&
 				((X10DeviceEvent)e).getDeviceCodeInt( ) == getDeviceCode( )){
 				
@@ -387,26 +397,23 @@ public class X10Appliance extends X10Device{
 	 * The processTimeEvent method is used to listen for events from the Timer class.
 	 * We simply watch for events which match the same device Name.
 	 */
-	public void processTimerEvent(Event e) {
-		/* We only deal with timerEvents attached to this device name.  When
-		 * we get a timer event, we set our state to OFF to indicate no motion.
-		 */
-		if (e instanceof X10DeviceEvent &&
-				((X10DeviceEvent)e).getDeviceName().equals(getName()) &&
-				((X10DeviceEvent)e).getHouseCodeChar( ) == getHouseCode( ) &&
-				((X10DeviceEvent)e).getDeviceCodeInt( ) == getDeviceCode( )){
+	public void processTimerEvent(TimerEvent e) {
+		
+		// We only deal with timerEvents attached to this device name. 
+		if (e instanceof TimerEvent &&
+				((TimerEvent)e).equals(getName())){
 				
 					//Now that we know the event was intended for this device
-					if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_ON ){
+					if (((TimerEvent)e).getEventName().equals("ON") ){
 						setState ( X10DeviceState.ON );
 					}
-					else if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
-						setState ( X10DeviceState.ON );
+					else if (((TimerEvent)e).getEventName().equals("OFF") ){
+						setState ( X10DeviceState.OFF );
 					}
 					else{
 						System.out.println("Error: Device: " + getName() +
 								            " was unables to process " +
-								            ((X10DeviceEvent)e).toString() +
+								            ((TimerEvent)e).toString() +
 								            " This is likely due to an unrecognized event type");
 					}
 		}
@@ -416,7 +423,7 @@ public class X10Appliance extends X10Device{
 	 * The processProtocolEvent is not used by this class.  We simply need
 	 * to override it.
 	 */
-	public void processProtocolEvent(Event e) { 
+	public void processProtocolEvent(X10ProtocolEvent e) { 
 
 	}
 
