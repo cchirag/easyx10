@@ -21,10 +21,11 @@ import java.util.Set;
 public final class DeviceManager {
 
 	//member variables
+	//TODO 
 	private Set<Device> mDeviceList;   // List of Devices
 	
-
-	public final Set<Device> getDevices(){
+    //Change to 
+	public final Set<Device> getDevices(){	
 		
 		//TODO Return a list of proxyDevices instead of the real devices
 		//DEFINITELY CANT LEAVE THIS AS IT IS FOR TOO LONG
