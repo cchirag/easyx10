@@ -1,5 +1,7 @@
 package edu.bu.easyx10.device;
 
+import edu.bu.easyx10.event.TimerEvent;
+
 //import java.util.*;
 //import java.sql.Time;
 
@@ -32,12 +34,12 @@ public class ProxyX10Appliance extends X10Appliance{
 	 * Proxy objects do not send or receive events or instantiate timer objects.
 	 */
 
-	public ProxyX10Appliance ( X10Appliance appliance ){
+	public ProxyX10Appliance (String name, char houseCode, int deviceCode){
 		
-		// Create the super X10Device class and pass to it its attributes
-		super(  appliance.getName( ),
-				appliance.getHouseCode( ),
-				appliance.getDeviceCode( ) );
+		// Create the super X10Device class and pass to it its attribute;
+			super(name,houseCode,deviceCode);
+
+
 		
 		
 	}
