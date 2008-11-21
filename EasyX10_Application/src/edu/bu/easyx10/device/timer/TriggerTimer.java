@@ -8,8 +8,9 @@ public class TriggerTimer extends DeviceTimer{
 	
 	private Time mTriggerTime;
 	
-	public TriggerTimer(Event eventToFire){
+	public TriggerTimer(Event eventToFire, Time triggerTime){
 		super(eventToFire);
+		setTriggerTime(triggerTime);
 	}
 	
 	public Time getTriggerTime() {
