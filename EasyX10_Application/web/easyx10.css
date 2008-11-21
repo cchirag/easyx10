@@ -1,0 +1,110 @@
+﻿/* CSS layout */
+/* CSS Generic to Every Page */
+#masthead {
+	font: normal normal bolder xx-large Aharoni;
+	background-color: #CC3300;
+	height: 90px;
+	color: #FFFFFF;
+	text-align: center;
+}
+#top_nav {
+	height: 20px;
+	//background-color: #CCCCCC;
+}
+#page_content {
+	height: 400px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+#footer {
+	font: normal normal bold x-small Arial, Helvetica, sans-serif;
+	background-color: #CC3300;
+	height: 53px;
+	position: relative;
+	/*top: 70%;*/
+	/*top: 100px;*/ 
+	clear: left;
+}
+/* CSS for default.htm */
+#loginDiv {
+	top: 50px;
+	width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+	border: thin black solid;
+	text-align: center;
+}
+/* CSS for status.htm */
+/* Link CSS */
+a:visited {
+	font-weight: bold;
+	background: transparent;
+	text-decoration: none;
+	border: none;
+	font-family: Helvetica, Arial, sans-serif;
+}
+a:link {
+	font-weight: bold;
+	background: transparent;
+	border: none;
+	text-decoration: none;
+	font-family: Helvetica, Arial, sans-serif;
+}
+a:hover {
+	color: #999999;
+	font-weight: bold;
+	background: transparent;
+	text-decoration: none;
+	border: none;
+	font-family: Helvetica, Arial, sans-serif;
+}
+a:active {
+	color: #999999;
+	font-weight: bold;
+	background: transparent;
+	text-decoration: none;
+	border: none;
+	font-family: Helvetica, Arial, sans-serif;
+}
+.nav1 a:visited {
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 12px;
+	background-color: #666666;
+	border: 1px solid #ffffff;
+	display: block;
+	padding: 3px;
+}
+.nav1 a:link {
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 12px;
+	background-color: #666666;
+	border: 1px solid #ffffff;
+	display: block;
+	padding: 3px;
+}
+.nav1 a:hover {
+	color: #000000;
+	font-weight: bold;
+	font-size: 12px;
+	background-color: #CC3300;
+	border: 1px solid #ffffff;
+	display: block;
+	padding: 3px;
+}
+.nav1 a:active {
+	color: #000000;
+	font-weight: bold;
+	font-size: 12px;
+	background-color: #CC3300;
+	border: 1px solid #ffffff;
+	display: block;
+	padding: 3px;
+}
+/* Misc */
+.transparent {
+   filter:alpha(opacity=60); 
+   -moz-opacity: 0.6; 
+   opacity: 0.6; 
+}
