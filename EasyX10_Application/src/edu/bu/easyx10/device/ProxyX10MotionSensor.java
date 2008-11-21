@@ -20,9 +20,11 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	private Set<String> mApplianceList;       // List of Appliances to send events to
 	
 	/**
-	 * Implicit constructor of a new ProxyX10MotionSensor object.
+	 * Default constructor for the X10MotionSensor class.  The minimum
+	 * information required is a Name, HouseCode, and DeviceCode.
 	 */
-	public ProxyX10MotionSensor ( ) {
+	public ProxyX10MotionSensor(String name, char houseCode, int deviceCode){
+		super ( name, houseCode, deviceCode );
 		// create any required member classes
 		mApplianceList = new HashSet<String>( );
 	}
@@ -35,14 +37,17 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 */
 	public ProxyX10MotionSensor ( X10MotionSensor motionDevice ) {	
 
+		// Create the base class with the minimum information required.
+		super( motionDevice.getName( ),
+			   motionDevice.getHouseCode( ),
+			   motionDevice.getDeviceCode( ) );
+			
 		// create any required member classes
 		mApplianceList = new HashSet<String>( motionDevice.getApplianceList( ) );
 
 		// load our member variables from the X10MotionDevice
-		setName ( motionDevice.getName( ) );
+		// Create the super X10Device class and pass to it its attributes
 		setLocation (motionDevice.getLocation());
-		setHouseCode ( motionDevice.getHouseCode( ) );
-		setDeviceCode ( motionDevice.getDeviceCode( ) );
 		setInactivityTime ( motionDevice.getInactivityTime( ) );
 		setDetectionPeriodEnabled ( motionDevice.getDetectionPeriodEnabled( ) );
 		setStartTime ( motionDevice.getStartTime( ) );
