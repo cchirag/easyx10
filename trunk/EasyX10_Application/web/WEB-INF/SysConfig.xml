@@ -1,0 +1,22 @@
+<edu.bu.easyx10.util.SystemConfiguration>
+  <users>
+    <edu.bu.easyx10.gui.User>
+      <username>john</username>
+      <password>john1</password>
+    </edu.bu.easyx10.gui.User>
+    <edu.bu.easyx10.gui.User>
+      <username>damon</username>
+      <password>damon1</password>
+    </edu.bu.easyx10.gui.User>
+    <edu.bu.easyx10.gui.User>
+      <username>jim</username>
+      <password>jim1</password>
+    </edu.bu.easyx10.gui.User>
+    <edu.bu.easyx10.gui.User>
+      <username>bruce</username>
+      <password>bruce1</password>
+    </edu.bu.easyx10.gui.User>
+  </users>
+  <floorCount>3</floorCount>
+  <cm11aPortName>COM4</cm11aPortName>
+</edu.bu.easyx10.util.SystemConfiguration>
