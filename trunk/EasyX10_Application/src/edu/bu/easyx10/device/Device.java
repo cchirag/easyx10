@@ -4,6 +4,7 @@ import edu.bu.easyx10.event.EventGeneratorFactory;
 import edu.bu.easyx10.event.EventGenerator;
 import edu.bu.easyx10.event.EventHandlerListener;
 
+
 /**
  * The Device class is an abstract base class that’s used to model
  * physical devices within the EasyX10 system. A device has only two 
@@ -22,6 +23,8 @@ public abstract class Device implements EventHandlerListener{
 	private String mName;
 	private String mLocation;
 	protected EventGenerator eventGenerator;
+
+	
 	
 	/**
 	 * Construct a new Device class.  The constructor always registers

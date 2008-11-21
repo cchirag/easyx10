@@ -1,7 +1,8 @@
 package edu.bu.easyx10.device;
 
-//import java.util.*;
-//import java.sql.Time;
+import java.sql.Time;
+import edu.bu.easyx10.util.LoggingUtilities;
+
 
 /**
  * ProxyX10Appliance is derived from and identical to X10Appliance except 
@@ -79,5 +80,46 @@ public class ProxyX10Appliance extends X10Appliance{
 		
 	}
 
+	/**
+	 * This method sets the time that an Appliance should be turned on.
+	 * 
+	 *  @override X10Appliance setOnTime
+	 *  @param A Time to turn on the Appliance
+	 */
+	public void setOnTime(Time onTime) {
+		
+		mOnTime = onTime;
+
+	}
+	
+	/**
+	 * This method sets the time that an Appliance should be turned off.
+	 * 
+	 *  @override X10Appliance setOffTime
+	 *  @param A Time to turn off the Appliance
+	 */
+	public void setOffTime(Time offTime) {
+		
+		mOffTime = offTime;
+
+	}
+	
+	public synchronized void setState( X10DeviceState state ) {
+
+		//check to see if they're already the same
+		if (!getState().toString().equals(state.toString())){
+			
+			//set the new state of this X10Appliance
+			mState = state;
+			
+	    }
+		else{
+			 LoggingUtilities.logInfo(ProxyX10Appliance.class.getCanonicalName(),
+			 "setState()", "INFO: The state of " + getName() + " was ignored" +
+			 "because the current state is already" + getState().toString());
+		}	
+			
+		
+	}
 	
 }
