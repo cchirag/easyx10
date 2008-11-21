@@ -36,16 +36,16 @@ public abstract class X10Device extends Device{
 	 
 	public X10Device(String name, char houseCode, int deviceCode){
 		
-		this.setName(name);
-		this.setHouseCode(houseCode);
-		this.setDeviceCode(deviceCode);
+		super(name);
+		setHouseCode(houseCode);
+		setDeviceCode(deviceCode);
 		
 	}
 	
 	
 	/**
 	 * This method returns the HouseCode char that corresponds to
-	 * the housecode set on the physical device.
+	 * the houseCode set on the physical device.
 	 * 
 	 * @return Returns a char containing the X10 Devices HouseCode
 	 */	
@@ -139,7 +139,7 @@ public abstract class X10Device extends Device{
 	 * the derived class since they are specific to that device.
 	 * 
 	 */
-	public abstract boolean setState(X10DeviceState state );
+	public abstract void setState(X10DeviceState state );
 	
 	
 	/**
