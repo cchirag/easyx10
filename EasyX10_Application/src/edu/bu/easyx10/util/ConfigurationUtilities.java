@@ -85,6 +85,7 @@ public class ConfigurationUtilities {
 		for( User user : sysConfig.getUsers() ){
 			System.out.println("\t" + user);
 		}
+		System.out.println("Floor Count = " + sysConfig.getFloorCount());
 	}
 
 	/**
@@ -116,6 +117,8 @@ public class ConfigurationUtilities {
 		users.add(user2);
 		users.add(user3);
 		users.add(user4);
+		
+		sysConfig.setFloorCount(3);
 		
 		System.out.println("Preparing to Write Data");
 		
