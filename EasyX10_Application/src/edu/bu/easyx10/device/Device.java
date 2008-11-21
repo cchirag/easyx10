@@ -21,7 +21,7 @@ public abstract class Device implements EventHandlerListener{
 
 	// Declare Private Member Variables
 	private String mName;
-	private String mLocation;
+	private DeviceLocation mLocation;
 	protected EventGenerator eventGenerator;
 
 	
@@ -54,23 +54,21 @@ public abstract class Device implements EventHandlerListener{
 	/**
 	 * 
 	 * This method sets the location of Device. Location is implementation 
-	 * specific. For instance this can be used to represent where the device 
-	 * is physically located within a GUI or where it's located within the home. 
+	 * specific. 
 	 * 
-	 * @return Return true if the location is successfully set or false if it isn't.
-	 * Currently as long as it's a valid string it should never return false as
-	 * there are no restrictions on length enforced at this level.
+	 * @return Return true if the location is successfully set 
+	 * or false if it isn't.
 	 */	
 	
-	public boolean setLocation(String location) {
+	public boolean setLocation(DeviceLocation location) {
 		mLocation = location;
 		return true;
 	}
 
 	/**
-	 * @return Returns a string containing the Device location
+	 * @return Returns the Device location
 	 */	
-	public String getLocation() {
+	public DeviceLocation getLocation() {
 		return mLocation;
 	}
 	
