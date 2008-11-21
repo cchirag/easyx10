@@ -1,7 +1,5 @@
 package edu.bu.easyx10.device;
 
-import edu.bu.easyx10.event.TimerEvent;
-
 //import java.util.*;
 //import java.sql.Time;
 
@@ -38,10 +36,48 @@ public class ProxyX10Appliance extends X10Appliance{
 		
 		// Create the super X10Device class and pass to it its attribute;
 			super(name,houseCode,deviceCode);
-
-
 		
 		
 	}
+	
+	public ProxyX10Appliance ( X10Appliance applianceDevice ) {	
+		
+		
+		//Set the following required attributes
+		super(applianceDevice.getName(),
+			  applianceDevice.getHouseCode(),
+			  applianceDevice.getDeviceCode());
+		
+		/* 
+		 * Load our member variables from the X10ApplianceDevice
+		 * If the triggerTimer is enabled proceed with setting 
+		 * the onTimer, OffTimer, onTime and OffTime attributes.
+		 */
+		if(applianceDevice.getTriggerTimerEnabled()){
+				
+			setTriggerTimerEnabled(true);                 //call to parent Method
+			
+			setOnTime(applianceDevice.getOnTime());       //call to overridden Method
+			
+			setOffTime(applianceDevice.getOffTime());     //call to overridden Method
+			
+		}
+		else {
+			setTriggerTimerEnabled(false);
+		}
+		
+		// Check to see if the location was instantiated in the X10Appliance
+		if(applianceDevice.getLocation()!= null){
+			
+			//Call base classes setMethod
+			setLocation(applianceDevice.getLocation());			
+		}
+			
+		setState ( applianceDevice.getState( ) );
+		
+		
+		
+	}
+
 	
 }
