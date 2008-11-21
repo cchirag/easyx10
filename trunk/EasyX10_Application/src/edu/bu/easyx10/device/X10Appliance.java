@@ -335,12 +335,10 @@ public class X10Appliance extends X10Device{
 				
 				//null it out
 				setOnTimer(null);
-				//mOnTimer = null;
-				
 			}
 				
 			setTriggerTimerEnabled(false);
-			//TODO Figure out how to stop the timer
+
 		}
 		
 		//Store the proxyDevice state and this objects current state in 
