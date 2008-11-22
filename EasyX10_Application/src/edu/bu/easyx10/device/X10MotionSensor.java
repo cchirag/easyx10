@@ -5,25 +5,25 @@ import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.device.timer.*;
 
 import java.util.*;
-import java.sql.Time;
-import java.util.Calendar;
 import java.util.concurrent.Semaphore;
 
 /**
  * 
- * The X10Motion sensor class is where X10 motion sensor devices 
- * are created. In addition to inheriting from X10Device and 
- * Device, X10MotionSensor contains a WaitTimer, that stores the 
- * number of seconds to wait before deeming a motion 
- * sensor inactive. When the timer reaches zero, it fires an event 
- * that is processed by the X10MotionSensor that sets it�s state 
- * to inactive. It also contains an ApplianceList, so that it 
- * knows what devices to send DeviceEvents to when motion is detected,
- * a StartTime and EndTime to mark the window during which motion 
- * events should be processed and a boolean so that it can be checked 
- * whether a window time has been defined.
+ * The X10MotionSensor is a concrete implementation
+ * of the X10Device class.  The X10MotionSensor is
+ * configured with an X10 house and device code.  This
+ * class listen to DeviceEvents from the Protocol module.
+ * When a DeviceEvent matches the house and device code,
+ * then a motion event occurs.  The activity window is
+ * checked if necessary.  Motion events cause X10 ON
+ * events to be delivered to each of the Appliances 
+ * stored in the appliance list.  A timer is activated
+ * to wait a certain number of seconds.  When the timer
+ * expires, and X10 OFF event is sent to the same set
+ * of appliances which where previously turned on
+ * when the original motion event occurred.
  * 
- * @author  Damon Gabrielle
+ * @author  Jim Duda
  * @version please refer to subversion
  * @date:   11/06/08
  */
@@ -41,10 +41,10 @@ public class X10MotionSensor extends X10Device {
 	protected Set<String> mApplianceList;       
 
 	// Beginning of Motion Detection Period
-	protected Time mStartTime;                  
+	protected Calendar mStartTime;                  
 
 	// End of motion Detection Period
-	protected Time mEndTime;                    
+	protected Calendar mEndTime;                    
 
 	/* If Enabled Motion Detector will only 
 	 * send Device events between mStartime
@@ -191,7 +191,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param Time startTime Beginning time for Motion Activity Window
 	 */
-	public void setStartTime(Time startTime) {
+	public void setStartTime(Calendar startTime) {
 		mStartTime = startTime;
 	}
 
@@ -203,7 +203,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @return Time Beginning time for Motion Activity Window
 	 */
-	public Time getStartTime() {
+	public Calendar getStartTime() {
 		return mStartTime;
 	}
 
@@ -215,7 +215,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param Time startTime Beginning time for Motion Activity Window
 	 */
-	public Time getEndTime() {
+	public Calendar getEndTime() {
 		return mEndTime;
 	}
 
@@ -227,7 +227,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @return Time Ending time for Motion Activity Window
 	 */
-	public void setEndTime(Time endTime) {
+	public void setEndTime(Calendar endTime) {
 		mEndTime = endTime;
 	}
 
