@@ -1,7 +1,5 @@
 package edu.bu.easyx10.device;
 
-import java.util.Random;
-import java.util.Set;
 import java.util.*;
 
 import edu.bu.easyx10.device.X10Device.*;
@@ -24,6 +22,8 @@ public class TestX10MotionSensor extends TestCase {
 	private Integer numberOfProtocolEvents;
 	private Integer numberOfDeviceEvents;
 	private Random m_rv;
+	private Calendar startTime;
+	private Calendar endTime;
 
 	/*
 	 * Construct the TestCase itself
@@ -173,6 +173,13 @@ public class TestX10MotionSensor extends TestCase {
 		proxySensor.setLocation(new DeviceLocation(1,20,50));
 		proxySensor.setApplianceList(applianceList);
 		proxySensor.setDetectionPeriodEnabled(false);
+//		startTime = new Calendar( );
+//		startTime.set(Calendar.HOUR_OF_DAY, 13);
+//		startTime.set(Calendar.MINUTE, 33);
+//      proxySensor.setStartTime(startTime); 
+//		startTime.set(Calendar.HOUR_OF_DAY, 17);
+//		startTime.set(Calendar.MINUTE, 45);
+        proxySensor.setStartTime(startTime); 
 		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
 		proxySensor.setState(RandomX10DeviceState( ));
 		return (proxySensor);
@@ -189,8 +196,8 @@ public class TestX10MotionSensor extends TestCase {
     	if (a.getDeviceCode() != b.getDeviceCode()) proxyEqual = false;
     	if (!a.getApplianceList().equals(b.getApplianceList())) proxyEqual = false;
     	if (a.getDetectionPeriodEnabled() != b.getDetectionPeriodEnabled()) proxyEqual = false;
-    	// mStartTime
-    	// mEndTime
+//    	if (!a.getStartTime( ).equals(b.getStartTime())) proxyEqual = false;
+//    	if (!a.getEndTime( ).equals(b.getEndTime( ))) proxyEqual = false;
     	if (a.getInactivityTime() != b.getInactivityTime()) proxyEqual = false;
     	if (a.getState() != b.getState()) proxyEqual = false;
     	return (proxyEqual);
