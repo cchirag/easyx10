@@ -334,7 +334,7 @@ public class X10MotionSensor extends X10Device {
 			while (i.hasNext()) {
 				String deviceName = i.next();
 				// Create an X10DeviceEvent to turn on the Appliance
-				X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_ON );
+				X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_OFF );
 				// Send the Event to the X10Appliance object through EventGenerator
 				eventGenerator.fireEvent ( deviceEvent );
 			}
