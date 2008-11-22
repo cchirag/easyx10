@@ -24,6 +24,11 @@
 			document.detailsForm.endTime.disabled = true;
 		}
 	}
+
+	function updateLocation(){
+		document.detailsForm.top.value = document.getElementById("newAppliance").style.top;
+		document.detailsForm.left.value = document.getElementById("newAppliance").style.left;
+	}
 </script>
 <div id="masthead">
 	<br />
@@ -50,7 +55,7 @@
 	<div id="addForm">
 		<!-- span id="addFormMessage" style="font-family: Arial, Helvetica, sans-serif; font-size: large; font-weight: bold; font-variant: normal">
 		Enter Details for New Item:</span> <br / -->
-		<form name="detailsForm" id="detailsForm" method="post" action="/easyx10/EasyX10AppServlet?action=ADD_DEVICE">
+		<form name="detailsForm" id="detailsForm" method="post" action="/easyx10/EasyX10AppServlet?action=ADD_DEVICE&deviceType=APPLIANCE">
 			<table id="detailsFormTable">
 				<tr>
 					<td>
@@ -79,7 +84,7 @@
 						<option>O</option>
 						<option>P</option>
 						</select> <span>Unit Code:</span>
-						<select name="houseCode" tabindex="3">
+						<select name="unitCode" tabindex="3">
 						<option>1</option>
 						<option>2</option>
 						<option>3</option>
@@ -104,7 +109,7 @@
 						<span>Status:</span>
 					</td>
 					<td>
-						<select name="itemStatus" tabindex="4">
+						<select name="deviceStatus" tabindex="4">
 						<option value="ON">ON</option>
 						<option value="OFF">OFF</option>
 						</select>
@@ -136,7 +141,7 @@
 				<tr>
 					<td colspan="3">
 						<br />
-						<input name="AddButton" type="submit" value="Add" tabindex="8" />
+						<input name="AddButton" type="submit" value="Add" tabindex="8" onclick="updateLocation()" />
 						&nbsp;
 						<input name="Reset1" type="reset" value="Reset" tabindex="9"/>
 						&nbsp;
@@ -144,6 +149,9 @@
 					</td>
 				</tr>
 			</table>
+			<input name="floorNumber" type="hidden" value="<%= (String)request.getParameter("selectedFloor") %>" />
+			<input name="top" type="hidden" value="" />
+			<input name="left" type="hidden" value="" />"
 		</form>
 	</div>
 		<% 
@@ -167,7 +175,7 @@
 					if( devices.get(j).getLocation().getFloorNumber() == floorNumber ){
 			%>
 			<div style="position: absolute; height: 40px; width: 40px; top: 
-				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getY() %>px; background-color: 
+				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getX() %>px; background-color: 
 				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "lightgreen" : "yellow") %>; border: 1px black solid; text-align:center">
 				
 				<span style="font-size:x-small"><a href="Room.htm"><%= devices.get(j).getName() %></a></span>
