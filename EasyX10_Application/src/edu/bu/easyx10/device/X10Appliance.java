@@ -135,7 +135,8 @@ public class X10Appliance extends X10Device{
 			mOnTimer.startTimer();
 		}
 		
-		//start up the timer
+
+		//Now start / restart the timer. If it's already started it will restart.
 		
 		  mOnTimer.startTimer();
 		
@@ -249,7 +250,7 @@ public class X10Appliance extends X10Device{
 	public synchronized void setState( X10DeviceState state ) {
 
 		//check to see if they're already the same
-		if (!getState().toString().equals(state.toString())){
+		if (getState() != state ){
 			
 			//set the new state of this X10Appliance
 			mState = state;
@@ -373,15 +374,43 @@ public class X10Appliance extends X10Device{
 	public void processDeviceEvent(X10DeviceEvent e) {
 
 		/* 
-		 * Verify the incoming event was intended for this device by checking
-		 * that the Device name and house and unit codes match. If it doesn't,
-		 * don't do anything with it. Remember that EventGenerator broadcasts
-		 * events to all listeners so not all events heard are meant to be processed.
+		 * Incoming events can originate from other Devices (Motion sensors or 
+		 * Timers) or they can originate from protocol. Motion Sensors and 
+		 * Timers send device events with only a Device Name since they are 
+		 * not aware of an Appliances House and Device Codes. DeviceEvents
+		 * sent by protocol do not contain a device name, rather only Device
+		 * and House codes. The logic below handles both types of incoming events.
+		 * 
+		 * Another key concept to keep in mind here is that EventGenerator broadcasts
+		 * events to all listeners. So, not all events heard by an Appliance
+		 * are meant to be processed. Verify that all incoming event are intended
+		 * for this device by checking that the Device name and house and Device 
+		 * codes match. If they don't match, don't continue to process the event.
 		 */
-		if (e instanceof X10DeviceEvent &&
-				((X10DeviceEvent)e).equals(getName()) &&
-				((X10DeviceEvent)e).getHouseCodeChar( ) == getHouseCode( ) &&
-				((X10DeviceEvent)e).getDeviceCodeInt( ) == getDeviceCode( )){
+		
+		//Handle incoming events from MotionSensor and Timer - when name is provided
+		if (e instanceof X10DeviceEvent && ((X10DeviceEvent)e).equals(getName())){
+			
+				if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_ON ){
+					
+					setState ( X10DeviceState.ON );
+				}
+				else if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
+					
+					setState ( X10DeviceState.ON );
+				}
+				else{
+					
+					 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "processDeviceEvent()","Error: Device: " + getName() +
+					 " was unables to process the incoming " + ((X10DeviceEvent)e).toString() +
+					 " event from another device. This is likely due to an unrecognized event type");
+				}
+			
+		}
+		//Handle incoming event from Protocol - HouseCode and Device Code Provided
+		else if ( ((X10DeviceEvent)e).getDeviceCodeInt()  == getHouseCode( ) &&
+		          ((X10DeviceEvent)e).getDeviceCodeInt() == getDeviceCode( )){
 				
 					//Now that we know the event was intended for this device
 					if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_ON ){
@@ -392,11 +421,20 @@ public class X10Appliance extends X10Device{
 					}
 					else{
 						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-						 "processDeviceEvent()","Error: Device: " + getName() +
-						 " was unables to process " + ((X10DeviceEvent)e).toString() +
-						 " This is likely due to an unrecognized event type");
+						 "processDeviceEvent()","ERROR: Device: " + getName() +
+						 " was unables to process the incoming " + 
+						 ((X10DeviceEvent)e).toString() + " event sent by Protocol." +
+						 " This was likely due to an unrecognized event type");
 					}
+		}else {
+			
+			//The incoming event was not intended for this device.
+			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "processDeviceEvent()","INFO: Device: " + getName() +
+					 " Did not process the incoming " + ((X10DeviceEvent)e).toString() + 
+					 " event. It was not intended for this device.");
 		}
+		
 	}
 
 	/**
