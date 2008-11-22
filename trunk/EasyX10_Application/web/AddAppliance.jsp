@@ -50,8 +50,19 @@
 	<span style="font-family: Arial, Helvetica, sans-serif; font-size: x-large; font-weight: bold">
 	Add New Appliance</span> <br />
 	<br />
-	<span id="status" style="float: left; padding: 20px; font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: small; color: #FF0000">
-	</span>
+	<div>
+		<%
+			// Retrieve the error message if one exists
+			String statusMessage = (String)request.getAttribute( "statusMessage" );
+			if( statusMessage == null ){
+				statusMessage = "";
+			}
+		%>
+		<span style="padding: 20px; font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: small; color: #FF0000">
+			<%= statusMessage %>
+		</span>
+	</div>
+	<br />
 	<div id="addForm">
 		<!-- span id="addFormMessage" style="font-family: Arial, Helvetica, sans-serif; font-size: large; font-weight: bold; font-variant: normal">
 		Enter Details for New Item:</span> <br / -->
@@ -157,34 +168,33 @@
 		<% 
 			
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
-			int floorNumber = 1;
-			String tempFloor = (String)request.getParameter("selectedFloor");
-			if( tempFloor != null ) {
-				floorNumber = Integer.parseInt(tempFloor);
-			}
+
+			String currentFloor = (String)request.getParameter("selectedFloor");
+			session.setAttribute("currentFloor", currentFloor);
 		%>
 	
-		<div id="<%= "floor" + floorNumber  %>" style="position: relative; width : 800px; 
+		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; 
 				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left">
 			
 			
-			<span><%= "Floor " + floorNumber %></span>
+			<span><%= currentFloor %></span>
 			
 			<% 
 				for(int j=0; j< devices.size(); j++) { 
-					if( devices.get(j).getLocation().getFloorNumber() == floorNumber ){
+					if( ("floor" + devices.get(j).getLocation().getFloorNumber()).equals(currentFloor)){
 			%>
 			<div style="position: absolute; height: 40px; width: 40px; top: 
 				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getX() %>px; background-color: 
 				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "lightgreen" : "yellow") %>; border: 1px black solid; text-align:center">
 				
-				<span style="font-size:x-small"><a href="Room.htm"><%= devices.get(j).getName() %></a></span>
+				<span style="font-size:x-small"><%= devices.get(j).getName() %></span>
 			</div>
 			<%
 					}
 				}
 			%>
 			<div id="newAppliance" style="z-index: 2; position: absolute; height: 40px; width: 40px; top: 50px; left: 50px; background-color: yellow; border: 1px black solid; text-align: center">
+				<span style="font-size:x-small">New Appliance</span>
 			</div>
 			<div class="transparent" style="position: absolute; top: 0px; left: 0px; z-index: 1; background-color: gray; height: 400px; width: 800px;">
 			</div>
