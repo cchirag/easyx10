@@ -122,11 +122,13 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	
 	/**
 	 * This method adds a new entry into the Appliance list.
+	 * Pass into this method the Device Name of the Appliance
+	 * device you wish to associate with this MotionSensor.
 	 * 
 	 * @param String applianceName
 	 */
-	public void addAppliance (String applianceName ) {
-		mApplianceList.add(applianceName);
+	public void addAppliance (String deviceName ) {
+		mApplianceList.add(deviceName);
 	}
 
 	/**
