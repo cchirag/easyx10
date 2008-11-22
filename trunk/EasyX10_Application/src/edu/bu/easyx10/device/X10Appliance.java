@@ -371,7 +371,7 @@ public class X10Appliance extends X10Device{
 	 * 
 	 * @param Event e
 	 */
-	public void processDeviceEvent(X10DeviceEvent e) {
+	public void processDeviceEvent(X10DeviceEvent deviceEvent) {
 
 		/* 
 		 * Incoming events can originate from other Devices (Motion sensors or 
@@ -389,41 +389,41 @@ public class X10Appliance extends X10Device{
 		 */
 		
 		//Handle incoming events from MotionSensor and Timer - when name is provided
-		if (e instanceof X10DeviceEvent && ((X10DeviceEvent)e).equals(getName())){
+		if (deviceEvent.getDeviceName( ).equals(getName())){
 			
-				if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_ON ){
+				if (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ){
 					
 					setState ( X10DeviceState.ON );
 				}
-				else if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
+				else if (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
 					
-					setState ( X10DeviceState.ON );
+					setState ( X10DeviceState.OFF );
 				}
 				else{
 					
 					 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
 					 "processDeviceEvent()","Error: Device: " + getName() +
-					 " was unables to process the incoming " + ((X10DeviceEvent)e).toString() +
+					 " was unables to process the incoming " + deviceEvent.toString() +
 					 " event from another device. This is likely due to an unrecognized event type");
 				}
 			
 		}
 		//Handle incoming event from Protocol - HouseCode and Device Code Provided
-		else if ( ((X10DeviceEvent)e).getDeviceCodeInt()  == getHouseCode( ) &&
-		          ((X10DeviceEvent)e).getDeviceCodeInt() == getDeviceCode( )){
+		else if ( (deviceEvent.getHouseCodeChar()  == getHouseCode( )) &&
+		          (deviceEvent.getDeviceCodeInt() == getDeviceCode( ))){
 				
 					//Now that we know the event was intended for this device
-					if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_ON ){
+					if (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ){
 						setState ( X10DeviceState.ON );
 					}
-					else if (((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
+					else if (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
 						setState ( X10DeviceState.ON );
 					}
 					else{
 						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
 						 "processDeviceEvent()","ERROR: Device: " + getName() +
 						 " was unables to process the incoming " + 
-						 ((X10DeviceEvent)e).toString() + " event sent by Protocol." +
+						 deviceEvent.toString() + " event sent by Protocol." +
 						 " This was likely due to an unrecognized event type");
 					}
 		}else {
@@ -431,7 +431,7 @@ public class X10Appliance extends X10Device{
 			//The incoming event was not intended for this device.
 			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
 					 "processDeviceEvent()","INFO: Device: " + getName() +
-					 " Did not process the incoming " + ((X10DeviceEvent)e).toString() + 
+					 " Did not process the incoming " + deviceEvent.toString() + 
 					 " event. It was not intended for this device.");
 		}
 		
