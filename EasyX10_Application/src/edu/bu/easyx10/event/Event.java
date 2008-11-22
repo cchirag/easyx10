@@ -29,7 +29,7 @@ public abstract class Event {
 	 * @param deviceName String which identifies the Device destination for this Event.
 	 */
 	public Event ( String deviceName ) {
-		m_deviceName = deviceName;
+		setDeviceName(deviceName);
 	}
 
 	/**
