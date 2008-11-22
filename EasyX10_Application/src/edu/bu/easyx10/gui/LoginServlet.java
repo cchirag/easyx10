@@ -58,6 +58,9 @@ public class LoginServlet extends HttpServlet {
 			// Store user data in the session
 			session.setAttribute("currentUser", theUser);
 			
+			// Set the current floor to display
+			session.setAttribute("currentFloor", "floor1");
+			
 			// Retrieve the list of devices and store in session
 			GuiUtilities.updateSessionDeviceList(session);
 			

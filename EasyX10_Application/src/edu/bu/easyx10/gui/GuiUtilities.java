@@ -1,13 +1,19 @@
 package edu.bu.easyx10.gui;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import edu.bu.easyx10.device.Device;
 import edu.bu.easyx10.device.DeviceLocation;
 import edu.bu.easyx10.device.ProxyX10Appliance;
 import edu.bu.easyx10.device.ProxyX10MotionSensor;
+import edu.bu.easyx10.device.X10Device;
 import edu.bu.easyx10.device.X10Device.X10DeviceState;
 import edu.bu.easyx10.util.LoggingUtilities;
 
@@ -121,6 +127,131 @@ public class GuiUtilities {
 		}
 		
 		return timeOptionsHtml;
+	}
+	
+	public static ProxyX10Appliance createNewAppliance(HttpServletRequest request){
+		
+		// Retrieve the name/house code/unit code
+		String name = request.getParameter("applianceName");
+		char houseCode = request.getParameter("houseCode").charAt(0);
+		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
+		
+		// Check to see if this device already exists
+		// TODO: Add Device Manager Code 
+		// Device alreadyExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
+		boolean deviceExists = false;
+		for( Device d : tempDeviceList ){
+			if( d.getName().equals(name) ){
+				deviceExists = true;
+				break;
+			}
+		}
+		
+		// If the Device Exists Log an Error
+		if( deviceExists ){
+			// TODO Throw an exception
+			return null;
+		}
+		
+		// Create the new Appliance
+		ProxyX10Appliance newDevice = new ProxyX10Appliance(name, houseCode, unitCode);
+		
+		// Set the State
+		newDevice.setState(
+				X10Device.X10DeviceState.valueOf(request.getParameter("deviceStatus")));
+		
+		// Set timer details
+		if( request.getParameter("timer").equals("ON")){
+			SimpleDateFormat dateFormat = new SimpleDateFormat("h:mma");
+			
+			// Retrieve the time strings
+			String startTime = request.getParameter("startTime");
+			String endTime = request.getParameter("endTime");
+		
+			// Set the On Time
+			try{
+				Calendar onTime = Calendar.getInstance();
+				onTime.setTime(dateFormat.parse(startTime));
+				newDevice.setOnTime(onTime);
+			} catch( ParseException  pe){
+				pe.printStackTrace();
+			}
+			
+			// Set the Off Time
+			try{
+				Calendar offTime = Calendar.getInstance();
+				offTime.setTime(dateFormat.parse(endTime));
+				newDevice.setOnTime(offTime);
+			} catch( ParseException  pe){
+				pe.printStackTrace();
+			}
+		}
+			
+		// Set the Location
+		String leftString = request.getParameter("left");
+		int endLeft = leftString.indexOf("px");
+		String topString = request.getParameter("top");
+		int endTop = topString.indexOf("px");
+		
+		// TODO Fix Location object to have floor name
+		int floorNumber = Integer.parseInt(request.getParameter("floorNumber").substring(5));
+		DeviceLocation location = 
+			new DeviceLocation(floorNumber,
+					Integer.parseInt(leftString.substring(0,endLeft)),
+					Integer.parseInt(topString.substring(0, endTop)));
+							
+		newDevice.setLocation(location);
+			
+		return newDevice;
+	}
+	
+	public static ProxyX10MotionSensor createNewMotionSensor(HttpServletRequest request){
+		
+		// Retrieve the name/house code/unit code
+		String name = request.getParameter("motionSensorName");
+		char houseCode = request.getParameter("houseCode").charAt(0);
+		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
+		
+		// Check to see if this device already exists
+		// TODO: Add Device Manager Code 
+		// Device alreadyExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
+		boolean deviceExists = false;
+		for( Device d : tempDeviceList ){
+			if( d.getName().equals(name) ){
+				deviceExists = true;
+				break;
+			}
+		}
+		
+		// If the Device Exists Log an Error
+		if( deviceExists ){
+			// TODO Throw an exception
+			return null;
+		}
+		
+		// Create the new Appliance
+		ProxyX10MotionSensor newDevice = new ProxyX10MotionSensor(name, houseCode, unitCode);
+		
+		// Set the State
+		newDevice.setState(
+				X10Device.X10DeviceState.valueOf(request.getParameter("deviceStatus")));
+		
+			
+		// Set the Location
+		String leftString = request.getParameter("left");
+		int endLeft = leftString.indexOf("px");
+		String topString = request.getParameter("top");
+		int endTop = topString.indexOf("px");
+		DeviceLocation location = 
+			new DeviceLocation(Integer.parseInt(request.getParameter("floorNumber")),
+					Integer.parseInt(leftString.substring(0,endLeft)),
+					Integer.parseInt(topString.substring(0, endTop)));
+							
+		newDevice.setLocation(location);
+			
+		return newDevice;
 	}
 
 }
