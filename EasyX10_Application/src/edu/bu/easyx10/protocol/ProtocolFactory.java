@@ -2,7 +2,10 @@ package edu.bu.easyx10.protocol;
 
 import java.util.Enumeration;
 import gnu.io.CommPortIdentifier;
+import edu.bu.easyx10.event.Event;
+import edu.bu.easyx10.event.TimerEvent;
 import edu.bu.easyx10.protocol.CM11A_X10Protocol;
+import edu.bu.easyx10.util.LoggingUtilities;
 
 /**
  * This class provides the singleton generator for the Protocol class.
@@ -21,7 +24,20 @@ public class ProtocolFactory {
 	private static CM11A_X10Protocol m_x10Protocol;
 	private static Enumeration<Object> m_portIDs;
 
-	// create a static default constructor which is the singleton design pattern
+	// initialize the ProtocolFactory
+	static {
+		try {
+			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+			"Initializing the ProtocolFactory\n");
+		} catch ( Exception e ) {
+			LoggingUtilities.logError("ProtocolFactory", "initProtocols",
+					 "\nTrouble initializing ProtocolFactory" + e);
+		}
+	}
+	
+	/**
+	 * Default implicit constructor
+	 */
 	private ProtocolFactory ( ) {
 
 	}
