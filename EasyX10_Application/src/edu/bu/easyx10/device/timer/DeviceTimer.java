@@ -5,16 +5,16 @@ import edu.bu.easyx10.event.Event;
 import edu.bu.easyx10.event.EventGenerator;
 import edu.bu.easyx10.event.EventGeneratorFactory;
 
+
 public abstract class DeviceTimer extends TimerTask {
 	
 	// private member variables
-	Event mEventToFire;
+	protected Event mEventToFire;
 	
 	protected final EventGenerator eventGenerator;
 	
 	/**
-	 * Construct a new DeviceTimer. While this class is abstract, always
-	 * call the super classes constructor to in
+	 * Constructor for a new DeviceTimer.
 	 */
 	public DeviceTimer(Event eventToFire){
 		
