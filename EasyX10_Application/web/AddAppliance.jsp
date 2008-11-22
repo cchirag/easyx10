@@ -162,7 +162,7 @@
 			</table>
 			<input name="floorNumber" type="hidden" value="<%= (String)request.getParameter("selectedFloor") %>" />
 			<input name="top" type="hidden" value="" />
-			<input name="left" type="hidden" value="" />"
+			<input name="left" type="hidden" value="" />
 		</form>
 	</div>
 		<% 
@@ -170,7 +170,12 @@
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 
 			String currentFloor = (String)request.getParameter("selectedFloor");
-			session.setAttribute("currentFloor", currentFloor);
+			if( currentFloor != null ){
+				session.setAttribute("currentFloor", currentFloor);
+			} else {
+				currentFloor = (String)session.getAttribute("currentFloor");
+			}
+			
 		%>
 	
 		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; 
@@ -185,7 +190,7 @@
 			%>
 			<div style="position: absolute; height: 40px; width: 40px; top: 
 				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getX() %>px; background-color: 
-				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "lightgreen" : "yellow") %>; border: 1px black solid; text-align:center">
+				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "yellow" : "lightgray") %>; border: 1px black solid; text-align:center">
 				
 				<span style="font-size:x-small"><%= devices.get(j).getName() %></span>
 			</div>
