@@ -17,32 +17,38 @@
 				getServletContext().getRealPath( "/WEB-INF/SysConfig.xml" );
 	SystemConfiguration sysConfig = 
 				ConfigurationUtilities.getSystemConfiguration(configFilePath);	
+	
+	// Get the current floor
+	String currentFloor = (String)session.getAttribute("currentFloor");
+	if( currentFloor == null ){
+		currentFloor = "floor1";
+	}
 %>
 
 <body>
 
 <script type="text/javascript">
+	var currentFloor = "<%= currentFloor %>";
+
     function processFloorSelect(){
-    	var selectedFloor = document.getElementById("floorSelect").value;
-    	var displayedFloor = 1;
+    	currentFloor = document.getElementById("floorSelect").value;
 		for (i=0;i<= <%= sysConfig.getFloorCount() %>;i++)
 		{
-			var currentFloor = "floor" + (i+1);
-			var floorDiv = document.getElementById(currentFloor);
+			floor = "floor" + (i+1);
+			var floorDiv = document.getElementById(floor);
 			if( !floorDiv )continue;
 			
-			if( currentFloor == selectedFloor ) {
+			if( currentFloor == floor ) {
 				floorDiv .style.display = 'block';
-				displayedFloor = i+1;
 			} else {
 				floorDiv.style.display = 'none';
 			}
 		}	
 
 		var addAppLink = document.getElementById("addApplianceLink");
-		addAppLink.href = "AddAppliance.jsp?selectedFloor=" + displayedFloor;
+		addAppLink.href = "AddAppliance.jsp?selectedFloor=" + currentFloor;
 		var addMotionLink = document.getElementById("addMotionLink");
-		addMotionLink.href = "AddMotionSensor.jsp?selectedFloor=" + displayedFloor;
+		addMotionLink.href = "AddMotionSensor.jsp?selectedFloor=" + currentFloor;
 	}
 </script>
 <div id="masthead">
@@ -56,10 +62,10 @@
 					<a href="Status.jsp">System Status</a>
 				</td>
 				<td class="nav1" style="text-align: center">
-					<a id="addApplianceLink" href="AddAppliance.jsp?selectedFloor=1">Add Appliance</a>
+					<a id="addApplianceLink" href="AddAppliance.jsp?selectedFloor=<%= currentFloor %>">Add Appliance</a>
 				</td>
 				<td class="nav1" style="text-align: center">
-					<a id="addMotionLink" href="AddMotionSensor.jsp?selectedFloor=1">Add Motion Sensor</a>
+					<a id="addMotionLink" href="AddMotionSensor.jsp?selectedFloor=<%= currentFloor %>">Add Motion Sensor</a>
 				</td>
 			</tr>
 		</table>
@@ -74,8 +80,11 @@
 		<select id="floorSelect" name="floorSelect" onchange="processFloorSelect();">
 		<% 
 			for( int i=0; i< sysConfig.getFloorCount(); i++ ) {
+				String thisFloor = "floor" + (i+1);
 		%>
-		<option value="<%= "floor" + (i+1) %>"><%= "Floor #" + (i+1) %></option>
+		<option value="<%= thisFloor %>" <%= currentFloor.equals(thisFloor) ? " selected=\"selected\" " : "" %> >
+			<%= "Floor #" + (i+1) %>
+		</option>
 		<%
 			}
 		%>
@@ -95,24 +104,27 @@
 	<div id="house">
 		
 		<% 
-			
+			// Retrieve the Device List and the current floor
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
+			
+			// Create each floor
 			for(int i=0; i< sysConfig.getFloorCount(); i++) {
 		%>
 	
-		<div id="<%= "floor" + (i+1) %>" style="display: <%= (i>0) ? "none" : "block" %>; position: relative; width : 800px; 
+		<div id="<%= "floor" + (i+1) %>" style="display: <%= ("floor" + (i+1)).equals(currentFloor) ? "block" : "none" %>; position: relative; width : 800px; 
 				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left">
 			
 			
 			<span><%= "Floor #" + (i+1) %></span>
 			
-			<% 
+			<%
+				// Create each device in each floor
 				for(int j=0; j< devices.size(); j++) { 
 					if( devices.get(j).getLocation().getFloorNumber() == (i+1) ){
 			%>
 			<div style="position: absolute; height: 40px; width: 40px; top: 
 				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getX() %>px; background-color: 
-				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "lightgreen" : "yellow") %>; border: 1px black solid; text-align:center">
+				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "yellow" : "lightgray") %>; border: 1px black solid; text-align:center">
 				
 				<span style="font-size:x-small"><a href="Room.htm"><%= devices.get(j).getName() %></a></span>
 			</div>
