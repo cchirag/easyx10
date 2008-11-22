@@ -2,7 +2,6 @@ package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.*;
 import java.util.*;
-import java.sql.Time;
 
 /**
  * 
@@ -92,7 +91,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @param Time startTime Beginning time for Motion Activity Window
 	 */
-	public void setStartTime(Time startTime) {
+	public void setStartTime(Calendar startTime) {
 		mStartTime = startTime;
 	}
 
@@ -104,7 +103,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @return Time Ending time for Motion Activity Window
 	 */
-	public void setEndTime(Time endTime) {
+	public void setEndTime(Calendar endTime) {
 		mEndTime = endTime;
 	}
 
