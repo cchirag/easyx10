@@ -4,8 +4,11 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import gnu.io.*;
+import edu.bu.easyx10.device.X10Appliance;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
+import edu.bu.easyx10.util.LoggingUtilities;
+import edu.bu.easyx10.util.LoggingUtilities;
 
 /**
  * This class implements the controller interface for the CM11A X10 controller.
@@ -350,7 +353,8 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	private void debug ( String Message ) {
 		if (System.getProperty("DEBUG") != null) {
-			System.out.println ( this.getClass().getName( ) + ":: " + Message );
+			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "Debug",
+			 this.getClass().getName( ) + ":: " + Message );
 		}
 	}
 
