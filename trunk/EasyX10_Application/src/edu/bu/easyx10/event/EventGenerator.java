@@ -2,6 +2,8 @@ package edu.bu.easyx10.event;
 
 import edu.bu.easyx10.event.EventHandlerListener;
 import edu.bu.easyx10.event.Event;
+import edu.bu.easyx10.util.LoggingUtilities;
+
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -58,8 +60,10 @@ public class EventGenerator {
 		// If the new object is not already in the list, let's add it to the list.
 		if (!found) {
 			m_eventListeners.add( listener );
-		}
-
+			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "addEventListener",
+					 "Registered:: " + listener.getClass( ).getCanonicalName());
+		} 
+		
 		// return the Mutex now
 		m_listSemaphore.release();
 	}
@@ -94,10 +98,20 @@ public class EventGenerator {
 	 * @param e Event which is to be delivered.
 	 */
 	public void fireEvent ( Event e ) {
+		
+		// First, let's acquire the Mutex to allow only one updater of the list
+		m_listSemaphore.acquireUninterruptibly();
+		List<EventHandlerListener> localList = new ArrayList( );
+		localList.addAll(m_eventListeners);
+		// return the Mutex now
+		m_listSemaphore.release();
+		
 		// Iterate though our existing m_eventListeners and send the Event to all.
-		ListIterator<EventHandlerListener> i = m_eventListeners.listIterator( );
+		ListIterator<EventHandlerListener> i = localList.listIterator( );
 		while (i.hasNext( )) {
 			EventHandlerListener object = i.next( );
+			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "fireEvent",
+					 "EventType:: " + e.getClass( ).getCanonicalName( ) + " Event:: " + e.toString( ) + " To:: " + object.getClass( ).getCanonicalName());
 			e.fireEvent( object );
 		}
 	}

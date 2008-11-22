@@ -21,7 +21,8 @@ public abstract class X10Event extends Event {
 		X10_A, X10_B, X10_C, X10_D,
 		X10_E, X10_F, X10_G, X10_H,
 		X10_I, X10_J, X10_K, X10_L,
-		X10_M, X10_N, X10_O, X10_P
+		X10_M, X10_N, X10_O, X10_P,
+		X10_UNDEFINED
 	}
 
 	// Create an enumeration which defines all the possible X10 device codes.
@@ -29,7 +30,8 @@ public abstract class X10Event extends Event {
 		X10_1,  X10_2,  X10_3,  X10_4,
 		X10_5,  X10_6,  X10_7,  X10_8,
 		X10_9,  X10_10, X10_11, X10_12,
-		X10_13, X10_14, X10_15, X10_16
+		X10_13, X10_14, X10_15, X10_16,
+		X10_UNDEFINED
 	}
 
 	// Create an enumeration which defines all the possible X10 event codes.
@@ -49,7 +51,8 @@ public abstract class X10Event extends Event {
 		X10_EXTENDED_DATA_TRANSFER,
 		X10_STATUS_ON,
 		X10_STATUS_OFF,
-		X10_STATUS_REQUEST
+		X10_STATUS_REQUEST,
+		X10_UNDEFINED
 	}
 
 	// Create the private member variables for this class.
@@ -61,7 +64,9 @@ public abstract class X10Event extends Event {
 	 * Constructor - default implicit constructor
 	 */
 	public X10Event ( ) {
-
+        setHouseCode (X10_HOUSE_CODE.X10_UNDEFINED);
+        setDeviceCode (X10_DEVICE_CODE.X10_UNDEFINED);
+        setEventCode (X10_EVENT_CODE.X10_UNDEFINED);
 	}
 
 	/**
@@ -134,9 +139,9 @@ public abstract class X10Event extends Event {
 	public X10Event(String deviceName, X10_EVENT_CODE eventCode)
 			throws IllegalArgumentException {
 		super(deviceName);
-	    
-		setEventCode ( eventCode );
-	
+		setHouseCode ( X10_HOUSE_CODE.X10_UNDEFINED);
+		setDeviceCode ( X10_DEVICE_CODE.X10_UNDEFINED);
+		setEventCode ( eventCode );	
 	}
 
 	/**
@@ -224,7 +229,6 @@ public abstract class X10Event extends Event {
 		case X10_N: houseCode = "N"; break;
 		case X10_O: houseCode = "O"; break;
 		case X10_P: houseCode = "P"; break;
-		default: assert(false);
 		}
 		return houseCode;
 	}
@@ -253,7 +257,6 @@ public abstract class X10Event extends Event {
 		case X10_N: houseCode = 'N'; break;
 		case X10_O: houseCode = 'O'; break;
 		case X10_P: houseCode = 'P'; break;
-		default: assert(false);
 		}
 		return houseCode;
 	}
@@ -328,7 +331,6 @@ public abstract class X10Event extends Event {
 		case X10_14: deviceCode = "14"; break;
 		case X10_15: deviceCode = "15"; break;
 		case X10_16: deviceCode = "16"; break;
-		default: assert(false);
 		}
 		return deviceCode;
 	}
@@ -357,7 +359,6 @@ public abstract class X10Event extends Event {
 		case X10_14: deviceCode = 14; break;
 		case X10_15: deviceCode = 15; break;
 		case X10_16: deviceCode = 16; break;
-		default: assert(false);
 		}
 		return deviceCode;
 	}
@@ -425,7 +426,6 @@ public abstract class X10Event extends Event {
 		case X10_STATUS_ON:        event = "STATUS_ON"; break;
 		case X10_STATUS_OFF:       event = "STATUS_OFF"; break;
 		case X10_STATUS_REQUEST:   event = "STATUS_REQUEST"; break;
-		default: assert(false);
 		}
 		return event;
 	}
@@ -436,7 +436,11 @@ public abstract class X10Event extends Event {
 	 *   @return Something along the lines of "G12_ON" or "E1_OFF" or "C_BRIGHT" or "A_DIM".
 	 */
 	public String toString() {
-		String s = getDeviceName( ) + "::" + getHouseCodeString( ) + getDeviceCodeString( ) + "_" + getEventCodeString( );
+		String houseDevice = "";
+	    if ( (getHouseCode( ) != X10_HOUSE_CODE.X10_UNDEFINED) || (getDeviceCode( ) != X10_DEVICE_CODE.X10_UNDEFINED) ) {
+	    	houseDevice = getHouseCodeString( ) + getDeviceCodeString( ) + "_";
+	    }
+		String s = getDeviceName( ) + "::" + houseDevice + getEventCodeString( );
 		return s;
 	}
 
