@@ -2,6 +2,7 @@ package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
+import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
 
 import java.util.*;
@@ -286,14 +287,24 @@ public class X10MotionSensor extends X10Device {
 		 */
 		if ( getState( ) == X10DeviceState.ON ) {
 
-			// reset the activity timer
-			mInactivityTimer.startTimer( );
-
 			// On transition to MOTION, we need to turn on appliances.
 			if (mDetectionWindowTrigger == false) {
+
+				// Load some local time pieces from startTime and endTime to compare with current time
+				Calendar localStartTime = Calendar.getInstance();
+				localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
+				localStartTime.set(Calendar.MINUTE, getStartTime( ).get(Calendar.MINUTE));
+				
+				Calendar localEndTime = Calendar.getInstance();
+				localEndTime.set(Calendar.HOUR_OF_DAY, getEndTime( ).get(Calendar.HOUR_OF_DAY));
+				localEndTime.set(Calendar.MINUTE, getEndTime( ).get(Calendar.MINUTE));
+				
 				// Check the detection window if applicable
-				if (!getDetectionPeriodEnabled( ) || 
-						(calendar.after(getStartTime( )) && calendar.before(getEndTime( ))) ) {
+				if ( !getDetectionPeriodEnabled( ) || 
+				    (calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
+
+					// reset the activity timer
+					mInactivityTimer.startTimer( );
 
 					// First, let's acquire the Mutex to allow only one updater of the list
 					mListSemaphore.acquireUninterruptibly();
