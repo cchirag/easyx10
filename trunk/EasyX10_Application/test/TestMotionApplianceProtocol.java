@@ -88,7 +88,7 @@ public class TestMotionApplianceProtocol implements EventHandlerListener {
 	
 	public void processProtocolEvent ( X10ProtocolEvent protocolEvent ) {
 		LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "processProtocolEvent",
-				 "Message Received:: " + (X10DeviceEvent)(Event)protocolEvent );
+				 "Message Received:: " + (X10ProtocolEvent)(Event)protocolEvent );
 	}
 
 	public void processTimerEvent ( TimerEvent timerEvent ) {
