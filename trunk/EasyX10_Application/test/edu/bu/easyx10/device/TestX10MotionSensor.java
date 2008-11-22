@@ -173,12 +173,14 @@ public class TestX10MotionSensor extends TestCase {
 		proxySensor.setLocation(new DeviceLocation(1,20,50));
 		proxySensor.setApplianceList(applianceList);
 		proxySensor.setDetectionPeriodEnabled(false);
-//		startTime = new Calendar( );
-//		startTime.set(Calendar.HOUR_OF_DAY, 13);
-//		startTime.set(Calendar.MINUTE, 33);
-//      proxySensor.setStartTime(startTime); 
-//		startTime.set(Calendar.HOUR_OF_DAY, 17);
-//		startTime.set(Calendar.MINUTE, 45);
+		startTime = Calendar.getInstance( );
+		startTime.set(Calendar.HOUR_OF_DAY, 13);
+		startTime.set(Calendar.MINUTE, 33);
+        proxySensor.setStartTime(startTime);
+        endTime = Calendar.getInstance( );
+		endTime.set(Calendar.HOUR_OF_DAY, 17);
+		endTime.set(Calendar.MINUTE, 45);
+		System.out.println("startTime: " + startTime.get(Calendar.HOUR_OF_DAY) + " endTime: " + endTime.get(Calendar.HOUR_OF_DAY));
         proxySensor.setStartTime(startTime); 
 		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
 		proxySensor.setState(RandomX10DeviceState( ));
@@ -196,8 +198,12 @@ public class TestX10MotionSensor extends TestCase {
     	if (a.getDeviceCode() != b.getDeviceCode()) proxyEqual = false;
     	if (!a.getApplianceList().equals(b.getApplianceList())) proxyEqual = false;
     	if (a.getDetectionPeriodEnabled() != b.getDetectionPeriodEnabled()) proxyEqual = false;
-//    	if (!a.getStartTime( ).equals(b.getStartTime())) proxyEqual = false;
-//    	if (!a.getEndTime( ).equals(b.getEndTime( ))) proxyEqual = false;
+    	if (a.getStartTime( ).get(Calendar.HOUR_OF_DAY) != b.getStartTime( ).get(Calendar.HOUR_OF_DAY)) {
+    		proxyEqual = false;
+    	}
+    	if (a.getStartTime( ).get(Calendar.MINUTE) != b.getStartTime( ).get(Calendar.MINUTE)) {
+    		proxyEqual = false;
+    	}
     	if (a.getInactivityTime() != b.getInactivityTime()) proxyEqual = false;
     	if (a.getState() != b.getState()) proxyEqual = false;
     	return (proxyEqual);
