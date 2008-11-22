@@ -111,7 +111,7 @@
 					if( devices.get(j).getLocation().getFloorNumber() == (i+1) ){
 			%>
 			<div style="position: absolute; height: 40px; width: 40px; top: 
-				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getY() %>px; background-color: 
+				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getX() %>px; background-color: 
 				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "lightgreen" : "yellow") %>; border: 1px black solid; text-align:center">
 				
 				<span style="font-size:x-small"><a href="Room.htm"><%= devices.get(j).getName() %></a></span>
