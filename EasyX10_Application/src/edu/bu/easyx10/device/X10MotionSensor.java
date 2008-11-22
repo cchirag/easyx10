@@ -30,7 +30,7 @@ import java.util.concurrent.Semaphore;
 public class X10MotionSensor extends X10Device {
 
 	//Declare Private Member Variables
-	
+
 	// Seconds before Sensor is marked inactive
 	protected int mInactivityTime;              
 
@@ -56,7 +56,7 @@ public class X10MotionSensor extends X10Device {
 
 	// Simple state variable for Detection Window logic
 	private boolean mDetectionWindowTrigger;  
-	
+
 	// Set of appliances which have been turned on
 	private List<String> mDetectionWindowList; 
 
@@ -75,7 +75,7 @@ public class X10MotionSensor extends X10Device {
 		// create any required member classes
 		mApplianceList = new HashSet<String>( );
 	}
-	
+
 	/**
 	 * Constructor for a new X10MotionSensor class.  The constructor is provided
 	 * with a ProxyX10MotionSensor object which contains all of the desired 
@@ -88,14 +88,14 @@ public class X10MotionSensor extends X10Device {
 
 		// Create the base class with the minimum information required.
 		super( proxyDevice.getName( ),
-			   proxyDevice.getHouseCode( ),
-			   proxyDevice.getDeviceCode( ) );
+				proxyDevice.getHouseCode( ),
+				proxyDevice.getDeviceCode( ) );
 
 		// Create the super X10Device class and pass to it its attributes
 		setLocation (proxyDevice.getLocation());
 
 		// create any required member classes
-		mApplianceList = new HashSet<String>( proxyDevice.getApplianceList() );
+		mApplianceList = new HashSet<String>( );
 		mDetectionWindowList = new ArrayList<String>( );
 
 		// create a Mutex using the static semaphore
@@ -123,7 +123,7 @@ public class X10MotionSensor extends X10Device {
 		//set the initial device state
 		mState =  X10DeviceState.OFF;
 	}
-	
+
 	/*
 	 * Defined access methods for all of the member variables.
 	 */
@@ -274,6 +274,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param X10DeviceState state - new state of ON (motion) or OFF
 	 */
+	@Override
 	public synchronized void setState( X10DeviceState state ) {
 
 		// update our local member variable 
@@ -290,9 +291,9 @@ public class X10MotionSensor extends X10Device {
 
 			// On transition to MOTION, we need to turn on appliances.
 			if (mDetectionWindowTrigger == false) {
-
-				// Check the detection window
-				if (getDetectionPeriodEnabled( ) && calendar.after(getStartTime( )) && calendar.before(getEndTime( )) ) {
+				// Check the detection window if applicable
+				if (!getDetectionPeriodEnabled( ) || 
+						(calendar.after(getStartTime( )) && calendar.before(getEndTime( ))) ) {
 
 					// First, let's acquire the Mutex to allow only one updater of the list
 					mListSemaphore.acquireUninterruptibly();
@@ -303,7 +304,7 @@ public class X10MotionSensor extends X10Device {
 					 */
 					mDetectionWindowTrigger = true;
 					mDetectionWindowList.clear( );
-					mDetectionWindowList.addAll ( mApplianceList );
+					mDetectionWindowList.addAll ( getApplianceList( ) );
 					// return the Mutex now
 					mListSemaphore.release();
 
@@ -332,7 +333,6 @@ public class X10MotionSensor extends X10Device {
 			Iterator<String> i = mDetectionWindowList.iterator( );
 			while (i.hasNext()) {
 				String deviceName = i.next();
-				// Fetch the appliance reference from the DeviceManager
 				// Create an X10DeviceEvent to turn on the Appliance
 				X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_ON );
 				// Send the Event to the X10Appliance object through EventGenerator
@@ -347,6 +347,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @return X10DeviceState ( ON, OFF )
 	 */
+	@Override
 	public X10DeviceState getState( ) {	
 		return mState;
 	}
@@ -357,6 +358,7 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @return ProxyX10MotionSensor
 	 */
+	@Override
 	public ProxyX10MotionSensor getProxyDevice( ) {
 		return new ProxyX10MotionSensor(this);
 	}
@@ -368,15 +370,16 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param ProxyX10MotionSensor
 	 */
+	@Override
 	public void updateDevice(Device proxyDevice) {
 
 		/*
 		 * We needer to crash if we get an update for a device which
 		 * is not a ProxyX10MotionSensor.  This means we found a bug.
 		 */
-	    assert(proxyDevice instanceof ProxyX10MotionSensor);
+		assert(proxyDevice instanceof ProxyX10MotionSensor);
 
-	    /*
+		/*
 		 * We need to crash if we get an update for a device with a 
 		 * different name.  This means we found a bug.
 		 */
@@ -400,17 +403,16 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param Event e
 	 */
-	public void processDeviceEvent(X10DeviceEvent e) {
-
+	public void processDeviceEvent(X10DeviceEvent deviceEvent) {
 		/* We only deal with X10DeviceEvents with a matching House and Device code and
-		 *those events which are ON indicating motion.
+		 * those events which are ON indicating motion.
 		 */
-		if (e instanceof X10DeviceEvent &&
-				((X10DeviceEvent)e).getHouseCodeChar( ) == getHouseCode( ) &&
-				((X10DeviceEvent)e).getDeviceCodeInt( ) == getDeviceCode( ) &&
-				((X10DeviceEvent)e).getEventCode( ) == X10_EVENT_CODE.X10_ON ) {
+		if (deviceEvent instanceof X10DeviceEvent &&
+			deviceEvent.getHouseCodeChar( ) == getHouseCode( ) &&
+			deviceEvent.getDeviceCodeInt( ) == getDeviceCode( ) &&
+			deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ) {
 			setState ( X10DeviceState.ON );
-		}
+		} 
 	}
 
 	/**
