@@ -15,17 +15,12 @@ import java.util.*;
  */
 public class ProxyX10MotionSensor extends X10MotionSensor {
 
-	// local member variables
-	private Set<String> mApplianceList;       // List of Appliances to send events to
-	
 	/**
 	 * Default constructor for the X10MotionSensor class.  The minimum
 	 * information required is a Name, HouseCode, and DeviceCode.
 	 */
 	public ProxyX10MotionSensor(String name, char houseCode, int deviceCode){
 		super ( name, houseCode, deviceCode );
-		// create any required member classes
-		mApplianceList = new HashSet<String>( );
 	}
 
 	/**
@@ -41,17 +36,14 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 			   motionDevice.getHouseCode( ),
 			   motionDevice.getDeviceCode( ) );
 			
-		// create any required member classes
-		mApplianceList = new HashSet<String>( motionDevice.getApplianceList( ) );
-
 		// load our member variables from the X10MotionDevice
-		// Create the super X10Device class and pass to it its attributes
 		setLocation (motionDevice.getLocation());
 		setInactivityTime ( motionDevice.getInactivityTime( ) );
 		setDetectionPeriodEnabled ( motionDevice.getDetectionPeriodEnabled( ) );
 		setStartTime ( motionDevice.getStartTime( ) );
 		setEndTime ( motionDevice.getEndTime( ) );
 		setState ( motionDevice.getState( ) );
+		setApplianceList ( motionDevice.getApplianceList( ) );
 	}
 
 	/*
@@ -65,6 +57,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @param int seconds Inactivity Time
 	 */
+	@Override
 	public void setInactivityTime (int seconds) {
 		mInactivityTime = seconds;
 	}
@@ -79,6 +72,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @param boolean isEnabled
 	 */
+	@Override
 	public void setDetectionPeriodEnabled(boolean isEnabled){
 		mDetectionPeriodEnabled = isEnabled;
 	}
@@ -91,6 +85,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @param Time startTime Beginning time for Motion Activity Window
 	 */
+	@Override
 	public void setStartTime(Calendar startTime) {
 		mStartTime = startTime;
 	}
@@ -103,6 +98,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @return Time Ending time for Motion Activity Window
 	 */
+	@Override
 	public void setEndTime(Calendar endTime) {
 		mEndTime = endTime;
 	}
@@ -115,6 +111,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 * 
 	 * @param applianceList the mApplianceList to set
 	 */
+	@Override
 	public void setApplianceList(Set<String> applianceList) {
 		// clear out the old list
 		mApplianceList.clear( );
@@ -122,12 +119,22 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 		// All all the new ones
 		mApplianceList.addAll ( applianceList );
 	}
+	
+	/**
+	 * This method adds a new entry into the Appliance list.
+	 * 
+	 * @param String applianceName
+	 */
+	public void addAppliance (String applianceName ) {
+		mApplianceList.add(applianceName);
+	}
 
 	/**
 	 * This method loads the state attribute.
 	 * 
 	 * @param X10DeviceState state - new state of ON (motion) or OFF
 	 */
+	@Override
 	public void setState( X10DeviceState state ) {
 		mState = state;
 	}
@@ -155,6 +162,26 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	public void processProtocolEvent(Event e) { 
 
 	}
+	
+	/**
+	 * The updateDevice method is simply knocked out since there isn't
+	 * any which needs to be updated.
+	 */
+	@Override
+	public void updateDevice ( Device device ) {
+		
+	}
 
+	/**
+	 * We simply override the getProxyDevice method.  It doesn't 
+	 * make sense to fetch a proxy from a proxy.
+	 * 
+	 * @override X10Appliance getProxyDevice()
+	 * @return ProxyX10Appliance object
+	 */
+	@Override
+	public ProxyX10MotionSensor getProxyDevice(){ 
+		return null;
+	}
 }
 
