@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="easyx10.css" />
 </head>
 
-<body>
+<body onload="document.loginform.username.focus()">
 
 <div id="masthead"><br/>
 	<span>EasyX10 Project</span>
@@ -20,10 +20,18 @@
 	<div id="loginDiv">
 		<br />
 		<span>Please Log In:</span>
-		<form method="post" action="/easyx10/LoginServlet">
-			Username:&nbsp;&nbsp; <input name="username" type="text" size="25" /><br /><br/>
-			Password:&nbsp;&nbsp; <input name="password" type="password" size="25" /><br />
-			<span style="color: red; font-weight: bold"><%= session.getAttribute( "errorMessage" ) %></span>
+		<form name="loginform" method="post" action="/easyx10/LoginServlet">
+			Username:&nbsp;&nbsp; <input name="username" type="text" size="25" maxlength="25" /><br /><br/>
+			Password:&nbsp;&nbsp; <input name="password" type="password" size="25" maxlength="25" /><br />
+			
+			<%
+				// Retrieve the error message if one exists
+				String errorMessage = (String)session.getAttribute( "errorMessage" );
+				if( errorMessage == null ){
+					errorMessage = "";
+				}
+			%>
+			<span style="color: red; font-weight: bold"><%= errorMessage %></span>
 			<br />
 			
 			<input name="loginButton" type="submit" value="Login"/>
