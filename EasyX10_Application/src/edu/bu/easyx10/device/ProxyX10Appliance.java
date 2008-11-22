@@ -1,8 +1,7 @@
 package edu.bu.easyx10.device;
 
-import java.sql.Time;
 import edu.bu.easyx10.util.LoggingUtilities;
-
+import java.util.Calendar;
 
 /**
  * ProxyX10Appliance is derived from and identical to X10Appliance except 
@@ -35,7 +34,7 @@ public class ProxyX10Appliance extends X10Appliance{
 
 	public ProxyX10Appliance (String name, char houseCode, int deviceCode){
 		
-		// Create the super X10Device class and pass to it its attribute;
+		// Create the super X10Device class and pass it to its attribute;
 			super(name,houseCode,deviceCode);
 		
 		
@@ -86,7 +85,7 @@ public class ProxyX10Appliance extends X10Appliance{
 	 *  @override X10Appliance setOnTime
 	 *  @param A Time to turn on the Appliance
 	 */
-	public void setOnTime(Time onTime) {
+	public void setOnTime(Calendar onTime) {
 		
 		mOnTime = onTime;
 
@@ -98,7 +97,7 @@ public class ProxyX10Appliance extends X10Appliance{
 	 *  @override X10Appliance setOffTime
 	 *  @param A Time to turn off the Appliance
 	 */
-	public void setOffTime(Time offTime) {
+	public void setOffTime(Calendar offTime) {
 		
 		mOffTime = offTime;
 
