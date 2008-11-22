@@ -4,9 +4,8 @@ import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
+import java.util.Calendar;
 
-//TODO Check to see if Java SQL time is required for a timer
-import java.sql.Time;
 
 /** The X10Appliance class is derived from the abstract class X10DeviceClass. 
  * It's purpose is to model the state and behavior of X10 appliance modules.
@@ -23,8 +22,8 @@ public class X10Appliance extends X10Device{
 	//Declare Private Member Variables
 	private TriggerTimer mOnTimer;            // Timer used to trigger On Event
 	private TriggerTimer mOffTimer;           // Timer used to trigger Off Event
-	protected Time mOnTime;                   // Time to turn appliance on
-	protected Time mOffTime;                  // Time to shut appliance off
+	protected Calendar mOnTime = Calendar.getInstance();// Time to turn appliance on
+	protected Calendar mOffTime = Calendar.getInstance();// Time to shut appliance off
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
 	private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
 	private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
@@ -115,7 +114,7 @@ public class X10Appliance extends X10Device{
 	 * 
 	 * @param Pass in a Time object equal to the time to turn the Appliance on.
 	 */
-	private void setOnTimer(Time anOnTime){
+	private void setOnTimer(Calendar anOnTime){
 
 		//If the mOnTimer is null setOnTimer is being called by the constructor
 		//So you must instantiate the TriggerTimer
@@ -123,14 +122,17 @@ public class X10Appliance extends X10Device{
 		if(mOnTimer == null){
 		
 			//instantiate the member TriggerTimer mOnTimer
+			
 			mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
+			mOnTimer.startTimer();
 		}
 		else{  
 			
 			//If we're in here the TriggerTimer has already been instantiated
 			//so just set the TriggerTimer to it's new value
 			
-			mOnTimer.setTriggerTime(anOnTime);		
+			mOnTimer.setTriggerTime(anOnTime);
+			mOnTimer.startTimer();
 		}
 		
 		//start up the timer
@@ -146,22 +148,25 @@ public class X10Appliance extends X10Device{
 	 * 
 	 * @param Pass in a Time object equal to the time to turn the Appliance on.
 	 */
-	private void setOffTimer(Time anOffTime){
+	private void setOffTimer(Calendar anOffTime){
 		
 		//If the mOffTimer is null setOffTimer is being called by the constructor
 		//So you must instantiate the TriggerTimer
 		if(mOffTimer == null){
+			
 		//instantiate the member TriggerTimer mOffTimer
-		mOffTimer = new TriggerTimer (mOffEvent,anOffTime);
+		
+			mOffTimer = new TriggerTimer (mOffEvent,anOffTime);
 		}
 		else{  
 			
 			//If we're in here the TriggerTimer has already been instantiated
 			//so just set the TriggerTimer to it's new value
+			
 			mOffTimer.setTriggerTime(anOffTime);		
 		}
 		
-		//start up the timer
+		//Now start / restart the timer. If it's already started it will restart.
 		mOffTimer.startTimer();
 		
 	}
@@ -170,7 +175,7 @@ public class X10Appliance extends X10Device{
 	 * @return Returns a Time object representing the time an event will be 
 	 * fired to turn on the Appliance
 	 */
-	public Time getOnTime() {
+	public Calendar getOnTime() {
 		return mOnTime;
 	}
 
@@ -181,9 +186,9 @@ public class X10Appliance extends X10Device{
 	 * 
 	 *  @param A Time to turn on the Appliance
 	 */
-	public void setOnTime(Time onTime) {
+	public void setOnTime(Calendar onTime) {
 		
-		mOnTime = onTime;
+		mOnTime= onTime;
 		
 		//now hand off the onTime to the onTimer;
 		setOnTimer(mOnTime);
@@ -194,7 +199,7 @@ public class X10Appliance extends X10Device{
 	 * will be sent to turn the appliance off.
 	 * @return
 	 */
-	public Time getOffTime() {
+	public Calendar getOffTime() {
 		return mOffTime;
 	}
 	
@@ -206,7 +211,7 @@ public class X10Appliance extends X10Device{
 	 *  @param A time to turn off the Appliance
 	 */
 	
-	public void setOffTime(Time offTime) {
+	public void setOffTime(Calendar offTime) {
 		
 		mOffTime = offTime;
 		
