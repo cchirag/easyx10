@@ -11,23 +11,38 @@
 <link rel="stylesheet" type="text/css" href="easyx10.css" />
 </head>
 
+<% 
+	// Retrieve config data
+	String configFilePath = 
+				getServletContext().getRealPath( "/WEB-INF/SysConfig.xml" );
+	SystemConfiguration sysConfig = 
+				ConfigurationUtilities.getSystemConfiguration(configFilePath);	
+%>
+
 <body>
 
 <script type="text/javascript">
     function processFloorSelect(){
     	var selectedFloor = document.getElementById("floorSelect").value;
-    	var floors = new Array("floor1", "floor2", "floor3");
-		for (i=0;i<=floors.length;i++)
+    	var displayedFloor = 1;
+		for (i=0;i<= <%= sysConfig.getFloorCount() %>;i++)
 		{
-			var floorDiv = document.getElementById(floors[i]);
+			var currentFloor = "floor" + (i+1);
+			var floorDiv = document.getElementById(currentFloor);
 			if( !floorDiv )continue;
 			
-			if( floors[i] == selectedFloor ) {
+			if( currentFloor == selectedFloor ) {
 				floorDiv .style.display = 'block';
+				displayedFloor = i+1;
 			} else {
 				floorDiv.style.display = 'none';
 			}
 		}	
+
+		var addAppLink = document.getElementById("addApplianceLink");
+		addAppLink.href = "AddAppliance.jsp?selectedFloor=" + displayedFloor;
+		var addMotionLink = document.getElementById("addMotionLink");
+		addMotionLink.href = "AddMotionSensor.jsp?selectedFloor=" + displayedFloor;
 	}
 </script>
 <div id="masthead">
@@ -38,27 +53,21 @@
 		<table border="0" cellpadding="0" cellspacing="0" class="nav1">
 			<tr>
 				<td class="nav1" style="text-align: center">
-					<a href="SystemStatus.htm">System Status</a>
+					<a href="Status.jsp">System Status</a>
 				</td>
 				<td class="nav1" style="text-align: center">
-					<a href="AddAppliance.htm">Add Appliance</a>
+					<a id="addApplianceLink" href="AddAppliance.jsp?selectedFloor=1">Add Appliance</a>
 				</td>
 				<td class="nav1" style="text-align: center">
-					<a href="Default.htm">Add Motion Sensor</a>
+					<a id="addMotionLink" href="AddMotionSensor.jsp?selectedFloor=1">Add Motion Sensor</a>
 				</td>
 			</tr>
 		</table>
 	</div>
 	<div class="nav1" style="float: right">
-		<span><a href="Default.htm">Logout</a></span> </div>
+		<span><a href="Login.jsp">Logout</a></span> </div>
 </div>
-<% 
-	// Retrieve config data
-	String configFilePath = 
-				getServletContext().getRealPath( "/WEB-INF/SysConfig.xml" );
-	SystemConfiguration sysConfig = 
-				ConfigurationUtilities.getSystemConfiguration(configFilePath);	
-%>
+
 <div id="page_content">
 	<div style="font: large Arial, Helvetica, sans-serif; margin-left: 50px;">
 		<span>Select a Floor: </span>
@@ -70,8 +79,19 @@
 		<%
 			}
 		%>
-		</select> </div>
+		</select> 
+	</div>
 	<br />
+	<div style="margin-left: 50px">
+		<%
+			// Retrieve the error message if one exists
+			String statusMessage = (String)request.getAttribute( "statusMessage" );
+			if( statusMessage == null ){
+				statusMessage = "";
+			}
+		%>
+		<span style="color: red; font-weight: bold"><%= statusMessage %></span>
+	</div>
 	<div id="house">
 		
 		<% 
@@ -92,7 +112,7 @@
 			%>
 			<div style="position: absolute; height: 40px; width: 40px; top: 
 				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getY() %>px; background-color: 
-				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "green" : "yellow") %>; border: 1px black solid; text-align:center">
+				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "lightgreen" : "yellow") %>; border: 1px black solid; text-align:center">
 				
 				<span style="font-size:x-small"><a href="Room.htm"><%= devices.get(j).getName() %></a></span>
 			</div>
