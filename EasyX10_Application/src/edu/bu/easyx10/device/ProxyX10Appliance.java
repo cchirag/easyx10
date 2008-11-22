@@ -65,13 +65,8 @@ public class ProxyX10Appliance extends X10Appliance{
 		else {
 			setTriggerTimerEnabled(false);
 		}
-		
-		// Check to see if the location was instantiated in the X10Appliance
-		if(applianceDevice.getLocation()!= null){
-			
-			//Call base classes setMethod
-			setLocation(applianceDevice.getLocation());			
-		}
+
+		setLocation(applianceDevice.getLocation());			
 			
 		setState ( applianceDevice.getState( ) );
 		
@@ -113,7 +108,7 @@ public class ProxyX10Appliance extends X10Appliance{
 	public synchronized void setState( X10DeviceState state ) {
 
 		//check to see if they're already the same
-		if (!getState().toString().equals(state.toString())){
+		if (getState() != state){
 			
 			//set the new state of this X10Appliance
 			mState = state;
