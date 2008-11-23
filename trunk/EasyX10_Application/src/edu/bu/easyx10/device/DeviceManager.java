@@ -3,6 +3,7 @@ package edu.bu.easyx10.device;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.bu.easyx10.protocol.ProtocolFactory;
 import edu.bu.easyx10.util.LoggingUtilities;
 
 
@@ -22,7 +23,26 @@ public final class DeviceManager {
 	//member variables
 	private HashMap<String, X10Device> mDeviceHashMap = new HashMap<String,X10Device>();   // List of Devices
 	
-    //Change to HashMap
+	public DeviceManager(){
+
+		try {
+			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+			"Initializing the ProtocolFactory\n");
+ 		    ProtocolFactory.initProtocols();
+		} catch ( Exception e ) {
+			LoggingUtilities.logError("ProtocolFactory", "initProtocols",
+					 "\nTrouble initializing ProtocolFactory" + e);
+		}
+		
+		
+	}
+	
+    /**
+     * This method is used to return an ArrayList of ProxyX10Appliances and 
+     * ProxyX10Devices.
+     * 
+     * @return Returns an ArrayList of Proxy Devices 
+     */
 	public ArrayList<X10Device> getDevices(){	
 		
 		//Create the ArrayList that will be returned
