@@ -101,7 +101,7 @@ public class EventGenerator {
 		
 		// First, let's acquire the Mutex to allow only one updater of the list
 		m_listSemaphore.acquireUninterruptibly();
-		List<EventHandlerListener> localList = new ArrayList( );
+		List<EventHandlerListener> localList = new ArrayList<EventHandlerListener>( );
 		localList.addAll(m_eventListeners);
 		// return the Mutex now
 		m_listSemaphore.release();

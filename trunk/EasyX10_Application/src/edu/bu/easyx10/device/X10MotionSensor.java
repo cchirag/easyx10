@@ -2,7 +2,6 @@ package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
-import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
 
 import java.util.*;
