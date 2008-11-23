@@ -294,14 +294,14 @@ public class X10MotionSensor extends X10Device {
 				Calendar localStartTime = Calendar.getInstance();
 				localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
 				localStartTime.set(Calendar.MINUTE, getStartTime( ).get(Calendar.MINUTE));
-				
+
 				Calendar localEndTime = Calendar.getInstance();
 				localEndTime.set(Calendar.HOUR_OF_DAY, getEndTime( ).get(Calendar.HOUR_OF_DAY));
 				localEndTime.set(Calendar.MINUTE, getEndTime( ).get(Calendar.MINUTE));
-				
+
 				// Check the detection window if applicable
 				if ( !getDetectionPeriodEnabled( ) || 
-				    (calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
+						(calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
 
 					// reset the activity timer
 					mInactivityTimer.startTimer( );
@@ -329,6 +329,10 @@ public class X10MotionSensor extends X10Device {
 						eventGenerator.fireEvent ( deviceEvent );
 					}
 				}
+			} else {
+
+				// reset the activity timer
+				mInactivityTimer.startTimer( );
 			}
 		}
 
@@ -419,9 +423,9 @@ public class X10MotionSensor extends X10Device {
 		 * those events which are ON indicating motion.
 		 */
 		if (deviceEvent instanceof X10DeviceEvent &&
-			deviceEvent.getHouseCodeChar( ) == getHouseCode( ) &&
-			deviceEvent.getDeviceCodeInt( ) == getDeviceCode( ) &&
-			deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ) {
+				deviceEvent.getHouseCodeChar( ) == getHouseCode( ) &&
+				deviceEvent.getDeviceCodeInt( ) == getDeviceCode( ) &&
+				deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ) {
 			setState ( X10DeviceState.ON );
 		} 
 	}
