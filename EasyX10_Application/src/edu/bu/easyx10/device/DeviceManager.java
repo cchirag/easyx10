@@ -3,6 +3,7 @@ package edu.bu.easyx10.device;
 import java.util.ArrayList;
 import java.util.HashMap;
 import edu.bu.easyx10.util.LoggingUtilities;
+import java.util.Iterator;
 
 
 
@@ -25,9 +26,17 @@ public final class DeviceManager {
     //Change to HashMap
 	public ArrayList<X10Device> getDevices(){	
 		
-		//TODO Return a list of proxyDevices instead of the real devices
+		//Create the ArrayList that will be returned
 		ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
-		//DEFINITELY CANT LEAVE THIS AS IT IS FOR TOO LONG
+		
+		//Create an iterator for moving through the HashMap
+		Iterator iterator = mDeviceHashMap.entrySet().iterator();
+		
+		//Copy the HashMap into the ArrayList
+		while (iterator.hasNext() ) {
+			deviceList.add((X10Device)iterator.next());
+		}
+
 		return deviceList;
 		
 	}
