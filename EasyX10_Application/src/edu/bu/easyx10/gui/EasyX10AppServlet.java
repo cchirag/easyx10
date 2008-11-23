@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.bu.easyx10.device.Device;
+import edu.bu.easyx10.device.DeviceManagerFactory;
 import edu.bu.easyx10.util.LoggingUtilities;
 
 /**
@@ -17,7 +18,7 @@ import edu.bu.easyx10.util.LoggingUtilities;
 public class EasyX10AppServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	public static enum ActionType {ADD_DEVICE, MODIFY_DEVICE, DELETE_DEVIC}; 
+	public static enum ActionType {ADD_DEVICE, MODIFY_DEVICE}; 
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -34,7 +35,7 @@ public class EasyX10AppServlet extends HttpServlet {
 		String toPage = "/Status.jsp";
 		
 		// Retrieve the Action Type from the Request
-		String actionString = (String)request.getParameter("action");
+		String actionString = request.getParameter("action");
 		
 		ActionType selectedAction = null;
 		try {
@@ -63,9 +64,38 @@ public class EasyX10AppServlet extends HttpServlet {
 				}
 			} else if(selectedAction == ActionType.MODIFY_DEVICE) {
 				// TODO Add Modify Logic
-			} else if(selectedAction == ActionType.DELETE_DEVIC) {
-				// TODO Add Delete Logic
-			}
+				System.out.println("Got to Modify");
+				
+				// Access parameters from the request
+				String deviceName = request.getParameter("deviceName");
+				String deviceType = request.getParameter("deviceType");
+				String update = request.getParameter("update");
+				String delete = request.getParameter("delete");
+				
+				if( delete != null ){
+
+					// Delete the Device through the Manager
+					DeviceManagerFactory.getDeviceManager().deleteDevice(deviceName);
+					
+					// Set the status message and page to display
+					statusMessage = "Device Sucessfully Deleted";
+					toPage = "/Status.jsp";
+				} else if( update != null ){
+					Device updatedDevice = null;
+					if( deviceType.equals("APPLINCE") ){
+						updatedDevice = GuiUtilities.createNewAppliance(request);
+					} else if( deviceType.equals("MOTION") ){
+						updatedDevice = GuiUtilities.createNewMotionSensor(request);
+					}
+					
+					// Update the Device through the Manager
+					DeviceManagerFactory.getDeviceManager().updateDevice(updatedDevice);
+					
+					// Set the status message and page to display
+					statusMessage = "Device Successfully Updated";
+					toPage = "/Status.jsp";
+				}
+			} 
 		}
 		
 		// Set status message in request

@@ -126,7 +126,11 @@
 				<%= devices.get(j).getLocation().getY() %>px; left: <%= devices.get(j).getLocation().getX() %>px; background-color: 
 				<%= (devices.get(j).getState().equals(X10Device.X10DeviceState.ON) ? "yellow" : "lightgray") %>; border: 1px black solid; text-align:center">
 				
-				<span style="font-size:x-small"><a href="Room.htm"><%= devices.get(j).getName() %></a></span>
+				<span style="font-size:x-small">
+					<a href="<%= ((devices.get(j) instanceof ProxyX10Appliance) ? "ModifyAppliance.jsp" : "ModifyMotionSensor.jsp") 
+							+ "?deviceName=" + devices.get(j).getName() %>">
+					<%= devices.get(j).getName() %></a>
+				</span>
 			</div>
 			<%
 					}
