@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
 	function processActivityWindowSelect(displayActivityWindow){
-		if( displayActivityWindow == 'ON' ){
+		if( displayActivityWindow == 'true' ){
 			document.detailsForm.startTime.disabled = false;
 			document.detailsForm.endTime.disabled = false;
 		} else {
@@ -26,7 +26,7 @@
 	}
 
 	function processActivityTimeoutSelect(displayActivityWindow){
-		if( displayActivityWindow == 'ON' ){
+		if( displayActivityWindow == 'true' ){
 			document.detailsForm.activityTimeoutPeriod.disabled = false;
 		} else {
 			document.detailsForm.activityTimeoutPeriod.disabled = true;
@@ -186,8 +186,8 @@
 					</td>
 					<td>
 						<select name="activityWindow" onchange="processActivityWindowSelect(this.value);" tabindex="5">
-						<option value="ON">ON</option>
-						<option value="OFF" selected="selected">OFF</option>
+						<option value="true">ON</option>
+						<option value="false" selected="selected">OFF</option>
 						</select>
 					</td>
 					<td>
@@ -207,8 +207,8 @@
 					</td>
 					<td>
 						<select name="activityTimeout" onchange="processActivityTimeoutSelect(this.value);" tabindex="5">
-						<option value="ON">ON</option>
-						<option value="OFF" selected="selected">OFF</option>
+						<option value="true">ON</option>
+						<option value="false" selected="selected">OFF</option>
 						</select>
 					</td>
 					<td>
