@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.bu.easyx10.device.*;
@@ -52,8 +53,22 @@ public class TestDeviceManager {
 		//now add it back in again
 		  dm.addDevice(proxyApp);
 
-		//Test update device;
-		
+		//Test getDevice
+		  ProxyX10Appliance proxyApp1 = (ProxyX10Appliance)dm.getDevice("app1");
+		  System.out.println("The proxyApp1's name is " + proxyApp1.getName());
+		  
+		//Test getDevices
+		  ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
+		  
+		  deviceList = dm.getDevices();
+		  
+		  int count = 1;
+		  for (X10Device device : deviceList) {
+			  System.out.println("Here are the contents of the Arraylist");
+			  System.out.println("Item " + count + " is named " + device.getName());
+			  count++;
+		  }
+		  
 		
 	}
 	
