@@ -5,6 +5,7 @@ import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
 import java.util.Calendar;
+import java.util.Timer;
 
 
 /** The X10Appliance class is derived from the abstract class X10DeviceClass. 
@@ -122,8 +123,9 @@ public class X10Appliance extends X10Device{
 		if(mOnTimer == null){
 		
 			//instantiate the member TriggerTimer mOnTimer
-			
 			mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(new TriggerTimer(mOnEvent,anOnTime),anOnTime.getTime(), 86400000);
 			mOnTimer.startTimer();
 		}
 		else{  
