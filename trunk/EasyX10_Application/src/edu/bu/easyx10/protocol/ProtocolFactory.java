@@ -62,7 +62,7 @@ public class ProtocolFactory {
 			} else if (osType.equals("amd64")) {
 				x10Port = "/dev/ttyUSB0";
 			} else {
-				x10Port = "COM3";
+				x10Port = "COM9";
 			}
 
 			/*
