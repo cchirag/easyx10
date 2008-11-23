@@ -116,7 +116,7 @@ public class ProxyX10Appliance extends X10Appliance{
 	    }
 		else{
 			 LoggingUtilities.logInfo(ProxyX10Appliance.class.getCanonicalName(),
-			 "setState()", "INFO: The state of " + getName() + " was ignored" +
+			 "setState()", "The state of " + getName() + " was ignored" +
 			 "because the current state is already" + getState().toString());
 		}	
 			
