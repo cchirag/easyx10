@@ -50,6 +50,7 @@ public class TestMotionApplianceProtocol implements EventHandlerListener {
 		endTime.set(Calendar.HOUR_OF_DAY,19);
 		endTime.set(Calendar.MINUTE,0);
 		motionSensorProxy.setEndTime(endTime);
+		motionSensorProxy.setInactivityTimeEnabled(true);
 		motionSensorProxy.setInactivityTime (10);
 		motionSensor = new X10MotionSensor ( motionSensorProxy );
 		
@@ -63,7 +64,7 @@ public class TestMotionApplianceProtocol implements EventHandlerListener {
 	public static void main(String args[]) throws IOException {
 
 		// Enable Debugging
-//		System.setProperty("DEBUG", "1");
+		System.setProperty("DEBUG", "1");
 
 		// Instantiate the Test Controller
 		new TestMotionApplianceProtocol( );

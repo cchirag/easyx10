@@ -182,6 +182,7 @@ public class TestX10MotionSensor extends TestCase {
 		endTime.set(Calendar.MINUTE, 45);
 		System.out.println("startTime: " + startTime.get(Calendar.HOUR_OF_DAY) + " endTime: " + endTime.get(Calendar.HOUR_OF_DAY));
         proxySensor.setStartTime(startTime); 
+        proxySensor.setInactivityTimeEnabled(true);
 		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
 		proxySensor.setState(RandomX10DeviceState( ));
 		return (proxySensor);
@@ -204,6 +205,7 @@ public class TestX10MotionSensor extends TestCase {
     	if (a.getStartTime( ).get(Calendar.MINUTE) != b.getStartTime( ).get(Calendar.MINUTE)) {
     		proxyEqual = false;
     	}
+    	if (a.getInactivityTimeEnabled() != b.getInactivityTimeEnabled()) proxyEqual = false;
     	if (a.getInactivityTime() != b.getInactivityTime()) proxyEqual = false;
     	if (a.getState() != b.getState()) proxyEqual = false;
     	return (proxyEqual);
