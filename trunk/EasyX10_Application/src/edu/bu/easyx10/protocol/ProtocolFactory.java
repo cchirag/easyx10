@@ -22,18 +22,6 @@ public class ProtocolFactory {
 	private static CM11A_X10Protocol m_x10Protocol;
 	private static Enumeration<Object> m_portIDs;
 
-	// initialize the ProtocolFactory
-	static {
-		try {
-			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
-			"Initializing the ProtocolFactory\n");
- 		    initProtocols();
-		} catch ( Exception e ) {
-			LoggingUtilities.logError("ProtocolFactory", "initProtocols",
-					 "\nTrouble initializing ProtocolFactory" + e);
-		}
-	}
-	
 	/**
 	 * Default implicit constructor
 	 */
