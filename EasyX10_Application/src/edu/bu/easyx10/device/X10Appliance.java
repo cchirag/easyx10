@@ -26,8 +26,8 @@ public class X10Appliance extends X10Device{
 	protected Calendar mOnTime = Calendar.getInstance();// Time to turn appliance on
 	protected Calendar mOffTime = Calendar.getInstance();// Time to shut appliance off
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
-	private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
-	private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
+	//private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
+	//private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
 
 	/**
 	 * The default X10Appliance constructor. This takes in a device name
@@ -123,18 +123,18 @@ public class X10Appliance extends X10Device{
 		if(mOnTimer == null){
 		
 			//instantiate the member TriggerTimer mOnTimer
-			mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
-			Timer timer = new Timer();
-			timer.scheduleAtFixedRate(new TriggerTimer(mOnEvent,anOnTime),anOnTime.getTime(), 86400000);
-			mOnTimer.startTimer();
+			//mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
+			//Timer timer = new Timer();
+			//timer.scheduleAtFixedRate(new TriggerTimer(mOnEvent,anOnTime),anOnTime.getTime(), 86400000);
+			//mOnTimer.startTimer();
 		}
 		else{  
 			
 			//If we're in here the TriggerTimer has already been instantiated
 			//so just set the TriggerTimer to it's new value
 			
-			mOnTimer.setTriggerTime(anOnTime);
-			mOnTimer.startTimer();
+			//mOnTimer.setTriggerTime(anOnTime);
+			//mOnTimer.startTimer();
 		}
 		
 
@@ -159,18 +159,18 @@ public class X10Appliance extends X10Device{
 			
 		//instantiate the member TriggerTimer mOffTimer
 		
-			mOffTimer = new TriggerTimer (mOffEvent,anOffTime);
+			//mOffTimer = new TriggerTimer (mOffEvent,anOffTime);
 		}
 		else{  
 			
 			//If we're in here the TriggerTimer has already been instantiated
 			//so just set the TriggerTimer to it's new value
 			
-			mOffTimer.setTriggerTime(anOffTime);		
+			//mOffTimer.setTriggerTime(anOffTime);		
 		}
 		
 		//Now start / restart the timer. If it's already started it will restart.
-		mOffTimer.startTimer();
+		//mOffTimer.startTimer();
 		
 	}
 	
