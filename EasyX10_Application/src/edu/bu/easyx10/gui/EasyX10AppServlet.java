@@ -42,6 +42,7 @@ public class EasyX10AppServlet extends HttpServlet {
 		} catch (IllegalArgumentException iae){
 			LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 
 					"doPost()", "Unknown ActionType: Action = " + actionString);
+			iae.printStackTrace();
 		}
 		
 		LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 

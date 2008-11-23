@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,11 @@ public class GuiUtilities {
 	private static ArrayList<Device> tempDeviceList = new ArrayList<Device>();
 	
 	/**
-	 * @param theSession
+	 * This method updates the list of devices that is stored in the
+	 * session bean.  Devices are first retrieved from the DeviceManager
+	 * and then stored in the session bean.
+	 * 
+	 * @param theSession the current session
 	 */
 	public static void updateSessionDeviceList(HttpSession theSession){
 		
@@ -86,6 +91,13 @@ public class GuiUtilities {
 		GuiUtilities.tempDeviceList = tempDeviceList;
 	}
 
+	
+	/**
+	 * Generates the appliance option html for the  
+	 * Appliance Select box.
+	 *
+	 * @return html for appliance options
+	 */
 	public static String generateHtmlApplianceOptions() {
 		String optionsHtml = "";
 		
@@ -98,8 +110,12 @@ public class GuiUtilities {
 		}
 		return optionsHtml;
 	}
+	
 	/**
-	 * @return
+	 * Generates the html for the time options used
+	 * by a select box.
+	 * 
+	 * @return html for time options.
 	 */
 	public static String generateHtmlTimeOptions(){
 		String timeOptionsHtml = "";
@@ -141,6 +157,13 @@ public class GuiUtilities {
 		return timeOptionsHtml;
 	}
 	
+	/**
+	 * Creates a new appliance object using the data provided
+	 * in the request object.
+	 * 
+	 * @param request Contains form data from AddAppliance.jsp
+	 * @return the new proxy appliance.
+	 */
 	public static ProxyX10Appliance createNewAppliance(HttpServletRequest request){
 		
 		// Retrieve the name/house code/unit code
@@ -175,28 +198,16 @@ public class GuiUtilities {
 		
 		// Set timer details
 		if( request.getParameter("timer").equals("ON")){
-			SimpleDateFormat dateFormat = new SimpleDateFormat("h:mma");
-			
 			// Retrieve the time strings
 			String startTime = request.getParameter("startTime");
 			String endTime = request.getParameter("endTime");
 		
-			// Set the On Time
-			try{
-				Calendar onTime = Calendar.getInstance();
-				onTime.setTime(dateFormat.parse(startTime));
-				newDevice.setOnTime(onTime);
-			} catch( ParseException  pe){
-				pe.printStackTrace();
+			// Set the On and Off Time
+			if( startTime != null ){
+				newDevice.setOnTime(convertTimeString(startTime));
 			}
-			
-			// Set the Off Time
-			try{
-				Calendar offTime = Calendar.getInstance();
-				offTime.setTime(dateFormat.parse(endTime));
-				newDevice.setOnTime(offTime);
-			} catch( ParseException  pe){
-				pe.printStackTrace();
+			if( endTime != null ){
+				newDevice.setOffTime(convertTimeString(endTime));
 			}
 		}
 			
@@ -218,6 +229,13 @@ public class GuiUtilities {
 		return newDevice;
 	}
 	
+	/**
+	 * Creates a new motion sensor object using the data provided
+	 * in the request object.
+	 * 
+	 * @param request Contains form data from AddMotionSensor.jsp
+	 * @return the new proxy motion sensor.
+	 */
 	public static ProxyX10MotionSensor createNewMotionSensor(HttpServletRequest request){
 		
 		// Retrieve the name/house code/unit code
@@ -246,6 +264,39 @@ public class GuiUtilities {
 		// Create the new Appliance
 		ProxyX10MotionSensor newDevice = new ProxyX10MotionSensor(name, houseCode, unitCode);
 		
+		// Set the detection period
+		String activityWindow = request.getParameter("activityWindow");
+		newDevice.setDetectionPeriodEnabled(Boolean.parseBoolean(activityWindow));
+
+		// Set the start time
+		String startTime = request.getParameter("startTime");
+		if( startTime != null){
+			newDevice.setStartTime(convertTimeString(startTime));
+		}
+		
+		// Set the end time
+		String endTime = request.getParameter("endTime");
+		if( endTime != null){
+			newDevice.setEndTime(convertTimeString(endTime));
+		}
+		
+		// Set the Inactivity Timeout
+		// TODO Do we need bool?
+		//String activityTimeout = request.getParameter("activityTimeout");
+		String timeoutPeriod = request.getParameter("activityTimeoutPeriod");
+		if( timeoutPeriod != null ){
+			newDevice.setInactivityTime(Integer.parseInt(timeoutPeriod));
+		}
+		
+		// Set the appliance list
+		String listField = request.getParameter("associatedAppliances");
+		String [] applianceArray = listField.split(",");
+		HashSet<String> applianceSet = new HashSet<String>();
+		for(int i=0; i< applianceArray.length; i++){
+			applianceSet.add(applianceArray[i]);
+		}
+		newDevice.setApplianceList(applianceSet);
+		
 		// Set the Location
 		String leftString = request.getParameter("left");
 		int endLeft = leftString.indexOf("px");
@@ -260,6 +311,20 @@ public class GuiUtilities {
 		newDevice.setLocation(location);
 			
 		return newDevice;
+	}
+	
+	public static Calendar convertTimeString(String requestTime){
+		// Create a date format and calendar instance
+		SimpleDateFormat dateFormat = new SimpleDateFormat("h:mma");
+		Calendar theTime = Calendar.getInstance();
+		
+		// Set the time in the calendar based on input string
+		try{
+			theTime.setTime(dateFormat.parse(requestTime));
+		} catch( ParseException  pe){
+			pe.printStackTrace();
+		}
+		return theTime;
 	}
 
 }
