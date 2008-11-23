@@ -8,7 +8,7 @@
     <welcome-file>default.html</welcome-file>
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
-    <welcome-file>Login.htm</welcome-file>
+    <welcome-file>Login.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
     <description>Servlet that manages the login functionality</description>
@@ -19,5 +19,15 @@
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/LoginServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EasyX10AppServlet</display-name>
+    <servlet-name>EasyX10AppServlet</servlet-name>
+    <servlet-class>edu.bu.easyx10.gui.EasyX10AppServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EasyX10AppServlet</servlet-name>
+    <url-pattern>/EasyX10AppServlet</url-pattern>
   </servlet-mapping>
 </web-app>
