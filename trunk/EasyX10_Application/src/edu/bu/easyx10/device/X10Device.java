@@ -121,7 +121,7 @@ public abstract class X10Device extends Device{
 	 */
 	public boolean setDeviceCode(int deviceCode) {
 		
-		if (deviceCode >= 0 && deviceCode <=16){
+		if (deviceCode >= 1 && deviceCode <=16){
 		mDeviceCode = deviceCode;
 		return true;
 		}
