@@ -39,27 +39,33 @@ public class TestDeviceManager {
 		System.out.println("The proxyApp TriggerTimer is " + proxyApp.getTriggerTimerEnabled());
 		
 		//Test AddDevice
+		  System.out.println("Next Line should be INFO");
 		  dm.addDevice(proxyApp);
 		
 		//add again to make sure it doesn't allow it  
+		  System.out.println("Next Line should be SEVERE");
 		  dm.addDevice(proxyApp);
 		  
 		//now delete it
+		  System.out.println("Next Line should be INFO");
 		  dm.deleteDevice(proxyApp.getName());
 		  
 		//attempt to delete twice  
+		  System.out.println("Next Line should be SEVERE");
 		  dm.deleteDevice(proxyApp.getName());
 		  
 		//now add it back in again
+		  System.out.println("Next Line should be INFO");
 		  dm.addDevice(proxyApp);
 
 		//Test getDevice
+		  System.out.println("Next Line should be INFO");
 		  ProxyX10Appliance proxyApp1 = (ProxyX10Appliance)dm.getDevice("app1");
 		  System.out.println("The proxyApp1's name is " + proxyApp1.getName());
 		  
 		//Test getDevices
 		  ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
-		  
+		  System.out.println("Next Line should be INFO");
 		  deviceList = dm.getDevices();
 		  
 		  int count = 1;
