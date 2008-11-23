@@ -38,6 +38,7 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 			
 		// load our member variables from the X10MotionDevice
 		setLocation (motionDevice.getLocation());
+		setInactivityTimeEnabled ( motionDevice.getInactivityTimeEnabled( ) );
 		setInactivityTime ( motionDevice.getInactivityTime( ) );
 		setDetectionPeriodEnabled ( motionDevice.getDetectionPeriodEnabled( ) );
 		setStartTime ( motionDevice.getStartTime( ) );
@@ -49,6 +50,20 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	/*
 	 * Defined access methods for all of the member variables.
 	 */
+
+	/**
+	 * This method loads the Inactivity Time Enabled attribute.  The Inactivity Time
+	 * attribute defines the number of seconds for which a Motion Sensor will
+	 * be in the MOTION state.  The Enabled boolean controls if the Inactivty Timer
+	 * is in use.
+	 * 
+	 * @param int boolean enable
+	 */
+	@Override
+	public void setInactivityTimeEnabled (boolean enable) {
+		// store the enable in our private member variable
+		mInactivityTimeEnabled = enable;
+	}
 
 	/**
 	 * This method loads the Inactivity Time attribute.  The Inactivity Time

@@ -53,6 +53,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		endTime.set(Calendar.HOUR_OF_DAY,19);
 		endTime.set(Calendar.MINUTE,0);
 		motionSensorProxy.setEndTime(endTime);
+		motionSensorProxy.setInactivityTimeEnabled(true);
 		motionSensorProxy.setInactivityTime (10);
 		deviceManager.addDevice(motionSensorProxy);
 		

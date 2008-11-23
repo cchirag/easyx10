@@ -31,6 +31,9 @@ public class X10MotionSensor extends X10Device {
 
 	//Declare Private Member Variables
 
+	// Enable/Disable the Inactivity Timer
+	protected boolean mInactivityTimeEnabled;              
+
 	// Seconds before Sensor is marked inactive
 	protected int mInactivityTime;              
 
@@ -108,6 +111,7 @@ public class X10MotionSensor extends X10Device {
 		mInactivityTimer = new WaitTimer ( proxyDevice.getInactivityTime( ), timerEvent );
 
 		// load our member variables from the ProxyDevice
+		setInactivityTimeEnabled ( proxyDevice.getInactivityTimeEnabled( ) );
 		setInactivityTime ( proxyDevice.getInactivityTime( ) );
 		setDetectionPeriodEnabled ( proxyDevice.getDetectionPeriodEnabled( ) );
 		setStartTime ( proxyDevice.getStartTime( ) );
@@ -127,6 +131,31 @@ public class X10MotionSensor extends X10Device {
 	/*
 	 * Defined access methods for all of the member variables.
 	 */
+
+	/**
+	 * This method loads the Inactivity Time Enabled attribute.  The Inactivity Time
+	 * attribute defines the number of seconds for which a Motion Sensor will
+	 * be in the MOTION state.  The Enabled boolean controls if the Inactivty Timer
+	 * is in use.
+	 * 
+	 * @param int boolean enable
+	 */
+	public void setInactivityTimeEnabled (boolean enable) {
+		// store the enable in our private member variable
+		mInactivityTimeEnabled = enable;
+	}
+
+	/**
+	 * This method returns the Inactivity Time Enabled attribute.  The Inactivity Time
+	 * attribute defines the number of seconds for which a Motion Sensor will
+	 * be in the MOTION state.  The enabled attribute determines if the Inactivity Timer
+	 * feature is enabled.
+	 * 
+	 * @return boolean Inactivity Time Enabled
+	 */
+	public boolean getInactivityTimeEnabled( ) {
+		return mInactivityTimeEnabled;
+	}
 
 	/**
 	 * This method loads the Inactivity Time attribute.  The Inactivity Time
@@ -303,7 +332,9 @@ public class X10MotionSensor extends X10Device {
 						(calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
 
 					// reset the activity timer
-					mInactivityTimer.startTimer( );
+					if (getInactivityTimeEnabled( )) { 
+					     mInactivityTimer.startTimer( );
+					}
 
 					// First, let's acquire the Mutex to allow only one updater of the list
 					mListSemaphore.acquireUninterruptibly();
@@ -331,7 +362,9 @@ public class X10MotionSensor extends X10Device {
 			} else {
 
 				// reset the activity timer
-				mInactivityTimer.startTimer( );
+				if (getInactivityTimeEnabled( )) { 
+				    mInactivityTimer.startTimer( );
+				}
 			}
 		}
 
@@ -404,6 +437,7 @@ public class X10MotionSensor extends X10Device {
 		setHouseCode ( ((ProxyX10MotionSensor)proxyDevice).getHouseCode( ) );
 		setDeviceCode ( ((ProxyX10MotionSensor)proxyDevice).getDeviceCode( ) );
 		setApplianceList ( ((ProxyX10MotionSensor)proxyDevice).getApplianceList( ) );
+		setInactivityTimeEnabled ( ((ProxyX10MotionSensor)proxyDevice).getInactivityTimeEnabled( ) );
 		setInactivityTime ( ((ProxyX10MotionSensor)proxyDevice).getInactivityTime( ) );
 		setDetectionPeriodEnabled ( ((ProxyX10MotionSensor)proxyDevice).getDetectionPeriodEnabled( ) );
 		setStartTime ( ((ProxyX10MotionSensor)proxyDevice).getStartTime( ) );
