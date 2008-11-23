@@ -1,5 +1,6 @@
 package edu.bu.easyx10.device;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import edu.bu.easyx10.util.LoggingUtilities;
 
@@ -22,11 +23,12 @@ public final class DeviceManager {
 
 	
     //Change to HashMap
-	public final HashMap getDevices(){	
+	public ArrayList<X10Device> getDevices(){	
 		
 		//TODO Return a list of proxyDevices instead of the real devices
+		ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
 		//DEFINITELY CANT LEAVE THIS AS IT IS FOR TOO LONG
-		return mDeviceHashMap;
+		return deviceList;
 		
 	}
 	
@@ -38,39 +40,53 @@ public final class DeviceManager {
 	 * on the type of the X10Device.
 	 * 
 	 */
-	public final Device getDevice(String deviceName){
+	public final X10Device getDevice(String deviceName){
 		
-		/*
+		
 		// Make sure it's in the list
-		//if (!isUnique(deviceName)){
+		if (!isUnique(deviceName)){
 			
 			//Handle X10Appliance Devices
-			
-			
-			
-			//if(mDeviceHashMap.get(deviceName) instanceof X10Appliance){
+			if(mDeviceHashMap.get(deviceName) instanceof X10Appliance){
 				
-				//(X10Appliance)mDeviceHashMap.get(deviceName).	
+				ProxyX10Appliance proxyX10Appliance = 
+					(ProxyX10Appliance) mDeviceHashMap.get(deviceName).getProxyDevice();
+				
+				return (X10Device)proxyX10Appliance;	
 			
-			//}
+			}
 			// Handle X10MotionSensors
-			else if {
+		    else if (mDeviceHashMap.get(deviceName) instanceof X10MotionSensor) {
 				
+		    	//Downcast it so you can retrieve the proxy device
+		    	ProxyX10MotionSensor proxyX10MotionSensor = 
+		    		(ProxyX10MotionSensor) mDeviceHashMap.get(deviceName).getProxyDevice();
+				
+		    	//Now up cast it as an X10Device again so that its return type is correct
+		    	return (X10Device)proxyX10MotionSensor;
+			
 			}
 			// The DeviceType has no match - print to the log
 			else {
 				
-				
-				
+				/*
+				 * We could not match the Type if we're in here it likely means
+				 * we couldn't check the type on the object in the list.
+				 */
+				 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+				 "getDevice()","ERROR: The device type was not identifiable.");
+				 assert(false);
+
 			}
-			
-			*/
-			
+
+		} 
+		else {
+			LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+					 "getDevice()","ERROR: The device does not exist.");
+			assert(false);
 		}
-		
-		
-		//ProxyX10Appliance temp = new X10Appliance("Test", 'a',1);
-		//return temp;
+		return null;
+
 	}
 	
 	/**
@@ -80,7 +96,7 @@ public final class DeviceManager {
 	 */
 	public final boolean updateDevice(Device proxyDevice){
 		
-		//make sure the HashMap isn't empty and it exists in the Hashmap
+		//make sure the HashMap isn't empty and it exists in the HashMap
 		if (!mDeviceHashMap.isEmpty() && !isUnique(proxyDevice.getName())){
 			
 			//Determine it's Object type
