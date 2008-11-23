@@ -6,17 +6,17 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>EasyX10 - Add Appliance</title>
+<title>EasyX10 - Add Motion Sensor</title>
 <link rel="stylesheet" type="text/css" href="easyx10.css" />
 <script src="javascripts/prototype.js" type="text/javascript"></script>
 <script src="javascripts/scriptaculous.js" type="text/javascript"></script>
 </head>
 
-<body onload="document.detailsForm.applianceName.focus()">
+<body onload="document.detailsForm.motionSensorName.focus()">
 
 <script type="text/javascript">
-	function processTimerSelect(displayTimer){
-		if( displayTimer == 'ON' ){
+	function processActivityWindowSelect(displayActivityWindow){
+		if( displayActivityWindow == 'ON' ){
 			document.detailsForm.startTime.disabled = false;
 			document.detailsForm.endTime.disabled = false;
 		} else {
@@ -25,9 +25,64 @@
 		}
 	}
 
-	function updateLocation(){
-		document.detailsForm.top.value = document.getElementById("newAppliance").style.top;
-		document.detailsForm.left.value = document.getElementById("newAppliance").style.left;
+	function processActivityTimeoutSelect(displayActivityWindow){
+		if( displayActivityWindow == 'ON' ){
+			document.detailsForm.activityTimeoutPeriod.disabled = false;
+		} else {
+			document.detailsForm.activityTimeoutPeriod.disabled = true;
+		}
+	}
+
+	function processApplianceAdd() {
+		// Retrieve Selected Appliance
+		var selectedIndex = document.detailsForm.applianceList.selectedIndex;
+		var selectedApp = document.detailsForm.applianceList.options[selectedIndex].text;
+
+		// Add appliance to Associated List
+		addOption(document.detailsForm.associatedList, selectedApp, selectedApp);
+
+		// Remove appliance from Available List
+		removeOption(document.detailsForm.applianceList);
+	}
+	
+	function processApplianceRemove() {
+		// Retrieve Selected Associated Appliance
+		var selectedIndex = document.detailsForm.associatedList.selectedIndex;
+		var selectedApp = document.detailsForm.associatedList.options[selectedIndex].text;
+
+		// Add appliance to Available List
+		addOption(document.detailsForm.applianceList, selectedApp, selectedApp);
+
+		// Remove appliance from Associated List
+		removeOption(document.detailsForm.associatedList);
+	}
+
+	function removeOption(selectbox)
+	{
+		var i;
+		for(i=selectbox.options.length-1;i>=0;i--)
+		{
+			if(selectbox.options[i].selected)
+				selectbox.remove(i);
+		}
+	}
+
+	function addOption(selectbox,text,value )
+	{
+		var optn = document.createElement("OPTION");
+		optn.text = text;
+		optn.value = value;
+		selectbox.options.add(optn);
+	}
+
+	function preprocessForm(){
+		document.detailsForm.top.value = document.getElementById("newMotionSensor").style.top;
+		document.detailsForm.left.value = document.getElementById("newMotionSensor").style.left;
+
+		var options = document.detailsForm.associatedList.options;
+		for(i=0; i<options.length; i++){
+			document.detailsForm.associatedAppliances.value += (options[i].value + ",");
+		}
 	}
 </script>
 <div id="masthead">
@@ -48,7 +103,9 @@
 </div>
 <div id="page_content">
 	<span style="font-family: Arial, Helvetica, sans-serif; font-size: x-large; font-weight: bold">
-	Add New Appliance</span> <br />
+		Add New Motion Sensor
+	</span> 
+	<br />
 	<div>
 		<%
 			// Retrieve the error message if one exists
@@ -63,16 +120,14 @@
 	</div>
 	<br />
 	<div id="addForm">
-		<!-- span id="addFormMessage" style="font-family: Arial, Helvetica, sans-serif; font-size: large; font-weight: bold; font-variant: normal">
-		Enter Details for New Item:</span> <br / -->
-		<form name="detailsForm" id="detailsForm" method="post" action="/easyx10/EasyX10AppServlet?action=ADD_DEVICE&deviceType=APPLIANCE">
+		<form name="detailsForm" id="detailsForm" method="post" action="/easyx10/EasyX10AppServlet?action=ADD_DEVICE&deviceType=MOTION">
 			<table id="detailsFormTable">
 				<tr>
 					<td>
-						<span>Appliance Name: </span>
+						<span>Motion Sensor Name: </span>
 					</td>
 					<td colspan="1">
-						<input name="applianceName"  type="text" size="25" maxlength="25" tabindex="1" />
+						<input name="motionSensorName"  type="text" size="25" maxlength="25" tabindex="1" />
 					</td>
 					<td>
 						<span>House Code:</span>
@@ -119,18 +174,18 @@
 						<span>Status:</span>
 					</td>
 					<td>
-						<select name="deviceStatus" tabindex="4">
-						<option value="ON">ON</option>
-						<option value="OFF">OFF</option>
+						<select name="deviceStatus" tabindex="4" disabled="disabled">
+						<option value="ON">MOTION</option>
+						<option value="OFF" selected="selected">STILL</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<span>Timer:</span>
+						<span>Activity Window:</span>
 					</td>
 					<td>
-						<select name="timer" onchange="processTimerSelect(this.value);" tabindex="5">
+						<select name="activityWindow" onchange="processActivityWindowSelect(this.value);" tabindex="5">
 						<option value="ON">ON</option>
 						<option value="OFF" selected="selected">OFF</option>
 						</select>
@@ -147,9 +202,61 @@
 					</td>
 				</tr>
 				<tr>
+					<td>
+						<span>Inactivity Timeout:</span>
+					</td>
+					<td>
+						<select name="activityTimeout" onchange="processActivityTimeoutSelect(this.value);" tabindex="5">
+						<option value="ON">ON</option>
+						<option value="OFF" selected="selected">OFF</option>
+						</select>
+					</td>
+					<td>
+						<span>Timeout Period:</span>
+						<select id="activityTimeoutPeriod" name="activityTimeoutPeriod" disabled="disabled">
+                        	<option value="30">30 Seconds</option>
+                            <option value="60">1 min</option>
+                            <option value="120">2 min</option>
+                            <option value="300">5 min</option>
+                            <option value="600">10 min</option>
+                            <option value="1800">30 min</option>
+                            <option value="3600">60 min</option>
+                       </select>	
+					</td>	
+				</tr>
+				<tr>
+					<td colspan="2">
+						<br />
+						<fieldset>
+							<table>
+								<tr>
+               						<td align="center">
+               							<span style="font-weight:bold">Available Appliances</span>
+               							<br/>
+               							<select name="applianceList" size="5" style="width: 150px">
+               								<%= GuiUtilities.generateHtmlApplianceOptions() %>
+                						</select>
+                					</td>                                        
+                					<td align="center">
+                						<input name="AddAppButton" type="button" value="Add -&gt;" onclick="processApplianceAdd();" />
+                						<br/>                                                
+                						<input name="RemoveAppButton" type="button" value="&lt;- Remove" onclick="processApplianceRemove();" />
+               						</td>
+               						<td align="center">                                                
+               							<span style="font-weight:bold">Associated Appliances</span>
+               							<br/>
+               							<select name="associatedList" size="5" style="width: 150px">
+               							</select>
+               						</td>
+              					</tr>
+               				</table>
+               			</fieldset>
+                	</td>
+                </tr>
+				<tr>
 					<td colspan="3">
 						<br />
-						<input name="AddButton" type="submit" value="Add" tabindex="8" onclick="updateLocation()" />
+						<input name="AddButton" type="submit" value="Add" tabindex="8" onclick="preprocessForm()" />
 						&nbsp;
 						<input name="Reset1" type="reset" value="Reset" tabindex="9"/>
 						&nbsp;
@@ -160,6 +267,7 @@
 			<input name="floorNumber" type="hidden" value="<%= (String)request.getParameter("selectedFloor") %>" />
 			<input name="top" type="hidden" value="" />
 			<input name="left" type="hidden" value="" />
+			<input name="associatedAppliances" type="hidden" value="" />
 		</form>
 	</div>
 		<% 
@@ -195,14 +303,14 @@
 					}
 				}
 			%>
-			<div id="newAppliance" style="z-index: 2; position: absolute; height: 40px; width: 40px; top: 50px; left: 50px; background-color: yellow; border: 1px black solid; text-align: center">
-				<span style="font-size:x-small">New Appliance</span>
+			<div id="newMotionSensor" style="z-index: 2; position: absolute; height: 40px; width: 40px; top: 50px; left: 50px; background-color: yellow; border: 1px black solid; text-align: center">
+				<span style="font-size:x-small">New Motion Sensor</span>
 			</div>
 			<div class="transparent" style="position: absolute; top: 0px; left: 0px; z-index: 1; background-color: gray; height: 400px; width: 800px;">
 			</div>
 		</div>
 	<script type="text/javascript">
-		new Draggable('newAppliance',{snap: constrainSnap} );
+		new Draggable('newMotionSensor',{snap: constrainSnap} );
     
     	function constrainSnap(x, y){
     		return[ (x < 760) ? (x > 0 ? x : 0 ) : 760,
@@ -210,7 +318,7 @@
     	}	
   	</script>
 </div>
-<div id="footer">
+<div id="footer" >
 	<div style="text-align: right; margin-right: 10px">
 		<span>Created for CS673 - Boston University <br />
 		<br />
