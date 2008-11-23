@@ -5,7 +5,7 @@ import edu.bu.easyx10.event.X10DeviceEvent;
 import edu.bu.easyx10.util.LoggingUtilities;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Timer;
+//import java.util.Timer;
 
 
 
