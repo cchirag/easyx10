@@ -12,10 +12,10 @@ import javax.servlet.http.HttpSession;
 
 import edu.bu.easyx10.device.Device;
 import edu.bu.easyx10.device.DeviceLocation;
+import edu.bu.easyx10.device.DeviceManagerFactory;
 import edu.bu.easyx10.device.ProxyX10Appliance;
 import edu.bu.easyx10.device.ProxyX10MotionSensor;
 import edu.bu.easyx10.device.X10Device;
-import edu.bu.easyx10.device.X10Device.X10DeviceState;
 import edu.bu.easyx10.util.LoggingUtilities;
 
 /**
@@ -40,8 +40,17 @@ public class GuiUtilities {
 	public static void updateSessionDeviceList(HttpSession theSession){
 		
 		// Retrieve the devices from the Manager
-		// TODO Resolve Return Type
-		//Set<Device> devices = DeviceManagerFactory.getDeviceManager().getDevices();
+		List<X10Device> devices = 
+			DeviceManagerFactory.getDeviceManager().getDevices();
+		
+		// Store the Device List in the session
+		theSession.setAttribute("deviceList", devices);
+		
+		LoggingUtilities.logInfo(GuiUtilities.class.getCanonicalName(), 
+				"updateSessionDeviceList", 
+				"Session Device List Updated");
+		
+		/* Set<Device> devices = DeviceManagerFactory.getDeviceManager().getDevices();
 		
 		ArrayList<Device> deviceList = new ArrayList<Device>();
 		ProxyX10Appliance l1 = new ProxyX10Appliance("Light1", 'A', 1);
@@ -73,8 +82,8 @@ public class GuiUtilities {
 		// Store the Device List in the session
 		theSession.setAttribute("deviceList", deviceList);
 		
-		// TODO Remove
 		tempDeviceList = deviceList;
+		*/
 	}
 	
 	/**
@@ -112,8 +121,12 @@ public class GuiUtilities {
 	public static String generateHtmlApplianceOptions() {
 		String optionsHtml = "";
 		
-		// TODO Get Device List from DeviceManager
-		for( Device device : tempDeviceList ){
+		// Retrieve the list of devices from the Manager
+		List<X10Device> devices = 
+			DeviceManagerFactory.getDeviceManager().getDevices();
+		
+		// Iterate through each device and create an option for each appliance
+		for( Device device : devices ){
 			if( device instanceof ProxyX10Appliance ){
 				optionsHtml += "<option value=\"" +
 				device.getName() + "\">" + device.getName() + "</option>";
@@ -186,9 +199,7 @@ public class GuiUtilities {
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
 		// Check to see if this device already exists
-		// TODO: Add Device Manager Code 
-		// Device alreadyExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
-		List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
+		/* OLD: List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
 		boolean deviceExists = false;
 		for( Device d : tempDeviceList ){
 			if( d.getName().equals(name) ){
@@ -196,9 +207,11 @@ public class GuiUtilities {
 				break;
 			}
 		}
+		*/
 		
 		// If the Device Exists Log an Error
-		if( deviceExists ){
+		Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		if( deviceExists != null ){
 			// TODO Throw an exception
 			return null;
 		}
@@ -262,8 +275,7 @@ public class GuiUtilities {
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
 		// Check to see if this device already exists
-		// TODO: Add Device Manager Code 
-		// Device alreadyExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		/*
 		List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
 		boolean deviceExists = false;
 		for( Device d : tempDeviceList ){
@@ -272,9 +284,11 @@ public class GuiUtilities {
 				break;
 			}
 		}
+		*/
 		
 		// If the Device Exists Log an Error
-		if( deviceExists ){
+		Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		if( deviceExists != null){
 			// TODO Throw an exception
 			return null;
 		}
