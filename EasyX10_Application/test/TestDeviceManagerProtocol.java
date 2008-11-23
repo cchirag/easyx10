@@ -64,20 +64,23 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		deviceManager.addDevice(applianceProxy);
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		}
 		catch(Exception e){}
 		
 		System.out.println ("Attempt to turn ON ApplianceProxy");
 		applianceProxy.setState(X10DeviceState.ON);
 		
+		deviceManager.updateDevice(applianceProxy);
+		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		}
 		catch(Exception e){}
 		
 		System.out.println ("Attempt to turn Off ApplianceProxy");
 		applianceProxy.setState(X10DeviceState.OFF);
+		deviceManager.updateDevice(applianceProxy);
 		
 	}
 
@@ -88,10 +91,10 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 	public static void main(String args[]) throws IOException {
 
 		// Enable Debugging
-//		System.setProperty("DEBUG", "1");
+		System.setProperty("DEBUG", "1");
 
 		// Instantiate the Test Controller
-		new TestMotionApplianceProtocol( );
+		new TestDeviceManagerProtocol( );
 
 		//********************************************
 		// Prompt to enter a command
@@ -108,7 +111,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 			while(!command.equalsIgnoreCase("exit")) {
 				command = keyboardInput.readLine();
 				if(!command.equalsIgnoreCase("exit")) {
-					System.out.print("\nSYSTEMXXXXXXX>");
+					System.out.print("\nSYSTEM>");
 				}
 			}
 		} finally {
