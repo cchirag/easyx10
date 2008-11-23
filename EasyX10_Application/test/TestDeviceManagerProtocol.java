@@ -4,6 +4,7 @@ import edu.bu.easyx10.protocol.*;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.device.*;
+import edu.bu.easyx10.device.X10Device.X10DeviceState;
 
 /**
  * Application which exercises an integration test of Protocol, X10Appliance,
@@ -43,7 +44,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		
 		// Instantiate the MotionSensor object
 		motionSensorProxy = new ProxyX10MotionSensor ("Motion C16", 'C', 16);
-		motionSensorProxy.addAppliance ("Appliance C9");
+		motionSensorProxy.addAppliance ("Appliance C1");
 		motionSensorProxy.setDetectionPeriodEnabled(false);
 		Calendar startTime = Calendar.getInstance( );
 		startTime.set(Calendar.HOUR_OF_DAY,18);
@@ -58,12 +59,32 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		deviceManager.addDevice(motionSensorProxy);
 		
 		// Instantiate the Appliance object
-		applianceProxy = new ProxyX10Appliance ( "Appliance C9", 'C', 9);
+		applianceProxy = new ProxyX10Appliance ( "Appliance C1", 'C', 1);
 		applianceProxy.setTriggerTimerEnabled (false);
 		deviceManager.addDevice(applianceProxy);
-
+		
+		try {
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
+		
+		System.out.println ("Attempt to turn ON ApplianceProxy");
+		applianceProxy.setState(X10DeviceState.ON);
+		
+		try {
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
+		
+		System.out.println ("Attempt to turn Off ApplianceProxy");
+		applianceProxy.setState(X10DeviceState.OFF);
+		
 	}
 
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String args[]) throws IOException {
 
 		// Enable Debugging
@@ -87,7 +108,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 			while(!command.equalsIgnoreCase("exit")) {
 				command = keyboardInput.readLine();
 				if(!command.equalsIgnoreCase("exit")) {
-					System.out.print("\nSYSTEM>");
+					System.out.print("\nSYSTEMXXXXXXX>");
 				}
 			}
 		} finally {
