@@ -138,7 +138,7 @@ public class X10Appliance extends X10Device{
 
 		//Now start / restart the timer. If it's already started it will restart.
 		
-		  mOnTimer.startTimer();
+		  //mOnTimer.startTimer();
 		
 	}
 	
@@ -276,7 +276,7 @@ public class X10Appliance extends X10Device{
 	    }
 		else{
 			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-			 "setState()","INFO: The state of " + getName() + " was ignored " +
+			 "setState()","The state of " + getName() + " was ignored " +
 			 "because the current state is already " + getState().toString());
 		}	
 			
@@ -401,8 +401,8 @@ public class X10Appliance extends X10Device{
 				}
 				else{
 					
-					 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-					 "processDeviceEvent()","Error: Device: " + getName() +
+					 LoggingUtilities.logError(X10Appliance.class.getCanonicalName(),
+					 "processDeviceEvent()","Device: " + getName() +
 					 " was unables to process the incoming " + deviceEvent.toString() +
 					 " event from another device. This is likely due to an unrecognized event type");
 				}
@@ -420,8 +420,8 @@ public class X10Appliance extends X10Device{
 						setState ( X10DeviceState.ON );
 					}
 					else{
-						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-						 "processDeviceEvent()","ERROR: Device: " + getName() +
+						 LoggingUtilities.logError(X10Appliance.class.getCanonicalName(),
+						 "processDeviceEvent()","Device: " + getName() +
 						 " was unables to process the incoming " + 
 						 deviceEvent.toString() + " event sent by Protocol." +
 						 " This was likely due to an unrecognized event type");
@@ -430,7 +430,7 @@ public class X10Appliance extends X10Device{
 			
 			//The incoming event was not intended for this device.
 			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-					 "processDeviceEvent()","INFO: Device: " + getName() +
+					 "processDeviceEvent()","Device: " + getName() +
 					 " Did not process the incoming " + deviceEvent.toString() + 
 					 " event. It was not intended for this device.");
 		}
@@ -455,8 +455,8 @@ public class X10Appliance extends X10Device{
 						setState ( X10DeviceState.OFF );
 					}
 					else{
-						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-						 "processTimerEvent()","Error: Device: " + getName() +
+						 LoggingUtilities.logError(X10Appliance.class.getCanonicalName(),
+						 "processTimerEvent()","Device: " + getName() +
 						 " was unables to process " + ((TimerEvent)e).toString() +
 						 " This is likely due to an unrecognized event type");
 					}
