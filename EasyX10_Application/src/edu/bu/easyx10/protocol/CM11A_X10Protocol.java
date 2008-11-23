@@ -4,10 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import gnu.io.*;
-import edu.bu.easyx10.device.X10Appliance;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
-import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.util.LoggingUtilities;
 
 /**

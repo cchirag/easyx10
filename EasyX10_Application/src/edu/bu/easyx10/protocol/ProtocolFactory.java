@@ -2,8 +2,6 @@ package edu.bu.easyx10.protocol;
 
 import java.util.Enumeration;
 import gnu.io.CommPortIdentifier;
-import edu.bu.easyx10.event.Event;
-import edu.bu.easyx10.event.TimerEvent;
 import edu.bu.easyx10.protocol.CM11A_X10Protocol;
 import edu.bu.easyx10.util.LoggingUtilities;
 
