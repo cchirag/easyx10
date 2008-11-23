@@ -1,6 +1,7 @@
 package edu.bu.easyx10.device.timer;
 
 import edu.bu.easyx10.event.Event;
+import edu.bu.easyx10.event.X10DeviceEvent;
 import edu.bu.easyx10.util.LoggingUtilities;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,7 +15,7 @@ public class TriggerTimer extends DeviceTimer{
 	// private member variables
 	   
 	private Calendar mTriggerTime = Calendar.getInstance();
-	private Timer timer = new Timer();
+	//private Timer timer = new Timer();
 	String DATE_FORMAT_NOW = "H:mm:ss:SSS";
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 
@@ -48,7 +49,8 @@ public class TriggerTimer extends DeviceTimer{
 	@Override
 	public void run() {
 
-		eventGenerator.fireEvent(mEventToFire);
+		System.out.println("I tried to fire an event");
+		eventGenerator.fireEvent((X10DeviceEvent)mEventToFire);
 		
 		//Log a message indicating the timer was started
 		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
@@ -82,7 +84,7 @@ public class TriggerTimer extends DeviceTimer{
 		//timer.purge();   //Tell garbage collection to mark canceled tasks for cleanup
 		
 		//Schedule the TriggerTimer to fire once every 24 hrs from mTriggerTime
-		timer.schedule(this,mTriggerTime.getTime(), 86400000);
+		//timer.schedule(this,mTriggerTime.getTime(), 86400000);
 		
 		//Log a message indicating the timer was started
 		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
