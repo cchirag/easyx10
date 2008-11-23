@@ -26,8 +26,8 @@ public class X10Appliance extends X10Device{
 	protected Calendar mOnTime = Calendar.getInstance();// Time to turn appliance on
 	protected Calendar mOffTime = Calendar.getInstance();// Time to shut appliance off
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
-	//private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
-	//private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
+	private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
+	private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
 
 	/**
 	 * The default X10Appliance constructor. This takes in a device name
