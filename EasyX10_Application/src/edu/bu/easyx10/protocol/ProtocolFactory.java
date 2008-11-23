@@ -27,6 +27,7 @@ public class ProtocolFactory {
 		try {
 			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
 			"Initializing the ProtocolFactory\n");
+ 		    initProtocols();
 		} catch ( Exception e ) {
 			LoggingUtilities.logError("ProtocolFactory", "initProtocols",
 					 "\nTrouble initializing ProtocolFactory" + e);
