@@ -86,6 +86,18 @@ public class GuiUtilities {
 		GuiUtilities.tempDeviceList = tempDeviceList;
 	}
 
+	public static String generateHtmlApplianceOptions() {
+		String optionsHtml = "";
+		
+		// TODO Get Device List from DeviceManager
+		for( Device device : tempDeviceList ){
+			if( device instanceof ProxyX10Appliance ){
+				optionsHtml += "<option value=\"" +
+				device.getName() + "\">" + device.getName() + "</option>";
+			}
+		}
+		return optionsHtml;
+	}
 	/**
 	 * @return
 	 */
@@ -234,18 +246,14 @@ public class GuiUtilities {
 		// Create the new Appliance
 		ProxyX10MotionSensor newDevice = new ProxyX10MotionSensor(name, houseCode, unitCode);
 		
-		// Set the State
-		newDevice.setState(
-				X10Device.X10DeviceState.valueOf(request.getParameter("deviceStatus")));
-		
-			
 		// Set the Location
 		String leftString = request.getParameter("left");
 		int endLeft = leftString.indexOf("px");
 		String topString = request.getParameter("top");
 		int endTop = topString.indexOf("px");
+		int floorNumber = Integer.parseInt(request.getParameter("floorNumber").substring(5));
 		DeviceLocation location = 
-			new DeviceLocation(Integer.parseInt(request.getParameter("floorNumber")),
+			new DeviceLocation(floorNumber,
 					Integer.parseInt(leftString.substring(0,endLeft)),
 					Integer.parseInt(topString.substring(0, endTop)));
 							
