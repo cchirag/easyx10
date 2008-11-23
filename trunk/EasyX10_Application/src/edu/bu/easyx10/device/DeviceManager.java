@@ -2,8 +2,8 @@ package edu.bu.easyx10.device;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import edu.bu.easyx10.util.LoggingUtilities;
-import java.util.Iterator;
 
 
 
@@ -20,8 +20,7 @@ import java.util.Iterator;
 public final class DeviceManager {
 
 	//member variables
-	private HashMap<String, X10Device> mDeviceHashMap = new HashMap();   // List of Devices
-
+	private HashMap<String, X10Device> mDeviceHashMap = new HashMap<String,X10Device>();   // List of Devices
 	
     //Change to HashMap
 	public ArrayList<X10Device> getDevices(){	
@@ -29,16 +28,12 @@ public final class DeviceManager {
 		//Create the ArrayList that will be returned
 		ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
 		
-		//Create an iterator for moving through the HashMap
-		Iterator iterator = mDeviceHashMap.entrySet().iterator();
-		
 		//Copy the HashMap into the ArrayList
-		while (iterator.hasNext() ) {
-			deviceList.add((X10Device)iterator.next());
+		for (X10Device device : mDeviceHashMap.values() ) {
+			deviceList.add(device);
 		}
 
 		return deviceList;
-		
 	}
 	
 	/**
