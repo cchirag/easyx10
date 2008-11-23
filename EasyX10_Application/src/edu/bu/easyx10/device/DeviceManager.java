@@ -183,6 +183,12 @@ public final class DeviceManager {
 				//Insert it in the Hashmap
 				mDeviceHashMap.put(x10Appliance.getName(), x10Appliance);
 				
+				// Log an info message
+				LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+						 "addDevice()","The X10Appliance " + x10Appliance.getName()
+						 + " was added successfully.");
+				
+				
 				//write out the Hashmap to disk
 				saveConfig();
 				
@@ -198,12 +204,20 @@ public final class DeviceManager {
 				//Insert it in the Hashmap
 				mDeviceHashMap.put(x10MotionSensor.getName(), x10MotionSensor);
 				
-				 return true;  //TODO I know this return true is useless 
+				// Log an info message
+				LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+						 "addDevice()","The X10MotionSensor " + x10MotionSensor.getName()
+						 + " was added successfully.");
+				
+				//write out the Hashmap to disk
+				saveConfig();
+				
+				return true;  //TODO I know this return true is useless 
 				
 			}else{
 				//This is an unrecognized type of proxy Device
-				 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
-				 "addDevice()","ERROR: The proxy object type was invalid.");
+				 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
+				 "addDevice()","The proxy object type was invalid.");
 				 return false;
 			}
 			
@@ -211,8 +225,8 @@ public final class DeviceManager {
 		}else {
 		
 			//This is ProxyObjects name is not unique
-			 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
-			 "addDevice()","ERROR: The proxy objects name was not unique.");
+			 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
+			 "addDevice()","The proxy objects name was not unique.");
 			 
 			 return false;
 			
@@ -236,13 +250,17 @@ public final class DeviceManager {
 			
 			mDeviceHashMap.remove(deviceName);
 			
+			LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+					 "deleteDevice()","The proxy object " + deviceName + 
+					 " was deleted successfully.");
+			
 			return true;
 			
 		}
 		else{
 			//This Device name does not exist in the HashMap
-			 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
-			 "addDelete()","ERROR: The proxy object " + deviceName + 
+			 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
+			 "deleteDevice()","The proxy object " + deviceName + 
 			 " does not exist so it could not be deleted.");
 			
 			return false;
