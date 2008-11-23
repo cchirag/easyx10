@@ -56,6 +56,7 @@ public class EasyX10AppServlet extends HttpServlet {
 					statusMessage = "Device Successfully Added";
 					toPage = "/Status.jsp";
 				} else {
+					// TODO Repopulate Add Fields
 					statusMessage = "Error: Device Name Already Exists";
 					toPage = "/AddAppliance.jsp";
 				}
@@ -93,7 +94,7 @@ public class EasyX10AppServlet extends HttpServlet {
 		} else {
 			// Report Error
 			LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 
-					"processDeviceAdd()", "Cannot Add Device - Already Exists");
+					"processDeviceAdd", "Unrecognized Device Type: " + deviceType);
 			return false;
 			
 		}
