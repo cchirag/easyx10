@@ -259,7 +259,7 @@ public final class DeviceManager {
 	 */
 	public final boolean isUnique(String name){
 		
-		if(mDeviceHashMap.containsKey(name)){
+		if(!mDeviceHashMap.containsKey(name)){
 		
 			return true;
 		}
