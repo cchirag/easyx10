@@ -25,7 +25,6 @@ public class EasyX10AppServlet extends HttpServlet {
      */
     public EasyX10AppServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -41,7 +40,7 @@ public class EasyX10AppServlet extends HttpServlet {
 		try {
 			selectedAction = ActionType.valueOf(actionString);
 		} catch (IllegalArgumentException iae){
-			LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 
+			LoggingUtilities.logError(EasyX10AppServlet.class.getCanonicalName(), 
 					"doPost()", "Unknown ActionType: Action = " + actionString);
 			iae.printStackTrace();
 		}
@@ -63,8 +62,6 @@ public class EasyX10AppServlet extends HttpServlet {
 					toPage = "/AddAppliance.jsp";
 				}
 			} else if(selectedAction == ActionType.MODIFY_DEVICE) {
-				// TODO Add Modify Logic
-				System.out.println("Got to Modify");
 				
 				// Access parameters from the request
 				String deviceName = request.getParameter("deviceName");
@@ -131,13 +128,13 @@ public class EasyX10AppServlet extends HttpServlet {
 		}
 		
 		// Add the new Device
-		// TODO Interact with Decice Manager
-		//DeviceManagerFactory.getDeviceManager().addDevice(newDevice);
-		GuiUtilities.getTempDeviceList().add(newDevice);
+		// GuiUtilities.getTempDeviceList().add(newDevice);
+		DeviceManagerFactory.getDeviceManager().addDevice(newDevice);
 		
 		// Refresh the Device List
 		HttpSession session = request.getSession();
-		session.setAttribute("deviceList", GuiUtilities.getTempDeviceList());
+		session.setAttribute("deviceList", 
+				DeviceManagerFactory.getDeviceManager().getDevices());
 		
 		LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 
 				"processDeviceAdd()", "New Device Added: " + newDevice.getName());
