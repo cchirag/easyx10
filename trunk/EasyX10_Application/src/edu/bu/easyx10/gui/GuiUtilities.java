@@ -90,6 +90,17 @@ public class GuiUtilities {
 	public static void setTempDeviceList(ArrayList<Device> tempDeviceList) {
 		GuiUtilities.tempDeviceList = tempDeviceList;
 	}
+	
+	public static Device getDevice(String name){
+		Device theDevice = null;
+		for( Device d : tempDeviceList ){
+			if( d.getName().equals(name)){
+				theDevice = d;
+				break;
+			}
+		}
+		return theDevice;
+	}
 
 	
 	/**
@@ -115,9 +126,10 @@ public class GuiUtilities {
 	 * Generates the html for the time options used
 	 * by a select box.
 	 * 
+	 * @param selectedValue the value to be selected
 	 * @return html for time options.
 	 */
-	public static String generateHtmlTimeOptions(){
+	public static String generateHtmlTimeOptions(String selectedValue){
 		String timeOptionsHtml = "";
 		
 		// Define the list of times the user can select
@@ -151,7 +163,9 @@ public class GuiUtilities {
 		// Generate the html for the time options
 		for( int i=0; i< times.length; i++){
 			timeOptionsHtml += "<option value=\"" +
-				times[i] + "\">" + times[i] + "</option>";
+				times[i] + "\" " +
+				(selectedValue.equalsIgnoreCase(times[i]) ? "selected=\"selected\"" : "") + 
+				">" + times[i] + "</option>";
 		}
 		
 		return timeOptionsHtml;
@@ -167,7 +181,7 @@ public class GuiUtilities {
 	public static ProxyX10Appliance createNewAppliance(HttpServletRequest request){
 		
 		// Retrieve the name/house code/unit code
-		String name = request.getParameter("applianceName");
+		String name = request.getParameter("deviceName");
 		char houseCode = request.getParameter("houseCode").charAt(0);
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
@@ -198,6 +212,8 @@ public class GuiUtilities {
 		
 		// Set timer details
 		if( request.getParameter("timer").equals("ON")){
+			newDevice.setTriggerTimerEnabled(true);
+			
 			// Retrieve the time strings
 			String startTime = request.getParameter("startTime");
 			String endTime = request.getParameter("endTime");
@@ -209,6 +225,8 @@ public class GuiUtilities {
 			if( endTime != null ){
 				newDevice.setOffTime(convertTimeString(endTime));
 			}
+		} else {
+			newDevice.setTriggerTimerEnabled(false);
 		}
 			
 		// Set the Location
@@ -239,7 +257,7 @@ public class GuiUtilities {
 	public static ProxyX10MotionSensor createNewMotionSensor(HttpServletRequest request){
 		
 		// Retrieve the name/house code/unit code
-		String name = request.getParameter("motionSensorName");
+		String name = request.getParameter("deviceName");
 		char houseCode = request.getParameter("houseCode").charAt(0);
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
@@ -315,7 +333,7 @@ public class GuiUtilities {
 	
 	public static Calendar convertTimeString(String requestTime){
 		// Create a date format and calendar instance
-		SimpleDateFormat dateFormat = new SimpleDateFormat("h:mma");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma");
 		Calendar theTime = Calendar.getInstance();
 		
 		// Set the time in the calendar based on input string
@@ -325,6 +343,18 @@ public class GuiUtilities {
 			pe.printStackTrace();
 		}
 		return theTime;
+	}
+	
+	public static String convertCalendarToString(Calendar theTime){
+		if(theTime == null){
+			return "12:00am";
+		}
+		
+		// Create a date format
+		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma");
+		
+		// Convert the calendar to a string value
+		return dateFormat.format(theTime.getTime());
 	}
 
 }

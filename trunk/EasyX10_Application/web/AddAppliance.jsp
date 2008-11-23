@@ -72,7 +72,7 @@
 						<span>Appliance Name: </span>
 					</td>
 					<td colspan="1">
-						<input name="applianceName"  type="text" size="25" maxlength="25" tabindex="1" />
+						<input name="deviceName"  type="text" size="25" maxlength="25" tabindex="1" />
 					</td>
 					<td>
 						<span>House Code:</span>
@@ -138,11 +138,11 @@
 					<td>
 						<span>Start Time:</span>
 					    <select name="startTime" disabled="disabled" tabindex=6">
-					    	<%= GuiUtilities.generateHtmlTimeOptions() %>
+					    	<%= GuiUtilities.generateHtmlTimeOptions("05:00pm") %>
 					    </select>
 						<span>End Time:</span>
 						<select name="endTime" disabled="disabled" tabindex="7">
-					    	<%= GuiUtilities.generateHtmlTimeOptions() %>
+					    	<%= GuiUtilities.generateHtmlTimeOptions("12:00am") %>
 					    </select>
 					</td>
 				</tr>
