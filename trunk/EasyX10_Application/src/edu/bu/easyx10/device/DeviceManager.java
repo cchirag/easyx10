@@ -30,7 +30,35 @@ public final class DeviceManager {
 		
 		//Copy the HashMap into the ArrayList
 		for (X10Device device : mDeviceHashMap.values() ) {
-			deviceList.add(device);
+			
+			if (device instanceof X10Appliance){
+				
+				ProxyX10Appliance proxyX10Appliance = new ProxyX10Appliance((X10Appliance)device.getProxyDevice());
+				deviceList.add(proxyX10Appliance);
+				
+				 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+						 "getDevices()","The ProxyX10Appliance " + device.getName() + 
+						 " was added to the ArrayList.");
+			}
+			else if ((device instanceof X10MotionSensor)){
+				
+				ProxyX10MotionSensor proxyX10MotionSensor = new ProxyX10MotionSensor((X10MotionSensor)device.getProxyDevice());
+				deviceList.add(proxyX10MotionSensor);
+				
+				 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+						 "getDevices()","The ProxyX10MotionSensor " + device.getName() + 
+						 " was added to the ArrayList.");
+				
+			}else{
+				 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
+						 "getDevices()","The device " + device.getName() + 
+						 " was not an identifiable type.");
+						 assert(false);
+				
+			}
+			
+				
+			
 		}
 
 		return deviceList;
@@ -77,16 +105,16 @@ public final class DeviceManager {
 				 * We could not match the Type if we're in here it likely means
 				 * we couldn't check the type on the object in the list.
 				 */
-				 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
-				 "getDevice()","ERROR: The device type was not identifiable.");
+				 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
+				 "getDevice()","The device type was not identifiable.");
 				 assert(false);
 
 			}
 
 		} 
 		else {
-			LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
-					 "getDevice()","ERROR: The device does not exist.");
+			LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
+					 "getDevice()","The device does not exist.");
 			assert(false);
 		}
 		return null;
