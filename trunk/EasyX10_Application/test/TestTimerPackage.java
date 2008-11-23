@@ -1,15 +1,13 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 
 
 
-//import java.io.*;
-//import edu.bu.easyx10.device.*;
+
+
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.device.timer.*;
 import java.util.Calendar;
-//import java.util.Timer;
 
 public class TestTimerPackage {
 
@@ -25,22 +23,26 @@ public class TestTimerPackage {
 		// Prompt to enter a command
 		//********************************************
 
-		System.out.println("Type a command to send to a device or type exit to quit");
+		System.out.println("Enter a time to sent a timer event");
 		System.out.print("SEND>");
 
 		BufferedReader keyboardInput;
 		keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 		String command = "";
 	
-		Calendar currentTime = Calendar.getInstance();
-		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-        System.out.println("The current time is " + sdf.format(currentTime.getTime()));
+		//
+		//Calendar currentTime = Calendar.getInstance();
+		//String DATE_FORMAT_NOW = "H:mm:ss:SSS";
+		//SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        //System.out.println("The current time is " + sdf.format(currentTime.getTime()));
 		
 		
 		Calendar date = Calendar.getInstance();
-		date.set(Calendar.HOUR, 2);
-	    date.set(Calendar.MINUTE, 15);
+		date.set(Calendar.HOUR_OF_DAY, 0);
+	    date.set(Calendar.MINUTE, 6);
+	    date.set(Calendar.SECOND, 0);
+	    date.set(Calendar.MILLISECOND, 0);
+	    
 		TimerEvent timerEvent = new TimerEvent("TestTimer","ON");
 		TriggerTimer testTimer = new TriggerTimer(timerEvent,date);
 
@@ -67,9 +69,8 @@ public class TestTimerPackage {
 						//********************************************
 						//Tell the user their command was queued
 						//********************************************
-						System.out.println("Your command was delivered to CM11a");
+						System.out.println("Wait for response");
 					}
-					System.out.print("\nSEND>");
 				}
 			}
 		} catch ( Exception e ) {};
