@@ -1,5 +1,5 @@
 import java.io.*;
-
+import java.util.*;
 import edu.bu.easyx10.protocol.*;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.event.*;
@@ -42,6 +42,14 @@ public class TestMotionApplianceProtocol implements EventHandlerListener {
 		motionSensorProxy = new ProxyX10MotionSensor ("Motion C16", 'C', 16);
 		motionSensorProxy.addAppliance ("Appliance C9");
 		motionSensorProxy.setDetectionPeriodEnabled(false);
+		Calendar startTime = Calendar.getInstance( );
+		startTime.set(Calendar.HOUR_OF_DAY,18);
+		startTime.set(Calendar.MINUTE,0);
+		motionSensorProxy.setStartTime(startTime);
+		Calendar endTime = Calendar.getInstance( );
+		endTime.set(Calendar.HOUR_OF_DAY,19);
+		endTime.set(Calendar.MINUTE,0);
+		motionSensorProxy.setEndTime(endTime);
 		motionSensorProxy.setInactivityTime (10);
 		motionSensor = new X10MotionSensor ( motionSensorProxy );
 		

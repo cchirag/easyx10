@@ -88,7 +88,7 @@ public class TestEventGenerator extends TestCase {
 
 		listOfObservers = new ArrayList<Observer>( );
 
-		for (Integer i = 0; i < (m_rv.nextInt( ) & 0xff); i++) {
+		for (Integer i = 0; i < (m_rv.nextInt( ) & 0xf); i++) {
 			listOfObservers.add ( new Observer( ) );
 			numberOfObservers++;
 		}
@@ -207,7 +207,7 @@ public class TestEventGenerator extends TestCase {
 			switch (m_rv.nextInt( ) & 0x3) {
 			case 0: testDeviceEvent( ); break;
 			case 1: testProtocolEvent( ); break;
-			default: testDeviceEvent( ); break;
+			default: testTimerEvent( ); break;
 			}
 			tearDown( );
 		}
