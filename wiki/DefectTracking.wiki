@@ -4,16 +4,16 @@ This page is for bug tracking purposes. Please put your defect in the appropriat
 
 
 ==GUI==
-
+---
 ===EasyX10AppServlet===
 
-===GuiUtilities.java===
+===GuiUtilities===
 
-===LoginServlet.java===
+===LoginServlet===
 
 ==Device Package==
-
-===TriggerTimer.java===
+---
+===TriggerTimer===
 *P1 - Sev1 - Timer fires event immediately rather than at specified time.
 *P2 - Sev1 - TriggerTimer results in exception immediately after firing
 
