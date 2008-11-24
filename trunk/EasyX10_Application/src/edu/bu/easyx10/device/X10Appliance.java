@@ -123,18 +123,18 @@ public class X10Appliance extends X10Device{
 		if(mOnTimer == null){
 		
 			//instantiate the member TriggerTimer mOnTimer
-			//mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
+			mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
 			//Timer timer = new Timer();
 			//timer.scheduleAtFixedRate(new TriggerTimer(mOnEvent,anOnTime),anOnTime.getTime(), 86400000);
-			//mOnTimer.startTimer();
+			mOnTimer.startTimer();
 		}
 		else{  
 			
 			//If we're in here the TriggerTimer has already been instantiated
 			//so just set the TriggerTimer to it's new value
 			
-			//mOnTimer.setTriggerTime(anOnTime);
-			//mOnTimer.startTimer();
+			mOnTimer.setTriggerTime(anOnTime);
+			mOnTimer.startTimer();
 		}
 		
 
