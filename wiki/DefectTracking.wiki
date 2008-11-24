@@ -2,7 +2,7 @@
 = Defect Tracking=
 This page is for bug tracking purposes. Please put your defect in the appropriate list. If you don't know the component put it in under the "Unsorted" section header. If you don't have a section header please insert it.
 
-
+----
 ==GUI==
 ----
 ===EasyX10AppServlet===
@@ -10,7 +10,7 @@ This page is for bug tracking purposes. Please put your defect in the appropriat
 ===GuiUtilities===
 
 ===LoginServlet===
-
+----
 ==Device Package==
 ----
 ===TriggerTimer===
@@ -19,3 +19,5 @@ This page is for bug tracking purposes. Please put your defect in the appropriat
 
 ===X10Appliance===
 *P3 - Sev3 - SetState and additional methods do not support throwing exceptions.
+
+----
