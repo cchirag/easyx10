@@ -1,13 +1,21 @@
-#summary One-sentence summary of this page.
 #labels Featured,Phase-QA,Phase-Implementation
+= Defect Tracking=
+This page is for bug tracking purposes. Please put your defect in the appropriate list. If you don't know the component put it in under the "Unsorted" section header. If you don't have a section header please insert it.
 
-= Introduction =
-This page is for bug tracking purposes
 
+==GUI==
 
-= Details =
+===EasyX10AppServlet===
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+===GuiUtilities.java===
+
+===LoginServlet.java===
+
+==Device Package==
+
+===TriggerTimer.java===
+*P1 - Sev1 - Timer fires event immediately rather than at specified time.
+*P2 - Sev1 - TriggerTimer results in exception immediately after firing
+
+===X10Appliance===
+*P3 - Sev3 - SetState and additional methods do not support throwing exceptions.
