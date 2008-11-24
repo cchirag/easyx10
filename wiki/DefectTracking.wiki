@@ -1,5 +1,4 @@
 #labels Featured,Phase-QA,Phase-Implementation
-= Defect Tracking=
 This page is for bug tracking purposes. Please put your defect in the appropriate list. If you don't know the component put it in under the "Unsorted" section header. If you don't have a section header please insert it.
 
 ----
