@@ -7,6 +7,7 @@ import edu.bu.easyx10.event.EventGenerator;
 import edu.bu.easyx10.event.EventGeneratorFactory;
 import edu.bu.easyx10.event.EventHandlerListener;
 import edu.bu.easyx10.event.TimerEvent;
+import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.event.X10DeviceEvent;
 import edu.bu.easyx10.event.X10ProtocolEvent;
 
@@ -17,10 +18,10 @@ public class TestX10MotionSensor extends TestCase {
 	private EventGenerator eventGenerator;
 	private Observer observer;
 	private TimerEvent expectedTimerEvent = null;
-	private X10DeviceEvent expectedDeviceEvent = null;
-	private Integer numberOfTimerEvents;
-	private Integer numberOfProtocolEvents;
-	private Integer numberOfDeviceEvents;
+	private Queue<X10DeviceEvent> expectedDeviceEvent;
+	private int numberOfTimerEvents;
+	private int numberOfProtocolEvents;
+	private int numberOfDeviceEvents;
 	private Random m_rv;
 	private Calendar startTime;
 	private Calendar endTime;
@@ -31,6 +32,7 @@ public class TestX10MotionSensor extends TestCase {
 	public TestX10MotionSensor (String name) {
 		super(name);
 		m_rv = new Random( );
+		expectedDeviceEvent = new LinkedList<X10DeviceEvent>( );
 	}
 
 	public class Observer implements EventHandlerListener { 
@@ -48,10 +50,9 @@ public class TestX10MotionSensor extends TestCase {
 		/**
 		 * Catch all DeviceEvents and check against expected.
 		 */
-		public void processDeviceEvent ( X10DeviceEvent e ) {  	 
-			boolean properClass = e instanceof X10DeviceEvent;
-			assertEquals ("Received Event not a X10DeviceEvent" + e, properClass, true );
-			boolean equivalent = ((X10DeviceEvent)e).equals(expectedDeviceEvent);
+		public void processDeviceEvent ( X10DeviceEvent deviceEvent ) {
+            X10DeviceEvent expEvent = expectedDeviceEvent.remove( );
+			boolean equivalent = (deviceEvent.equals(expEvent));
 			assertEquals ("Received Event not equivalent to expected", equivalent, true );
 			numberOfDeviceEvents++;
 		}
@@ -85,6 +86,7 @@ public class TestX10MotionSensor extends TestCase {
 		numberOfTimerEvents = 0;
 		numberOfProtocolEvents = 0;
 		numberOfDeviceEvents = 0;
+		expectedDeviceEvent.clear( );
 	} 
 
 	/**
@@ -172,17 +174,16 @@ public class TestX10MotionSensor extends TestCase {
 		ProxyX10MotionSensor proxySensor = new ProxyX10MotionSensor ( name, houseCode, deviceCode );
 		proxySensor.setLocation(new DeviceLocation(1,20,50));
 		proxySensor.setApplianceList(applianceList);
-		proxySensor.setDetectionPeriodEnabled(false);
-		startTime = Calendar.getInstance( );
+        proxySensor.setInactivityTimeEnabled( (m_rv.nextInt() & 0x1) != 0 ? true : false );
+        startTime = Calendar.getInstance( );
 		startTime.set(Calendar.HOUR_OF_DAY, 13);
 		startTime.set(Calendar.MINUTE, 33);
         proxySensor.setStartTime(startTime);
         endTime = Calendar.getInstance( );
 		endTime.set(Calendar.HOUR_OF_DAY, 17);
 		endTime.set(Calendar.MINUTE, 45);
-		System.out.println("startTime: " + startTime.get(Calendar.HOUR_OF_DAY) + " endTime: " + endTime.get(Calendar.HOUR_OF_DAY));
         proxySensor.setStartTime(startTime); 
-        proxySensor.setInactivityTimeEnabled(true);
+        proxySensor.setInactivityTimeEnabled( (m_rv.nextInt() & 0x1) != 0 ? true : false );
 		proxySensor.setInactivityTime( m_rv.nextInt( ) & 0x7);
 		proxySensor.setState(RandomX10DeviceState( ));
 		return (proxySensor);
@@ -223,4 +224,27 @@ public class TestX10MotionSensor extends TestCase {
 		boolean proxyEqual = ProxyEqual ( updatedProxy, getProxy );
 		assertEquals ( "getProxyDevice not equal to updatedProxy", proxyEqual, true);
 	}
+    
+    public void testSetOn( ) {
+    	int expDevEvents = 0;
+        // create a motion sensor
+    	ProxyX10MotionSensor originalProxy = RandomProxyX10MotionSensor( );
+        // create an appliance name and code
+		char houseCode = RandomHouseCode();
+		int deviceCode = RandomDeviceCode();
+		String deviceName = "Appliance " + Character.toString(houseCode) + Integer.toString(deviceCode);
+		originalProxy.addAppliance(deviceName);
+		X10MotionSensor testMotionSensor = new X10MotionSensor ( originalProxy );
+		// create a DeviceEvent to set Motion
+		X10DeviceEvent eventToFire = new X10DeviceEvent("",houseCode,deviceCode,"ON");
+		expectedDeviceEvent.add(eventToFire);
+		expDevEvents++;
+		if (false) {
+          // create an expected DeviceEvent for Appliance ON
+		  expectedDeviceEvent.add(new X10DeviceEvent(deviceName,X10_EVENT_CODE.X10_ON));
+		  expDevEvents++;
+		}
+		eventGenerator.fireEvent(eventToFire);
+		assertEquals ( "Unexpected number of X10DeviceEvents", numberOfDeviceEvents, expDevEvents );
+    }
 }
