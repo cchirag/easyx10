@@ -19,13 +19,16 @@ import edu.bu.easyx10.util.SystemConfiguration;
  */
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	public static String configFilePath = "/WEB-INF/SysConfig.xml";
+	
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LoginServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub 
     }
 
 	/**
@@ -73,10 +76,8 @@ public class LoginServlet extends HttpServlet {
 	
 	private User validateUser(String username, String password){
 		// Retrieve the list of Users from Configuration
-		String configFilePath = 
-			getServletContext().getRealPath( "/WEB-INF/SysConfig.xml" );
 		SystemConfiguration sysConfig = 
-			ConfigurationUtilities.getSystemConfiguration(configFilePath);
+			ConfigurationUtilities.getSystemConfiguration();
 		List<User> users = sysConfig.getUsers();
 		
 		// Search for Matching Username and Password

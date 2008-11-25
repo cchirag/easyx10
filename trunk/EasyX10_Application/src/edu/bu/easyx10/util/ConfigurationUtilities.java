@@ -20,21 +20,20 @@ import edu.bu.easyx10.gui.User;
  */
 public class ConfigurationUtilities {
 	
-	private static final String SYS_CONFIG_FILE_NAME = "SysConfig.xml";
-	
+	private static String SystemConfigFilePath = "web/WEB-INF/SysConfig.xml";
+
 	/**
 	 * @return
 	 */
 	public static SystemConfiguration getSystemConfiguration(){
-		return getSystemConfiguration(SYS_CONFIG_FILE_NAME);
+		return getSystemConfiguration(SystemConfigFilePath);
 	}
 	
 	/**
 	 * @param filePath
 	 * @return
 	 */
-	public static SystemConfiguration getSystemConfiguration(
-			String filePath){
+	public static SystemConfiguration getSystemConfiguration(String filePath){
 		XStream xs = new XStream(new DomDriver());
         SystemConfiguration sysConfig = new SystemConfiguration();
 
@@ -46,6 +45,13 @@ public class ConfigurationUtilities {
         }
         
         return sysConfig;
+	}
+	
+	/**
+	 * @param sys_config_file_path the sYS_CONFIG_FILE_PATH to set
+	 */
+	public static void setSystemConfigFilePath(String filePath) {
+		SystemConfigFilePath = filePath;
 	}
 	
 	/**
@@ -78,7 +84,7 @@ public class ConfigurationUtilities {
 	 */
 	private static void readDefaultSysConfigFile(){
 		
-		SystemConfiguration sysConfig = getSystemConfiguration("DefaultSysConfig.xml" );
+		SystemConfiguration sysConfig = getSystemConfiguration("DefaultSysConfig.xml");
 		
 		System.out.println("Port Name = " + sysConfig.getCm11aPortName());
 		System.out.println("User List:");

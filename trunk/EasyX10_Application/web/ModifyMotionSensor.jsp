@@ -135,8 +135,8 @@
 						<span>Motion Sensor Name: </span>
 					</td>
 					<td colspan="1">
-						<input name="deviceName"  type="text" size="25" maxlength="25" tabindex="1" 
-						value="<%= device.getName() %>"/>
+						<input name="deviceNameDisplayed"  type="text" size="25" maxlength="25" tabindex="1" 
+						value="<%= device.getName() %>" disabled="disabled" />
 					</td>
 					<td>
 						<span>House Code:</span>
@@ -272,15 +272,16 @@
 				<tr>
 					<td colspan="3">
 						<br />
-						<input name="Update" type="submit" value="update" tabindex="8" onclick="preprocessForm()" />
+						<input name="update" type="submit" value="update" tabindex="8" onclick="preprocessForm()" />
 						&nbsp;
-						<input name="Delete" type="submit" value="delete" tabindex="9"/>
+						<input name="delete" type="submit" value="delete" tabindex="9"/>
 						&nbsp;
 						<input name="CancelButton" type="button" value="Cancel" onclick="window.location='Status.jsp';" tabindex="10" />
 					</td>
 				</tr>
 			</table>
-			<input name="floorNumber" type="hidden" value="<%= (String)request.getParameter("selectedFloor") %>" />
+			<input name="floorNumber" type="hidden" value="<%= "floor" + device.getLocation().getFloorNumber() %>" />
+			<input name="deviceName" type="hidden" value="<%= device.getName() %>" />
 			<input name="top" type="hidden" value="" />
 			<input name="left" type="hidden" value="" />
 			<input name="associatedAppliances" type="hidden" value="" />
