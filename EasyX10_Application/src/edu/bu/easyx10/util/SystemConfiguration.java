@@ -13,6 +13,8 @@ import edu.bu.easyx10.gui.User;
  */
 public class SystemConfiguration {
 	
+	public static final String FILE_NAME = "/WEB-INF/SysConfig.xml";
+	
 	// GUI Configuration
 	private ArrayList<User> users;
 	private int floorCount = 0;

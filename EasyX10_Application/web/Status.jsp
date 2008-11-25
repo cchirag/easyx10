@@ -13,10 +13,8 @@
 
 <% 
 	// Retrieve config data
-	String configFilePath = 
-				getServletContext().getRealPath( "/WEB-INF/SysConfig.xml" );
 	SystemConfiguration sysConfig = 
-				ConfigurationUtilities.getSystemConfiguration(configFilePath);	
+				ConfigurationUtilities.getSystemConfiguration();	
 	
 	// Get the current floor
 	String currentFloor = (String)session.getAttribute("currentFloor");

@@ -10,6 +10,9 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>Login.jsp</welcome-file>
   </welcome-file-list>
+  <listener>
+   <listener-class>edu.bu.easyx10.gui.EasyX10ServletContextListener</listener-class>
+  </listener>
   <servlet>
     <description>Servlet that manages the login functionality</description>
     <display-name>LoginServlet</display-name>

@@ -41,9 +41,10 @@
 	}
 
 	function updateLocation(){
-		document.detailsForm.top.value = document.getElementById("newAppliance").style.top;
-		document.detailsForm.left.value = document.getElementById("newAppliance").style.left;
+		document.detailsForm.top.value = document.getElementById("<%= deviceName %>").style.top;
+		document.detailsForm.left.value = document.getElementById("<%= deviceName %>").style.left;
 	}
+	
 </script>
 <div id="masthead">
 	<br />
@@ -73,15 +74,15 @@
 	<div id="addForm">
 		<!-- span id="addFormMessage" style="font-family: Arial, Helvetica, sans-serif; font-size: large; font-weight: bold; font-variant: normal">
 		Enter Details for New Item:</span> <br / -->
-		<form name="detailsForm" id="detailsForm" method="post" action="/easyx10/EasyX10AppServlet?action=MODIFY_DEVICE&deviceType=MOTION">
+		<form name="detailsForm" id="detailsForm" method="post" action="/easyx10/EasyX10AppServlet?action=MODIFY_DEVICE&deviceType=APPLIANCE">
 			<table id="detailsFormTable">
 				<tr>
 					<td>
 						<span>Appliance Name: </span>
 					</td>
 					<td colspan="1">
-						<input name="deviceName"  type="text" size="25" maxlength="25" tabindex="1" 
-						value="<%= device.getName() %>"/>
+						<input name="deviceNameDisplayed"  type="text" size="25" maxlength="25" tabindex="1" 
+						value="<%= device.getName() %>" disabled="disabled" />
 					</td>
 					<td>
 						<span>House Code:</span>
@@ -172,7 +173,8 @@
 					</td>
 				</tr>
 			</table>
-			<input name="floorNumber" type="hidden" value="<%= (String)request.getParameter("selectedFloor") %>" />
+			<input name="floorNumber" type="hidden" value="<%= "floor" + device.getLocation().getFloorNumber() %>" />
+			<input name="deviceName" type="hidden" value="<%= device.getName() %>" />
 			<input name="top" type="hidden" value="" />
 			<input name="left" type="hidden" value="" />
 		</form>

@@ -1,4 +1,4 @@
-package edu.bu.easyx10.gui;
+ package edu.bu.easyx10.gui;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -101,14 +101,7 @@ public class GuiUtilities {
 	}
 	
 	public static Device getDevice(String name){
-		Device theDevice = null;
-		for( Device d : tempDeviceList ){
-			if( d.getName().equals(name)){
-				theDevice = d;
-				break;
-			}
-		}
-		return theDevice;
+		return DeviceManagerFactory.getDeviceManager().getDevice(name);
 	}
 
 	
@@ -198,23 +191,12 @@ public class GuiUtilities {
 		char houseCode = request.getParameter("houseCode").charAt(0);
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
-		// Check to see if this device already exists
-		/* OLD: List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
-		boolean deviceExists = false;
-		for( Device d : tempDeviceList ){
-			if( d.getName().equals(name) ){
-				deviceExists = true;
-				break;
-			}
-		}
-		*/
-		
 		// If the Device Exists Log an Error
-		Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		/*Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
 		if( deviceExists != null ){
 			// TODO Throw an exception
 			return null;
-		}
+		}*/
 		
 		// Create the new Appliance
 		ProxyX10Appliance newDevice = new ProxyX10Appliance(name, houseCode, unitCode);
@@ -287,11 +269,11 @@ public class GuiUtilities {
 		*/
 		
 		// If the Device Exists Log an Error
-		Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
+		/*Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
 		if( deviceExists != null){
 			// TODO Throw an exception
 			return null;
-		}
+		}*/
 		
 		// Create the new Appliance
 		ProxyX10MotionSensor newDevice = new ProxyX10MotionSensor(name, houseCode, unitCode);

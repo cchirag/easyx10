@@ -53,7 +53,9 @@ public class EasyX10AppServlet extends HttpServlet {
 		String statusMessage = "Unknown Error - Please Contact Administrator";
 		if(selectedAction != null) {
 			if(selectedAction == ActionType.ADD_DEVICE) {
-				if( processDeviceAdd(request) == true ) {
+				String deviceName = request.getParameter("deviceName");
+				if( DeviceManagerFactory.getDeviceManager().isUnique(deviceName)){
+					boolean success = processDeviceAdd(request);
 					statusMessage = "Device Successfully Added";
 					toPage = "/Status.jsp";
 				} else {
@@ -79,7 +81,7 @@ public class EasyX10AppServlet extends HttpServlet {
 					toPage = "/Status.jsp";
 				} else if( update != null ){
 					Device updatedDevice = null;
-					if( deviceType.equals("APPLINCE") ){
+					if( deviceType.equals("APPLIANCE") ){
 						updatedDevice = GuiUtilities.createNewAppliance(request);
 					} else if( deviceType.equals("MOTION") ){
 						updatedDevice = GuiUtilities.createNewMotionSensor(request);
@@ -88,12 +90,19 @@ public class EasyX10AppServlet extends HttpServlet {
 					// Update the Device through the Manager
 					DeviceManagerFactory.getDeviceManager().updateDevice(updatedDevice);
 					
+					LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 
+							"processDeviceUpdate()", "Device Updated: " + updatedDevice.getName());
+					
 					// Set the status message and page to display
 					statusMessage = "Device Successfully Updated";
 					toPage = "/Status.jsp";
 				}
 			} 
 		}
+		
+		// Refresh the Device List
+		HttpSession session = request.getSession();
+		GuiUtilities.updateSessionDeviceList(session);
 		
 		// Set status message in request
 		request.setAttribute("statusMessage", statusMessage);
@@ -128,13 +137,7 @@ public class EasyX10AppServlet extends HttpServlet {
 		}
 		
 		// Add the new Device
-		// GuiUtilities.getTempDeviceList().add(newDevice);
 		DeviceManagerFactory.getDeviceManager().addDevice(newDevice);
-		
-		// Refresh the Device List
-		HttpSession session = request.getSession();
-		session.setAttribute("deviceList", 
-				DeviceManagerFactory.getDeviceManager().getDevices());
 		
 		LoggingUtilities.logInfo(EasyX10AppServlet.class.getCanonicalName(), 
 				"processDeviceAdd()", "New Device Added: " + newDevice.getName());
