@@ -44,7 +44,7 @@ public class TestTimerPackage {
 	    date.set(Calendar.MILLISECOND, 0);
 	    
 		TimerEvent timerEvent = new TimerEvent("TestTimer","ON");
-		TriggerTimer testTimer = new TriggerTimer(timerEvent,date);
+		TriggerTimer testTimer = new TriggerTimer(timerEvent);
 
 
 
