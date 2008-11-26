@@ -26,8 +26,21 @@ public abstract class DeviceTimer extends TimerTask {
 	
 	public abstract void startTimer();
 	
-	protected abstract Event getEventToFire();
+	/**
+	 * This method is used to set the eventToFire Event.
+	 * 
+	 * @param Event eventToFire
+	 */
+	public void setEventToFire(Event eventToFire) {
+		mEventToFire = eventToFire;
+	}
 
-	protected abstract void setEventToFire(Event eventToFire);
-
+	/**
+	 * This method returns the eventToFire Event.
+	 * 
+	 * @return Event
+	 */
+	public Event getEventToFire( ) {
+		 return (mEventToFire);
+	}
 }
