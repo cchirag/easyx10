@@ -4,10 +4,11 @@
 <%@ page import="java.util.List" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
 <title>EasyX10 - Status Screen</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--  meta http-equiv="refresh" content="5" 
+	  url="http://localhost:8080/easyx10/status.jsp"/ -->
 <link rel="stylesheet" type="text/css" href="easyx10.css" />
 </head>
 
@@ -26,13 +27,18 @@
 <body>
 
 <script type="text/javascript">
+
+	// Code to refresh the status page TODO FIX TO Use Selected Floor
+	setTimeout("location.replace('Status.jsp')",5000);
+
 	var currentFloor = "<%= currentFloor %>";
 
     function processFloorSelect(){
     	currentFloor = document.getElementById("floorSelect").value;
-		for (i=0;i<= <%= sysConfig.getFloorCount() %>;i++)
+    	var numFloors = <%= sysConfig.getFloorCount() %>;
+		for (var i=0; i<= numFloors; i++)
 		{
-			floor = "floor" + (i+1);
+			var floor = "floor" + (i+1);
 			var floorDiv = document.getElementById(floor);
 			if( !floorDiv )continue;
 			
