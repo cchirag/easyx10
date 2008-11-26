@@ -1,9 +1,12 @@
 package edu.bu.easyx10.protocol;
 
 import java.util.Enumeration;
+
 import gnu.io.CommPortIdentifier;
 import edu.bu.easyx10.protocol.CM11A_X10Protocol;
+import edu.bu.easyx10.util.ConfigurationUtilities;
 import edu.bu.easyx10.util.LoggingUtilities;
+import edu.bu.easyx10.util.SystemConfiguration;
 
 /**
  * This class provides the singleton generator for the Protocol class.
@@ -42,9 +45,11 @@ public class ProtocolFactory {
 		// Determine our operating system environment			
 		try {
 			osType= System.getProperty("os.arch");
-			System.out.println("Operating system type =>" + osType);
+			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+					 "Operating system type =>" + osType);
 		} catch (Exception e) {
-			System.out.println("Exception caught =" + e.getMessage());
+			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+			        "Exception caught = " + e.getMessage());
 		}
 
 		// instantiate all the possible protocols here
@@ -66,6 +71,12 @@ public class ProtocolFactory {
 			}
 
 			/*
+			 * Attempt to fetch the default port from the system configuration.
+			 */
+			SystemConfiguration sysConfig =  ConfigurationUtilities.getSystemConfiguration();
+			x10Port = sysConfig.getCm11aPortName();
+			
+			/*
 			 * This next block of code is used for debugging only.
 			 * When debug is turned on, we dump all of the available
 			 * COM port names to the console display.
@@ -75,7 +86,8 @@ public class ProtocolFactory {
 				while (m_portIDs.hasMoreElements()) {
 					CommPortIdentifier portID = (CommPortIdentifier) m_portIDs.nextElement();
 					if (portID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-						System.out.println ( portID.getName());
+						LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+						        portID.getName());
 						break;
 					}
 				}
@@ -85,8 +97,8 @@ public class ProtocolFactory {
 			try {
 				m_x10Protocol = new CM11A_X10Protocol( x10Port );
 			} catch ( Exception e ) {
-				System.out.println ( "Error attempting to initialize CM11A_X10Protocol\n");
-				System.out.println ( e );
+				LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+                        "Error attempting to initialize CM11A_X10Protocol\n" + e);
 				throw e;
 			};
 
