@@ -35,9 +35,8 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println (System.getProperty("java.library.path"));
 		LoggingUtilities.logInfo(LoginServlet.class.getCanonicalName(),
-				"doPost()", "Login Servlet Reached");
+				"doPost()", "Login Servlet Executed");
 		HttpSession session = request.getSession();
 		
 		// Retrieve the username and password from the request
