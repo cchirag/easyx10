@@ -21,6 +21,8 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 	 */
 	public ProxyX10MotionSensor(String name, char houseCode, int deviceCode){
 		super ( name, houseCode, deviceCode );
+		// unregister the Device with the EventGenerator
+	    eventGenerator.deleteEventListener(this);
 	}
 
 	/**
@@ -36,7 +38,10 @@ public class ProxyX10MotionSensor extends X10MotionSensor {
 			   motionDevice.getHouseCode( ),
 			   motionDevice.getDeviceCode( ) );
 			
-		// load our member variables from the X10MotionDevice
+		// unregister the Device with the EventGenerator
+	    eventGenerator.deleteEventListener(this);
+
+	    // load our member variables from the X10MotionDevice
 		setLocation (motionDevice.getLocation());
 		setInactivityTimeEnabled ( motionDevice.getInactivityTimeEnabled( ) );
 		setInactivityTime ( motionDevice.getInactivityTime( ) );
