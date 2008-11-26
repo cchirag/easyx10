@@ -350,7 +350,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 * @returns - void
 	 */
 	private void debug ( String Message ) {
-		if (System.getProperty("DEBUG") != null) {
+		if (System.getProperty("DEBUG_PROTOCOL") != null) {
 			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "Debug",
 			 this.getClass().getName( ) + ":: " + Message );
 		}
