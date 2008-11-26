@@ -60,7 +60,7 @@ public class EventGenerator {
 		// If the new object is not already in the list, let's add it to the list.
 		if (!found) {
 			m_eventListeners.add( listener );
-			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "addEventListener",
+			debug(this.getClass( ).getCanonicalName(), "addEventListener",
 					 "Registered:: " + listener.getClass( ).getCanonicalName());
 		} 
 		
@@ -91,13 +91,26 @@ public class EventGenerator {
 	}
 
 	/**
+	 * This method is used to interface with the system logger.  We
+	 * only print debug information if debugging is enabled for this class.
+	 * 
+	 * @param className
+	 * @param methodName
+	 * @param infoText
+	 */
+	public static void debug(String className, String methodName, String infoText) {
+		if (System.getProperty("DEBUG_EVENT") != null) {
+    		LoggingUtilities.logInfo(className,	methodName, infoText);
+		}
+	}
+	/**
 	 * The fireEvent( ) method is called to send an Event to all registered listeners.
 	 * The destination method is a function of the Event type.  As such, the Event
 	 * type is responsible for routing to the proper receiving method.
 	 *
 	 * @param e Event which is to be delivered.
 	 */
-	public void fireEvent ( Event e ) {
+	public void fireEvent ( Event event ) {
 		
 		// First, let's acquire the Mutex to allow only one updater of the list
 		m_listSemaphore.acquireUninterruptibly();
@@ -106,13 +119,19 @@ public class EventGenerator {
 		// return the Mutex now
 		m_listSemaphore.release();
 		
+		if (event == null) {
+			LoggingUtilities.logError(this.getClass( ).getCanonicalName(), "fireEvent", "event is null");
+		}
+		
 		// Iterate though our existing m_eventListeners and send the Event to all.
 		ListIterator<EventHandlerListener> i = localList.listIterator( );
 		while (i.hasNext( )) {
 			EventHandlerListener object = i.next( );
-			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "fireEvent",
-					 "EventType:: " + e.getClass( ).getCanonicalName( ) + " Event:: " + e.toString( ) + " To:: " + object.getClass( ).getCanonicalName());
-			e.fireEvent( object );
+			debug(this.getClass( ).getCanonicalName(), "fireEvent",
+			     "EventType:: " + event.getClass( ).getCanonicalName( ) + 
+			     " Event:: " + event.toString( ) + 
+			     " To:: " + object.getClass( ).getCanonicalName());
+			event.fireEvent( object );
 		}
 	}
 }
