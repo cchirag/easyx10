@@ -60,7 +60,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		deviceManager.addDevice(motionSensorProxy);
 		
 		// Instantiate the Appliance object
-		applianceProxy = new ProxyX10Appliance ( "Appliance C1", 'C', 1);
+		applianceProxy = new ProxyX10Appliance ( "App C1", 'C', 1);
 		applianceProxy.setTriggerTimerEnabled (false);
 		deviceManager.addDevice(applianceProxy);
 		
@@ -94,9 +94,9 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		
 		//Create an onTime
 		Calendar onTime = Calendar.getInstance();
-		onTime.set(Calendar.HOUR_OF_DAY, 23);
-		onTime.set(Calendar.MINUTE, 50);
-		onTime.set(Calendar.SECOND, 45);
+		onTime.set(Calendar.HOUR_OF_DAY, 01);
+		onTime.set(Calendar.MINUTE, 29);
+		onTime.set(Calendar.SECOND, 30);
 		onTime.set(Calendar.MILLISECOND, 0);
 
 		//Create an offTime
@@ -107,11 +107,21 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		offTime.set(Calendar.MILLISECOND, 0);
 	    
 		//Test creation of ProxyX10Appliance
-		ProxyX10Appliance applianceProxy4 = new ProxyX10Appliance("Appliance C4", 'C', 4);
+		ProxyX10Appliance applianceProxy4 = new ProxyX10Appliance("Appliance B1", 'B', 1);
 		applianceProxy4.setOnTime(onTime);
 		applianceProxy4.setOffTime(offTime);
 		applianceProxy4.setTriggerTimerEnabled(true);
 		deviceManager.addDevice(applianceProxy4);
+		applianceProxy4.setState(X10DeviceState.ON);
+		deviceManager.updateDevice(applianceProxy4);
+		
+		try {
+			Thread.sleep(3000);
+		}
+		catch(Exception e){}
+		
+		applianceProxy4.setState(X10DeviceState.OFF);
+		deviceManager.updateDevice(applianceProxy4);
 		
 		//Test getDevices
 		  ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
