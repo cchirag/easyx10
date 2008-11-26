@@ -18,8 +18,9 @@ import edu.bu.easyx10.util.LoggingUtilities;
 public class WaitTimer extends DeviceTimer {
 
 	// private member variables
-	int mSecondsToWait;
-	int mCountDown;
+	private int mSecondsToWait;
+	private int mCountDown;
+	private Thread mThread;
 
 	/**
 	 * Construct a new WaitTimer object.  This object is given a 
@@ -36,6 +37,11 @@ public class WaitTimer extends DeviceTimer {
 		setSecondsToWait(secondsToWait);
 		// Start the timer on creation if there is a time to wait
 		mCountDown = -1;
+
+		// Create a new runnable thread.
+		mThread = new Thread(this);
+		mThread.start( );
+		
 	}
 	
 	/**
