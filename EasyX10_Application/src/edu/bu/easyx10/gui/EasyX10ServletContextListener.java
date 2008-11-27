@@ -19,7 +19,7 @@ public class EasyX10ServletContextListener implements ServletContextListener {
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
-	@Override
+	//@Override
 	public void contextInitialized(ServletContextEvent sce) {
 
 		// Retrieve the file path for the configuration file
@@ -36,7 +36,7 @@ public class EasyX10ServletContextListener implements ServletContextListener {
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
-	@Override
+	//@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		// Do nothing, not implemented for EasyX10
 	}
