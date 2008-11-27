@@ -128,7 +128,8 @@ public final class DeviceManager {
 				 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
 				 "getDevice()","The device type was not identifiable.");
 				 assert(false);
-
+				 
+				 return null;
 			}
 
 		} 
@@ -136,8 +137,9 @@ public final class DeviceManager {
 			LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
 					 "getDevice()","The device does not exist.");
 			assert(false);
+
+		    return null;
 		}
-		return null;
 
 	}
 	
