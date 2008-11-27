@@ -163,7 +163,6 @@
 		</form>
 	</div>
 		<% 
-			
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 
 			String currentFloor = (String)request.getParameter("selectedFloor");

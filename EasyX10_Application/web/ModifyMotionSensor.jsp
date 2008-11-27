@@ -205,11 +205,11 @@
 					</td>
 					<td>
 						<span>Start Time:</span>
-					    <select name="startTime" disabled="disabled" tabindex=6">
+					    <select name="startTime" <%= device.getInactivityTimeEnabled() ? "" : "disabled=\"disabled\"" %> tabindex=6">
 					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getStartTime())) %>
 					    </select>
 						<span>End Time:</span>
-						<select name="endTime" disabled="disabled" tabindex="7">
+						<select name="endTime" <%= device.getInactivityTimeEnabled() ? "" : "disabled=\"disabled\"" %> tabindex="7">
 					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getEndTime())) %>
 					    </select>
 					</td>
@@ -220,13 +220,16 @@
 					</td>
 					<td>
 						<select name="activityTimeout" onchange="processActivityTimeoutSelect(this.value);" tabindex="5">
-						<option value="true">ON</option>
-						<option value="false" selected="selected">OFF</option>
+						<option value="true"
+							<%= (device.getInactivityTimeEnabled() == true) ? "selected=\"selected\"" : "" %>>ON</option>
+						<option value="false"
+							<%= (device.getInactivityTimeEnabled() == false) ? "selected=\"selected\"" : "" %>>OFF</option>
 						</select>
 					</td>
 					<td>
 						<span>Timeout Period:</span>
-						<select id="activityTimeoutPeriod" name="activityTimeoutPeriod" disabled="disabled">
+						<select id="activityTimeoutPeriod" name="activityTimeoutPeriod" 
+							<%= device.getInactivityTimeEnabled() ? "" : "disabled=\"disabled\"" %>>
                         	<option value="30" <%= (device.getInactivityTime() == 30) ? "selected=\"selected\"" : "" %>>30 Seconds</option>
                             <option value="60" <%= (device.getInactivityTime() == 60) ? "selected=\"selected\"" : "" %>>1 min</option>
                             <option value="120" <%= (device.getInactivityTime() == 120) ? "selected=\"selected\"" : "" %>>2 min</option>
