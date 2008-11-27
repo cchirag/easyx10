@@ -6,6 +6,7 @@ import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.device.*;
 import edu.bu.easyx10.device.X10Device.X10DeviceState;
+import java.text.SimpleDateFormat;
 
 /**
  * Application which exercises an integration test of Protocol, X10Appliance,
@@ -43,6 +44,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		// Initialize the DeviceManager
 		DeviceManager deviceManager = DeviceManagerFactory.getDeviceManager( );
 		
+		/*
 		// Instantiate the MotionSensor object
 		motionSensorProxy = new ProxyX10MotionSensor ("Motion C16", 'C', 16);
 		motionSensorProxy.addAppliance ("Appliance C1");
@@ -91,18 +93,18 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		ProxyX10Appliance applianceProxy3 = new ProxyX10Appliance ( "Appliance C3", 'C', 3);
 		applianceProxy3.setTriggerTimerEnabled (false);
 		deviceManager.addDevice(applianceProxy3);
-		
+		*/
 		//Create an onTime
 		Calendar onTime = Calendar.getInstance();
-		onTime.set(Calendar.HOUR_OF_DAY, 01);
-		onTime.set(Calendar.MINUTE, 29);
+		onTime.set(Calendar.HOUR_OF_DAY, 00);
+		onTime.set(Calendar.MINUTE, 36);
 		onTime.set(Calendar.SECOND, 30);
 		onTime.set(Calendar.MILLISECOND, 0);
 
 		//Create an offTime
 		Calendar offTime = Calendar.getInstance();
-		offTime.set(Calendar.HOUR_OF_DAY, 23);
-		offTime.set(Calendar.MINUTE, 46);
+		offTime.set(Calendar.HOUR_OF_DAY, 00);
+		offTime.set(Calendar.MINUTE, 1);
 		offTime.set(Calendar.SECOND, 30);
 		offTime.set(Calendar.MILLISECOND, 0);
 	    
@@ -112,18 +114,20 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		applianceProxy4.setOffTime(offTime);
 		applianceProxy4.setTriggerTimerEnabled(true);
 		deviceManager.addDevice(applianceProxy4);
-		applianceProxy4.setState(X10DeviceState.ON);
-		deviceManager.updateDevice(applianceProxy4);
-		
+		//applianceProxy4.setState(X10DeviceState.ON);
+		//deviceManager.updateDevice(applianceProxy4);
+
+		/*		
 		try {
 			Thread.sleep(3000);
 		}
 		catch(Exception e){}
 		
-		applianceProxy4.setState(X10DeviceState.OFF);
-		deviceManager.updateDevice(applianceProxy4);
+		//applianceProxy4.setState(X10DeviceState.ON);
+		//deviceManager.updateDevice(applianceProxy4);
 		
 		//Test getDevices
+
 		  ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
 		  System.out.println("Next Line should be INFO");
 		  deviceList = deviceManager.getDevices();
@@ -134,7 +138,8 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 			  System.out.println("Item " + count + " is named " + device.getName());
 			  count++;
 		  }
-		
+		  
+		  */
 		
 		
 	}
