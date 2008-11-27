@@ -41,9 +41,9 @@ public class WaitTimer extends DeviceTimer {
 		// Create a new runnable thread.
 		mThread = new Thread(this);
 		mThread.start( );
-		
+
 	}
-	
+
 	/**
 	 * This access methods is used to load the seconds to wait.
 	 * 
@@ -81,8 +81,10 @@ public class WaitTimer extends DeviceTimer {
 			// Decrement only until we reach -1
 			if (mCountDown > -1) {
 				mCountDown--;
-				LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "run",
-						"mCountDown:: " + Integer.toString(mCountDown ) );
+				if (System.getProperty("DEBUG_WAITTIMER") != null) {
+					LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "run",
+							"mCountDown:: " + Integer.toString(mCountDown ) );
+				}
 			}
 			// Sleep for one second
 			try {
