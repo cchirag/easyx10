@@ -222,6 +222,10 @@ public class X10MotionSensor extends X10Device {
 	 */
 	public void setStartTime(Calendar startTime) {
 		mStartTime = startTime;
+		// enforce that we have a valid object to avoid problems down the road
+		if (mStartTime == null) {
+			mStartTime = Calendar.getInstance();
+		}
 	}
 
 	/**
@@ -244,8 +248,12 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @param Time startTime Beginning time for Motion Activity Window
 	 */
-	public Calendar getEndTime() {
-		return mEndTime;
+	public void setEndTime(Calendar endTime) {
+		mEndTime = endTime;
+		// enforce that we have a valid object to avoid problems down the road
+		if (mEndTime == null) {
+			mEndTime = Calendar.getInstance();
+		}
 	}
 
 	/**
@@ -256,8 +264,8 @@ public class X10MotionSensor extends X10Device {
 	 * 
 	 * @return Time Ending time for Motion Activity Window
 	 */
-	public void setEndTime(Calendar endTime) {
-		mEndTime = endTime;
+	public Calendar getEndTime() {
+		return mEndTime;
 	}
 
 	/**
@@ -318,6 +326,7 @@ public class X10MotionSensor extends X10Device {
 			// On transition to MOTION, we need to turn on appliances.
 			if (mDetectionWindowTrigger == false) {
 
+				
 				// Load some local time pieces from startTime and endTime to compare with current time
 				Calendar localStartTime = Calendar.getInstance();
 				localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
