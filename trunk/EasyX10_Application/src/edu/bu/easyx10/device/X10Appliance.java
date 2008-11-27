@@ -4,8 +4,9 @@ import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Timer;
+
 
 
 /** The X10Appliance class is derived from the abstract class X10DeviceClass. 
@@ -21,13 +22,18 @@ import java.util.Timer;
 public class X10Appliance extends X10Device{
 	
 	//Declare Private Member Variables
-	private TriggerTimer mOnTimer;            // Timer used to trigger On Event
+	
 	private TriggerTimer mOffTimer;           // Timer used to trigger Off Event
 	protected Calendar mOnTime = Calendar.getInstance();// Time to turn appliance on
 	protected Calendar mOffTime = Calendar.getInstance();// Time to shut appliance off
 	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
-	private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
-	private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
+	//Create the onEvent and offEvents to be passed to the TriggerTimer
+	TimerEvent mOnEvent = new TimerEvent ( getName(), "ON" );
+	TimerEvent mOffEvent = new TimerEvent ( getName(), "OFF" );
+	//private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
+	//private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
+	private TriggerTimer mOnTimer;// Timer used to trigger On Event
+	private boolean mSetStateForceFlag = false;   //Forces the firing of an event
 
 	/**
 	 * The default X10Appliance constructor. This takes in a device name
@@ -68,7 +74,8 @@ public class X10Appliance extends X10Device{
 			}
 				
 			
-			/* If the triggerTimer is enabled proceed with setting onTime 
+			/* 
+			 * If the triggerTimer is enabled proceed with setting onTime 
 			 *  offTime. setOnTimer and setOffTimer get called within
 			 *  setOnTime and setOffTime methods so there is no need to 
 			 *  set them here. 
@@ -76,33 +83,49 @@ public class X10Appliance extends X10Device{
 			if(proxyX10Appliance.getTriggerTimerEnabled()){
 				
 				setTriggerTimerEnabled(true);                   //call to parent Method
-				
+			
 				setOnTime(proxyX10Appliance.getOnTime());       //call to overridden Method
 				
 				setOffTime(proxyX10Appliance.getOffTime());     //call to overridden Method
-				
-				//Create the onEvent to be passed to the TriggerTimer
-				mOnEvent = new TimerEvent ( getName(), "ON" );
-				
-				//Create the onEvent to be passed to the TriggerTimer
-				mOffEvent = new TimerEvent ( getName(), "OFF" );
 				
 			}
 			else {
 				setTriggerTimerEnabled(false);
 			}
-				
+			
+			/*
+			 * Call a special version of setState. This method is only
+			 * called from within this constructor. See method itself for 
+			 * further details 
+			 */
+			
+			//Enable on the setStateForceFlag
+			setStateForceFlag(true);
+			
 			setState ( proxyX10Appliance.getState( ) );
 		
-		
+		    //Disable the setStateForeceFlag;
+			
+			setStateForceFlag(false);
 		
 	}
 	
-	//This constructor is required by ProxyX10Appliance
+	/** 
+	 * This constructor is required by ProxyX10Appliance
+	 *
+	 * @parm A unique Device name, a houseCode A thru P and a device
+	 * code 1 through 16.
+	 */
 	public X10Appliance(String name, char houseCode, int deviceCode){
 		
 		// Call super in X10Device and pass in the required attributes
 		super(name,houseCode,deviceCode);
+		
+		//Create the onEvent to be passed to the TriggerTimer
+		//mOnEvent = new TimerEvent ( getName(), "ON" );
+		
+		//Create the offEvent to be passed to the TriggerTimer
+		//mOffEvent = new TimerEvent ( getName(), "OFF" );
 		
 		
 	}
@@ -117,30 +140,54 @@ public class X10Appliance extends X10Device{
 	 */
 	private void setOnTimer(Calendar anOnTime){
 
-		//If the mOnTimer is null setOnTimer is being called by the constructor
-		//So you must instantiate the TriggerTimer
+		//Make the Calendar object nice n' printable for the log messages
+		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		
+		
+		/* 
+		 * If the mOnTimer is null setOnTimer is being called by the 
+		 * constructor so you must instantiate the TriggerTimer
+		 */
 		if(mOnTimer == null){
 		
+			System.out.println("mOnTimer has not been set - instantiating it here!!!");
+			
 			//instantiate the member TriggerTimer mOnTimer
-			mOnTimer = new TriggerTimer (mOnEvent,anOnTime);
-			//Timer timer = new Timer();
-			//timer.scheduleAtFixedRate(new TriggerTimer(mOnEvent,anOnTime),anOnTime.getTime(), 86400000);
-			mOnTimer.startTimer();
+				
+			    mOnTimer = new TriggerTimer (mOnEvent);
+				
+				mOnTimer.setTriggerTime(anOnTime);
+	
+				mOnTimer.startTimer();
+			
+			//Print the log message
+			 
+				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "setOnTimer()",getName() + "'s onTimer has been instantiated"
+					 + " and is now enabled. The appliance " + getHouseCode() 
+					 + getDeviceCode() + " is scheduled to turn ON at "
+					 + sdf.format(anOnTime.getTime()));
 		}
+		//Entering the else means the onTimer's already been instantiated
 		else{  
 			
-			//If we're in here the TriggerTimer has already been instantiated
-			//so just set the TriggerTimer to it's new value
+			//Just set the TriggerTimer to it's new value
 			
-			mOnTimer.setTriggerTime(anOnTime);
-			mOnTimer.startTimer();
+				System.out.println("mOnTimer already instantiated!!!!!!");
+				mOnTimer.setTriggerTime(anOnTime);
+				mOnTimer.startTimer();
+			
+			
+			//Print the log message
+			 
+				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "setOnTimer()",getName() + "'s onTimer is enabled and is " +
+					 "scheduled to turn on " + getHouseCode() + getDeviceCode() +
+					 "at " + sdf.format(anOnTime.getTime()));			
+			
 		}
-		
 
-		//Now start / restart the timer. If it's already started it will restart.
-		
-		  //mOnTimer.startTimer();
 		
 	}
 	
@@ -226,6 +273,15 @@ public class X10Appliance extends X10Device{
 		return mTriggerTimerEnabled;
 	}
 
+	/**
+	 * This method sets the TriggerTimerEnabled Attribute. Regardless of whether
+	 * setOntime and setOffTime are called, the triggerTimerEnabled variable must
+	 * be explicitly called in order for the values in setOnTime and setOffTime
+	 * to be used.
+	 * 
+	 * @param A boolean value. A boolean value of true enables the TriggerTimer
+	 * and a false value disables it.
+	 */
 	public void setTriggerTimerEnabled(boolean triggerTimerEnabled) {
 		mTriggerTimerEnabled = triggerTimerEnabled;
 	}
@@ -251,8 +307,14 @@ public class X10Appliance extends X10Device{
 	 */
 	public synchronized void setState( X10DeviceState state ) {
 
-		//check to see if they're already the same
-		if (getState() != state ){
+		/* 
+		 * The following condition should only be met the state of the 
+		 * state local variable doesn't the member variable mState. It should 
+		 * also be met if the constructor has set the setStateForceFlag to true.
+		 * This would indicate that setState is being called from the constructor.
+		 * 
+		 */
+		if (getState() != state || mSetStateForceFlag == true){
 			
 			//set the new state of this X10Appliance
 			mState = state;
@@ -283,6 +345,20 @@ public class X10Appliance extends X10Device{
 		}	
 			
 		
+	}
+	
+	/**
+	 * This method sets the setStateForceFlag attribute. This method and 
+	 * flag should only be called by the constructor. It's purpose is to 
+	 * override the check performed within SetState that skips firing an
+	 * event if the state of the Appliance matches the current state. Normally
+	 * we don't want to force this because we don't want to fire events
+	 * unnecessarily.  
+	 * 
+	 * @param TRUE to force a setState, and FALSE to shut it off
+	 */
+	private void setStateForceFlag(Boolean b){
+		mSetStateForceFlag = b;
 	}
 
 	/**
@@ -445,23 +521,46 @@ public class X10Appliance extends X10Device{
 	 */
 	public void processTimerEvent(TimerEvent e) {
 		
+		int count = 1;
+		
+		System.out.println("The state within the timerEvent is " + e.getEventName());
+		System.out.println("The event holds appliance " + e.getDeviceName());
+		System.out.println("This appliances name is " + getName());
+		
 		// We only deal with timerEvents attached to this device name. 
-		if (e instanceof TimerEvent &&
-				((TimerEvent)e).equals(getName())){
+		if (e instanceof TimerEvent && e.getDeviceName().equals(getName())){
 				
+			System.out.println( "Method Call " + count + " within this if");
+			
 					//Now that we know the event was intended for this device
-					if (((TimerEvent)e).getEventName().equals("ON") ){
-						setState ( X10DeviceState.ON );
+					if (e.getEventName().equals("ON") ){
+						
+						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+								 "processTimerEvent()","Attempting to set Device: " + 
+								 getName() + "'s state to " + 
+								 e.getEventName());
+						 
+						 setState ( X10DeviceState.ON );
 					}
-					else if (((TimerEvent)e).getEventName().equals("OFF") ){
-						setState ( X10DeviceState.OFF );
+					else if (e.getEventName().equals("OFF") ){
+					
+						 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+								 "processTimerEvent()","Attempting to set Device: " + 
+								 getName() + "'s state to " + 
+								 e.getEventName());
+						
+						 setState ( X10DeviceState.OFF );
 					}
 					else{
 						 LoggingUtilities.logError(X10Appliance.class.getCanonicalName(),
 						 "processTimerEvent()","Device: " + getName() +
-						 " was unables to process " + ((TimerEvent)e).toString() +
+						 " was unables to process " + e.toString() +
 						 " This is likely due to an unrecognized event type");
 					}
+		}
+		else{
+			
+			System.out.println("What the F is wrong?");
 		}
 	}
 	
