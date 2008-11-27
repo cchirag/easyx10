@@ -47,18 +47,8 @@ public class EventGenerator {
 		// First, let's acquire the Mutex to allow only one updater of the list
 		m_listSemaphore.acquireUninterruptibly();
 
-		// Iterate though our existing m_eventListeners and determine if the
-		// new object is already in the list.
-		ListIterator<EventHandlerListener> i = m_eventListeners.listIterator( );
-		boolean found = false;
-		while (i.hasNext( )) {
-			if (i.next( ) == listener) {
-				found = true;
-			}
-		}
-
-		// If the new object is not already in the list, let's add it to the list.
-		if (!found) {
+		// Add to the list, if it's not already in the list
+		if (!m_eventListeners.contains(listener)) {
 			m_eventListeners.add( listener );
 			debug(this.getClass( ).getCanonicalName(), "addEventListener",
 					 "Registered:: " + listener.getClass( ).getCanonicalName());
@@ -78,13 +68,9 @@ public class EventGenerator {
 		// First, let's acquire the Mutex to allow only one updater of the list
 		m_listSemaphore.acquireUninterruptibly();
 
-		// Iterate though our existing m_eventListeners and determine if the
-		// object is in the list.  If so, simply remove it.
-		ListIterator<EventHandlerListener> i = m_eventListeners.listIterator( );
-		while (i.hasNext( )) {
-			if (i.next( ) == listener) {
-				m_eventListeners.remove(i);
-			}
+		// Delete the entry if it's in our list
+		if (m_eventListeners.contains(listener)) {
+			m_eventListeners.remove(listener);
 		}
 		// return the Mutex now
 		m_listSemaphore.release();
@@ -114,7 +100,7 @@ public class EventGenerator {
 		
 		// First, let's acquire the Mutex to allow only one updater of the list
 		m_listSemaphore.acquireUninterruptibly();
-		List<EventHandlerListener> localList = new ArrayList<EventHandlerListener>( );
+		List<EventHandlerListener> localList = new LinkedList<EventHandlerListener>( );
 		localList.addAll(m_eventListeners);
 		// return the Mutex now
 		m_listSemaphore.release();
