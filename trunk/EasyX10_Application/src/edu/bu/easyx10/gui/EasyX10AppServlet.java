@@ -54,7 +54,10 @@ public class EasyX10AppServlet extends HttpServlet {
 		if(selectedAction != null) {
 			if(selectedAction == ActionType.ADD_DEVICE) {
 				String deviceName = request.getParameter("deviceName");
-				if( DeviceManagerFactory.getDeviceManager().isUnique(deviceName)){
+				if( (deviceName == null) || (deviceName.equals("")) ){
+					statusMessage = "Cannot leave Name Field Blank";
+					toPage = "/AddAppliance.jsp";
+				} else if( DeviceManagerFactory.getDeviceManager().isUnique(deviceName)){
 					boolean success = processDeviceAdd(request);
 					statusMessage = "Device Successfully Added";
 					toPage = "/Status.jsp";

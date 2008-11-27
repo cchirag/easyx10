@@ -50,7 +50,9 @@ public class GuiUtilities {
 				"updateSessionDeviceList", 
 				"Session Device List Updated");
 		
-		/* Set<Device> devices = DeviceManagerFactory.getDeviceManager().getDevices();
+		/* TEST DATASET 
+		 
+		Set<Device> devices = DeviceManagerFactory.getDeviceManager().getDevices();
 		
 		ArrayList<Device> deviceList = new ArrayList<Device>();
 		ProxyX10Appliance l1 = new ProxyX10Appliance("Light1", 'A', 1);
@@ -100,6 +102,10 @@ public class GuiUtilities {
 		GuiUtilities.tempDeviceList = tempDeviceList;
 	}
 	
+	/**
+	 * @param name
+	 * @return
+	 */
 	public static Device getDevice(String name){
 		return DeviceManagerFactory.getDeviceManager().getDevice(name);
 	}
@@ -191,13 +197,6 @@ public class GuiUtilities {
 		char houseCode = request.getParameter("houseCode").charAt(0);
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
-		// If the Device Exists Log an Error
-		/*Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
-		if( deviceExists != null ){
-			// TODO Throw an exception
-			return null;
-		}*/
-		
 		// Create the new Appliance
 		ProxyX10Appliance newDevice = new ProxyX10Appliance(name, houseCode, unitCode);
 		
@@ -256,25 +255,6 @@ public class GuiUtilities {
 		char houseCode = request.getParameter("houseCode").charAt(0);
 		int unitCode = Integer.parseInt(request.getParameter("unitCode"));
 		
-		// Check to see if this device already exists
-		/*
-		List<Device> tempDeviceList = GuiUtilities.getTempDeviceList();
-		boolean deviceExists = false;
-		for( Device d : tempDeviceList ){
-			if( d.getName().equals(name) ){
-				deviceExists = true;
-				break;
-			}
-		}
-		*/
-		
-		// If the Device Exists Log an Error
-		/*Device deviceExists = DeviceManagerFactory.getDeviceManager().getDevice(name);
-		if( deviceExists != null){
-			// TODO Throw an exception
-			return null;
-		}*/
-		
 		// Create the new Appliance
 		ProxyX10MotionSensor newDevice = new ProxyX10MotionSensor(name, houseCode, unitCode);
 		
@@ -295,8 +275,11 @@ public class GuiUtilities {
 		}
 		
 		// Set the Inactivity Timeout
-		// TODO Do we need bool?
-		//String activityTimeout = request.getParameter("activityTimeout");
+		String activityTimeout = request.getParameter("activityTimeout");
+		if( activityTimeout != null ){
+			newDevice.setInactivityTimeEnabled(Boolean.parseBoolean(activityTimeout));
+		}
+		
 		String timeoutPeriod = request.getParameter("activityTimeoutPeriod");
 		if( timeoutPeriod != null ){
 			newDevice.setInactivityTime(Integer.parseInt(timeoutPeriod));
