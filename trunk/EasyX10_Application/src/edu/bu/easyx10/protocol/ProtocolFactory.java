@@ -39,42 +39,15 @@ public class ProtocolFactory {
 	 */
 	public synchronized static void initProtocols( ) throws Exception {
 
-		// create some local method variables    
-		String osType = "";
-
-		// Determine our operating system environment			
-		try {
-			osType= System.getProperty("os.arch");
-			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
-					 "Operating system type =>" + osType);
-		} catch (Exception e) {
-			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
-			        "Exception caught = " + e.getMessage());
-		}
-
 		// instantiate all the possible protocols here
-		// @TODO - the serial port needs to come from the configuration package
 		if (m_protocolInitialized == false) {
 
-			// Initialize the X10 Protocol Driver
-			String x10Port;
-
-			// Determine the default portName
-			if (osType.equals("linux")) {
-				x10Port = "/dev/ttyUSB0";
-			} else if (osType.equals("i386")) {
-				x10Port = "/dev/ttyUSB0";
-			} else if (osType.equals("amd64")) {
-				x10Port = "/dev/ttyUSB0";
-			} else {
-				x10Port = "COM9";
-			}
-
 			/*
-			 * Attempt to fetch the default port from the system configuration.
+			 * Fetch the default port from the system configuration.
 			 */
 			SystemConfiguration sysConfig =  ConfigurationUtilities.getSystemConfiguration();
-			x10Port = sysConfig.getCm11aPortName();
+			String x10Port = sysConfig.getCm11aPortName();
+			System.out.println("port: " + x10Port);
 			
 			/*
 			 * This next block of code is used for debugging only.
