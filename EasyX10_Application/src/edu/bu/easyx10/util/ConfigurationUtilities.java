@@ -100,7 +100,31 @@ public class ConfigurationUtilities {
 	 */
 	private static void writeDefaultSysConfigFile(){
 		SystemConfiguration sysConfig = new SystemConfiguration();
-		sysConfig.setCm11aPortName("COM4");
+
+        // Determine the default CM11A port name base upon OS type
+        String x10Port = "";
+        String osType = "";
+
+        // Determine our operating system environment
+        try {
+                osType= System.getProperty("os.arch");
+                LoggingUtilities.logInfo("ConfigurationUtilities", "writeDefaultSystemConfigFile",
+                                "Operating system type =>" + osType);
+        } catch (Exception e) {
+                LoggingUtilities.logInfo("ConfigurationUtilities", "writeDefaultSystemConfigFile",
+                                "Exception caught = " + e.getMessage());
+        }
+        // Determine the default portName
+        if (osType.equals("linux")) {
+                x10Port = "/dev/ttyUSB0";
+        } else if (osType.equals("i386")) {
+                x10Port = "/dev/ttyUSB0";
+        } else if (osType.equals("amd64")) {
+                x10Port = "/dev/ttyUSB0";
+        } else {
+                x10Port = "COM4";
+        }
+        sysConfig.setCm11aPortName(x10Port);
 		
 		ArrayList<User> users = new ArrayList<User>();
 		User user1 = new User();
