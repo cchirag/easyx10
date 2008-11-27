@@ -2,6 +2,7 @@ package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
+import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
 
 import java.util.*;
@@ -322,57 +323,44 @@ public class X10MotionSensor extends X10Device {
 		 * need to send an ON event to all of the associated appliances.
 		 */
 		if ( getState( ) == X10DeviceState.ON ) {
+			// reset the activity timer when enabled
+			if (getInactivityTimeEnabled( )) { 
+				mInactivityTimer.startTimer( );
+			}
+			// Load some local time pieces from startTime and endTime to compare with current time
+			Calendar localStartTime = Calendar.getInstance();
+			localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
+			localStartTime.set(Calendar.MINUTE, getStartTime( ).get(Calendar.MINUTE));
 
-			// On transition to MOTION, we need to turn on appliances.
-			if (mDetectionWindowTrigger == false) {
+			Calendar localEndTime = Calendar.getInstance();
+			localEndTime.set(Calendar.HOUR_OF_DAY, getEndTime( ).get(Calendar.HOUR_OF_DAY));
+			localEndTime.set(Calendar.MINUTE, getEndTime( ).get(Calendar.MINUTE));
 
-				
-				// Load some local time pieces from startTime and endTime to compare with current time
-				Calendar localStartTime = Calendar.getInstance();
-				localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
-				localStartTime.set(Calendar.MINUTE, getStartTime( ).get(Calendar.MINUTE));
+			// Check the detection window if applicable
+			if ( !getDetectionPeriodEnabled( ) || 
+					(calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
 
-				Calendar localEndTime = Calendar.getInstance();
-				localEndTime.set(Calendar.HOUR_OF_DAY, getEndTime( ).get(Calendar.HOUR_OF_DAY));
-				localEndTime.set(Calendar.MINUTE, getEndTime( ).get(Calendar.MINUTE));
+				// First, let's acquire the Mutex to allow only one updater of the list
+				mListSemaphore.acquireUninterruptibly();
+				/* set a member variable to identify that we have turned ON all
+				 * of the associated appliance devices.  Also, we need to remember
+				 * which appliance devices we have turned off.  We'll use the copy
+				 * of the list when we turn appliances off.
+				 */
+				mDetectionWindowTrigger = true;
+				mDetectionWindowList.clear( );
+				mDetectionWindowList.addAll ( getApplianceList( ) );
+				// return the Mutex now
+				mListSemaphore.release();
 
-				// Check the detection window if applicable
-				if ( !getDetectionPeriodEnabled( ) || 
-						(calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
-
-					// reset the activity timer
-					if (getInactivityTimeEnabled( )) { 
-					     mInactivityTimer.startTimer( );
-					}
-
-					// First, let's acquire the Mutex to allow only one updater of the list
-					mListSemaphore.acquireUninterruptibly();
-					/* set a member variable to identify that we have turned ON all
-					 * of the associated appliance devices.  Also, we need to remember
-					 * which appliance devices we have turned off.  We'll use the copy
-					 * of the list when we turn appliances off.
-					 */
-					mDetectionWindowTrigger = true;
-					mDetectionWindowList.clear( );
-					mDetectionWindowList.addAll ( getApplianceList( ) );
-					// return the Mutex now
-					mListSemaphore.release();
-
-					// Iterate through our mApplianceList and turn on all the Appliances now
-					Iterator<String> i = mDetectionWindowList.iterator( );
-					while (i.hasNext()) {
-						String deviceName = i.next();
-						// Create an X10DeviceEvent to turn on the Appliance
-						X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_ON );
-						// Send the Event to the X10Appliance object through EventGenerator
-						eventGenerator.fireEvent ( deviceEvent );
-					}
-				}
-			} else {
-
-				// reset the activity timer
-				if (getInactivityTimeEnabled( )) { 
-				    mInactivityTimer.startTimer( );
+				// Iterate through our mApplianceList and turn on all the Appliances now
+				Iterator<String> i = mDetectionWindowList.iterator( );
+				while (i.hasNext()) {
+					String deviceName = i.next();
+					// Create an X10DeviceEvent to turn on the Appliance
+					X10DeviceEvent deviceEvent = new X10DeviceEvent ( deviceName, X10_EVENT_CODE.X10_ON );
+					// Send the Event to the X10Appliance object through EventGenerator
+					eventGenerator.fireEvent ( deviceEvent );
 				}
 			}
 		}
@@ -430,16 +418,22 @@ public class X10MotionSensor extends X10Device {
 	public void updateDevice(Device proxyDevice) {
 
 		/*
-		 * We needer to crash if we get an update for a device which
+		 * We need to log an error if we get an update for a device which
 		 * is not a ProxyX10MotionSensor.  This means we found a bug.
 		 */
-		assert(proxyDevice instanceof ProxyX10MotionSensor);
+		if (!(proxyDevice instanceof ProxyX10MotionSensor)) {
+			LoggingUtilities.logError(this.getClass( ).getCanonicalName(), "updateDevice", 
+			"object is not of type ProxyX10MotionSensor");
+		}
 
 		/*
-		 * We need to crash if we get an update for a device with a 
+		 * We need to log an error if we get an update for a device with a 
 		 * different name.  This means we found a bug.
 		 */
-		assert(proxyDevice.getName( ).equals(getName( )));
+		if (!proxyDevice.getName( ).equals(getName( ))) {
+			LoggingUtilities.logError(this.getClass( ).getCanonicalName(), "updateDevice", 
+			"wrong deviceName: " + proxyDevice.getName());
+		}
 
 		// Update the various attributes from the Proxy object
 		setLocation ( ((ProxyX10MotionSensor)proxyDevice).getLocation( ) );
