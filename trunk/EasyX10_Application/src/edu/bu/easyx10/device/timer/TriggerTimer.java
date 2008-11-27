@@ -19,9 +19,9 @@ public class TriggerTimer extends DeviceTimer{
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 
 	
-	public TriggerTimer(Event eventToFire, Calendar triggerTime){
+	//public TriggerTimer(Event eventToFire, Calendar triggerTime){
+	public TriggerTimer(Event eventToFire){
 		super(eventToFire);
-		setTriggerTime(triggerTime);	
 	}
 	
 	
@@ -47,14 +47,13 @@ public class TriggerTimer extends DeviceTimer{
 
 	@Override
 	public void run() {
-
-		System.out.println("I tried to fire an event");
-		eventGenerator.fireEvent((TimerEvent)mEventToFire);
 		
 		//Log a message indicating the timer was started
 		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
-				 "run()","Trigger Timer Fired and " + mEventToFire.toString() + 
+				 "run()","Trigger Timer is firing an " + ((TimerEvent)mEventToFire).getEventName() + 
 				 " event to " + mEventToFire.getDeviceName());
+
+		eventGenerator.fireEvent(getEventToFire());
 		
 	}
 
@@ -74,18 +73,12 @@ public class TriggerTimer extends DeviceTimer{
 
 	@Override
 	public void startTimer() {
+		
+		
+		System.out.println("startTimer() was called. Next Line schedulesTimer");
 
-		//Useful Debugging
-			//System.out.println("I will do something at " + sdf.format(mTriggerTime.getTime()));
-		
-		//clean up previous scheduled tasks
-		//timer.cancel();  //cancel the previous scheduled task because the time may have changed
-		//timer.purge();   //Tell garbage collection to mark canceled tasks for cleanup
-		
 		//Schedule the TriggerTimer to fire once every 24 hrs from mTriggerTime
-		
-		eventGenerator.fireEvent((TimerEvent)mEventToFire);
-		//timer.schedule(this,mTriggerTime.getTime(), 86400000);
+		timer.scheduleAtFixedRate(this,mTriggerTime.getTime(), 86400000);
 		
 		//Log a message indicating the timer was started
 		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
