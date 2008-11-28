@@ -336,6 +336,9 @@ public class X10MotionSensor extends X10Device {
 			localEndTime.set(Calendar.HOUR_OF_DAY, getEndTime( ).get(Calendar.HOUR_OF_DAY));
 			localEndTime.set(Calendar.MINUTE, getEndTime( ).get(Calendar.MINUTE));
 
+			// Update the current time
+			calendar = Calendar.getInstance( ); 
+			
 			// Check the detection window if applicable
 			if ( !getDetectionPeriodEnabled( ) || 
 					(calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
@@ -347,9 +350,10 @@ public class X10MotionSensor extends X10Device {
 				 * which appliance devices we have turned off.  We'll use the copy
 				 * of the list when we turn appliances off.
 				 */
-				mDetectionWindowTrigger = true;
+				mDetectionWindowTrigger = getInactivityTimeEnabled( );
 				mDetectionWindowList.clear( );
 				mDetectionWindowList.addAll ( getApplianceList( ) );
+		
 				// return the Mutex now
 				mListSemaphore.release();
 
@@ -460,10 +464,16 @@ public class X10MotionSensor extends X10Device {
 		 */
 		if (deviceEvent instanceof X10DeviceEvent &&
 				deviceEvent.getHouseCodeChar( ) == getHouseCode( ) &&
-				deviceEvent.getDeviceCodeInt( ) == getDeviceCode( ) &&
-				deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ) {
-			setState ( X10DeviceState.ON );
-		} 
+				deviceEvent.getDeviceCodeInt( ) == getDeviceCode()) {
+			if (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_ON ) {
+				setState ( X10DeviceState.ON );
+			} 
+			if ( (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_OFF ) &&
+					!getInactivityTimeEnabled() &&
+					!mDetectionWindowTrigger) {
+				setState ( X10DeviceState.OFF );
+			} 
+		}
 	}
 
 	/**
