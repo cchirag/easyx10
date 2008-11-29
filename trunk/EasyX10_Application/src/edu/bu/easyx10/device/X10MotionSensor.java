@@ -324,6 +324,14 @@ public class X10MotionSensor extends X10Device {
 		 */
 		if ( getState( ) == X10DeviceState.ON ) {
 
+			/* reset the activity timer when enabled.  We need to use the timer event
+			 * if we are not turning on an Appliance since we use this timer to control
+			 * state of MOTION vs STILL
+			 */
+			if (getInactivityTimeEnabled( )) { 
+				mInactivityTimer.startTimer( );
+			}
+
 			// Load some local time pieces from startTime and endTime to compare with current time
 			Calendar localStartTime = Calendar.getInstance();
 			localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
@@ -345,10 +353,6 @@ public class X10MotionSensor extends X10Device {
 			if ( !getDetectionPeriodEnabled( ) || 
 					(currentTime.after(localStartTime) && currentTime.before(localEndTime)) ) {
 
-				// reset the activity timer when enabled
-				if (getInactivityTimeEnabled( )) { 
-					mInactivityTimer.startTimer( );
-				}
 				// First, let's acquire the Mutex to allow only one updater of the list
 				mListSemaphore.acquireUninterruptibly();
 				/* set a member variable to identify that we have turned ON all
