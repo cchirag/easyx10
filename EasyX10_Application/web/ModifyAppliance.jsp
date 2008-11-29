@@ -43,6 +43,8 @@
 	function updateLocation(){
 		document.detailsForm.top.value = document.getElementById("<%= deviceName %>").style.top;
 		document.detailsForm.left.value = document.getElementById("<%= deviceName %>").style.left;
+		document.detailsForm.startTime.disabled = false;
+		document.detailsForm.endTime.disabled = false;
 	}
 	
 </script>
