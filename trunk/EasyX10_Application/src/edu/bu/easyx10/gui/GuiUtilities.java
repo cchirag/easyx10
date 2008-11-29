@@ -2,7 +2,6 @@
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -27,9 +26,6 @@ import edu.bu.easyx10.util.LoggingUtilities;
  */
 public class GuiUtilities {
 	
-	// TODO Remove when real DeviceList is accessed
-	private static ArrayList<Device> tempDeviceList = new ArrayList<Device>();
-	
 	/**
 	 * This method updates the list of devices that is stored in the
 	 * session bean.  Devices are first retrieved from the DeviceManager
@@ -49,57 +45,6 @@ public class GuiUtilities {
 		LoggingUtilities.logInfo(GuiUtilities.class.getCanonicalName(), 
 				"updateSessionDeviceList", 
 				"Session Device List Updated");
-		
-		/* TEST DATASET 
-		 
-		Set<Device> devices = DeviceManagerFactory.getDeviceManager().getDevices();
-		
-		ArrayList<Device> deviceList = new ArrayList<Device>();
-		ProxyX10Appliance l1 = new ProxyX10Appliance("Light1", 'A', 1);
-		l1.setLocation(new DeviceLocation(1, 100, 150));
-		l1.setState(X10DeviceState.ON);
-		deviceList.add(l1);
-		
-		ProxyX10MotionSensor m1 = new ProxyX10MotionSensor("Motion1", 'B', 1);
-		m1.setLocation(new DeviceLocation(2, 200, 250));
-		m1.setState(X10DeviceState.ON);
-		deviceList.add(m1);
-		
-		ProxyX10Appliance l2 = new ProxyX10Appliance("HAHAHAH", 'A', 2);
-		l2.setLocation(new DeviceLocation(3, 400, 350));
-		l2.setState(X10DeviceState.OFF);
-		deviceList.add(l2);
-		
-		ProxyX10MotionSensor m2 = new ProxyX10MotionSensor("Motion2", 'B', 2);
-		m2.setLocation(new DeviceLocation(1, 20, 20));
-		m2.setState(X10DeviceState.ON);
-		deviceList.add(m2);
-		
-		ProxyX10Appliance l3 = new ProxyX10Appliance("Light3", 'A', 3);
-		l3.setLocation(new DeviceLocation(1, 340, 50));
-		deviceList.add(l3);
-		l3.setState(X10DeviceState.OFF);
-		
-		LoggingUtilities.logInfo("GuiUtilities", "updateSessionDeviceList", "Device List Size = " + deviceList.size());
-		// Store the Device List in the session
-		theSession.setAttribute("deviceList", deviceList);
-		
-		tempDeviceList = deviceList;
-		*/
-	}
-	
-	/**
-	 * @return the tempDeviceList
-	 */
-	public static ArrayList<Device> getTempDeviceList() {
-		return tempDeviceList;
-	}
-
-	/**
-	 * @param tempDeviceList the tempDeviceList to set
-	 */
-	public static void setTempDeviceList(ArrayList<Device> tempDeviceList) {
-		GuiUtilities.tempDeviceList = tempDeviceList;
 	}
 	
 	/**
@@ -205,22 +150,18 @@ public class GuiUtilities {
 				X10Device.X10DeviceState.valueOf(request.getParameter("deviceStatus")));
 		
 		// Set timer details
-		if( request.getParameter("timer").equals("ON")){
-			newDevice.setTriggerTimerEnabled(true);
+		newDevice.setTriggerTimerEnabled(request.getParameter("timer").equals("ON"));
 			
-			// Retrieve the time strings
-			String startTime = request.getParameter("startTime");
-			String endTime = request.getParameter("endTime");
+		// Retrieve the time strings
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
 		
-			// Set the On and Off Time
-			if( startTime != null ){
-				newDevice.setOnTime(convertTimeString(startTime));
-			}
-			if( endTime != null ){
-				newDevice.setOffTime(convertTimeString(endTime));
-			}
-		} else {
-			newDevice.setTriggerTimerEnabled(false);
+		// Set the On and Off Time
+		if( startTime != null ){
+			newDevice.setOnTime(convertTimeString(startTime));
+		}
+		if( endTime != null ){
+			newDevice.setOffTime(convertTimeString(endTime));
 		}
 			
 		// Set the Location
