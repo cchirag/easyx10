@@ -25,6 +25,9 @@
 	String deviceName = request.getParameter("deviceName");
 	ProxyX10MotionSensor device = 
 		(ProxyX10MotionSensor)GuiUtilities.getDevice(deviceName);
+	
+	// Retrieve the list of device
+	List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 %>
 
 <body onload="document.detailsForm.motionSensorName.focus()">
@@ -247,13 +250,20 @@
 							<table>
 								<tr>
                						<td align="center">
-               						<% 
-               							// TODO Generate Appliance List based on Motion Sensor Object
-               						%>
                							<span style="font-weight:bold">Available Appliances</span>
                							<br/>
                							<select name="applianceList" size="5" style="width: 150px">
-               								<%= GuiUtilities.generateHtmlApplianceOptions() %>
+               							<% 
+               								for( X10Device d : devices ){
+               									if( (d instanceof ProxyX10Appliance) && 
+               											!device.getApplianceList().contains(d.getName()) ){
+               							%>
+               										<option value="<%=d.getName() %>"><%=d.getName() %></option>
+               							<% 
+               									}
+               								} 
+               							%>
+
                 						</select>
                 					</td>                                        
                 					<td align="center">
@@ -265,6 +275,13 @@
                							<span style="font-weight:bold">Associated Appliances</span>
                							<br/>
                							<select name="associatedList" size="5" style="width: 150px">
+               							<% 
+               								for( String appliance : device.getApplianceList() ){
+               							%>
+               									<option value="<%=appliance %>"><%=appliance %></option>
+               							<%
+               								}
+               							%>
                							</select>
                						</td>
               					</tr>
@@ -291,9 +308,6 @@
 		</form>
 	</div>
 		<% 
-			
-			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
-
 			String currentFloor = (String)request.getParameter("selectedFloor");
 			if( currentFloor != null ){
 				session.setAttribute("currentFloor", currentFloor);
