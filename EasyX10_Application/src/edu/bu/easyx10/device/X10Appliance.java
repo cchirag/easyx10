@@ -23,16 +23,17 @@ public class X10Appliance extends X10Device{
 	
 	//Declare Private Member Variables
 	
-	private TriggerTimer mOffTimer;           // Timer used to trigger Off Event
-	protected Calendar mOnTime = Calendar.getInstance();// Time to turn appliance on
-	protected Calendar mOffTime = Calendar.getInstance();// Time to shut appliance off
-	private boolean mTriggerTimerEnabled;     // Check if TriggerTimer is Enabled 
+	protected Calendar mOnTime = Calendar.getInstance();  // Time to turn appliance on
+	protected Calendar mOffTime = Calendar.getInstance(); // Time to shut appliance off
+	private boolean mTriggerTimerEnabled;                 // Check if TriggerTimer is Enabled 
+	
 	//Create the onEvent and offEvents to be passed to the TriggerTimer
 	TimerEvent mOnEvent = new TimerEvent ( getName(), "ON" );
 	TimerEvent mOffEvent = new TimerEvent ( getName(), "OFF" );
-	//private TimerEvent mOnEvent;              // The  ON event riggerTimer will fire
-	//private TimerEvent mOffEvent;             // The  OFF event riggerTimer will fire
-	private TriggerTimer mOnTimer;// Timer used to trigger On Event
+	
+	private TriggerTimer mOnTimer;                 // Timer used to trigger On Event
+	private TriggerTimer mOffTimer;                // Timer used to trigger On Event
+	
 	private boolean mSetStateForceFlag = false;   //Forces the firing of an event
 
 	/**
@@ -121,13 +122,6 @@ public class X10Appliance extends X10Device{
 		// Call super in X10Device and pass in the required attributes
 		super(name,houseCode,deviceCode);
 		
-		//Create the onEvent to be passed to the TriggerTimer
-		//mOnEvent = new TimerEvent ( getName(), "ON" );
-		
-		//Create the offEvent to be passed to the TriggerTimer
-		//mOffEvent = new TimerEvent ( getName(), "OFF" );
-		
-		
 	}
 	
 
@@ -200,25 +194,53 @@ public class X10Appliance extends X10Device{
 	 */
 	private void setOffTimer(Calendar anOffTime){
 		
-		//If the mOffTimer is null setOffTimer is being called by the constructor
-		//So you must instantiate the TriggerTimer
-		if(mOffTimer == null){
-			
-		//instantiate the member TriggerTimer mOffTimer
+		//Make the Calendar object nice n' printable for the log messages
+		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		
-			//mOffTimer = new TriggerTimer (mOffEvent,anOffTime);
+		
+		/* 
+		 * If the mOnTimer is null setOnTimer is being called by the 
+		 * constructor so you must instantiate the TriggerTimer
+		 */
+		if(mOffTimer == null){
+		
+			System.out.println("mOffTimer has not been set - instantiating it here!!!");
+			
+			//instantiate the member TriggerTimer mOffTimer
+				
+			    mOffTimer = new TriggerTimer (mOffEvent);
+				
+				mOffTimer.setTriggerTime(anOffTime);
+	
+				mOffTimer.startTimer();
+			
+			//Print the log message
+			 
+				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "setOffTimer()",getName() + "'s offTimer has been instantiated"
+					 + " and is now enabled. The appliance " + getHouseCode() 
+					 + getDeviceCode() + " is scheduled to turn OFF at "
+					 + sdf.format(anOffTime.getTime()));
 		}
+		//Entering the else means the onTimer's already been instantiated
 		else{  
 			
-			//If we're in here the TriggerTimer has already been instantiated
-			//so just set the TriggerTimer to it's new value
+			//Just set the TriggerTimer to it's new value
 			
-			//mOffTimer.setTriggerTime(anOffTime);		
+				System.out.println("mOnTimer already instantiated!!!!!!");
+				mOffTimer.setTriggerTime(anOffTime);
+				mOffTimer.startTimer();
+			
+			
+			//Print the log message
+			 
+				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "setOffTimer()",getName() + "'s offTimer is enabled and is " +
+					 "scheduled to turn OFF " + getHouseCode() + getDeviceCode() +
+					 "at " + sdf.format(anOffTime.getTime()));			
+			
 		}
-		
-		//Now start / restart the timer. If it's already started it will restart.
-		//mOffTimer.startTimer();
-		
 	}
 	
 	/**
