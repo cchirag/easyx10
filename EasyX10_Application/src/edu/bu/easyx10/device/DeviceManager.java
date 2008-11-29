@@ -25,6 +25,11 @@ public final class DeviceManager {
 	
 	public DeviceManager(){
 
+		// Enable specific module level debugging.
+		// System.setProperty("DEBUG_EVENT", "1");
+		// System.setProperty("DEBUG_PROTOCOL", "1");
+		// System.setProperty("DEBUG_WAITTIMER", "1");
+
 		try {
 			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
 			"Initializing the ProtocolFactory\n");
