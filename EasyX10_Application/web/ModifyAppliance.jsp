@@ -182,24 +182,18 @@
 		</form>
 	</div>
 		<% 
-			
+			// Retrieve the list of device
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 
-			String currentFloor = (String)request.getParameter("selectedFloor");
-			if( currentFloor != null ){
-				session.setAttribute("currentFloor", currentFloor);
-			} else {
-				currentFloor = (String)session.getAttribute("currentFloor");
-			}
-			
+			// Retrieve the current floor info.
+			String currentFloor = "floor" + device.getLocation().getFloorNumber();
+			session.setAttribute("currentFloor", currentFloor);
 		%>
 	
 		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; 
 				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left">
 			
-			
 			<span><%= currentFloor %></span>
-			
 			<% 
 				for(int j=0; j< devices.size(); j++) { 
 					if( ("floor" + devices.get(j).getLocation().getFloorNumber()).equals(currentFloor)){
