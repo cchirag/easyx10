@@ -1,5 +1,6 @@
 package edu.bu.easyx10.device;
 
+import edu.bu.easyx10.event.TimerEvent;
 import edu.bu.easyx10.util.LoggingUtilities;
 import java.util.Calendar;
 
@@ -36,6 +37,9 @@ public class ProxyX10Appliance extends X10Appliance{
 		
 		// Create the super X10Device class and pass it to its attribute;
 			super(name,houseCode,deviceCode);
+			
+			// unregister the Device with the EventGenerator
+		    eventGenerator.deleteEventListener(this);
 		
 		
 	}
@@ -47,6 +51,10 @@ public class ProxyX10Appliance extends X10Appliance{
 		super(applianceDevice.getName(),
 			  applianceDevice.getHouseCode(),
 			  applianceDevice.getDeviceCode());
+		
+		
+		// unregister the Device with the EventGenerator
+	    eventGenerator.deleteEventListener(this);
 		
 		/* 
 		 * Load our member variables from the X10ApplianceDevice
@@ -206,4 +214,11 @@ public class ProxyX10Appliance extends X10Appliance{
 			 proxyDeviceState + " on device " + getName() );
 		 }
 	}
+	/*
+	 * 
+	 */
+	public void processDeviceEvent(TimerEvent e) {}
+	public void processTimerEvent(TimerEvent e) {}
+	
+	
 }
