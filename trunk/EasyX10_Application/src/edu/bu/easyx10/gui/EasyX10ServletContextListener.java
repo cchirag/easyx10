@@ -27,15 +27,20 @@ public class EasyX10ServletContextListener implements ServletContextListener {
 	 */
 	public void contextInitialized(ServletContextEvent sce) {
 
-		// Retrieve the file path for the configuration file
-		String configFilePath = 
+		// Retrieve the file paths for the configuration files
+		String sysConfigFilePath = 
 			sce.getServletContext().getRealPath( SystemConfiguration.FILE_NAME );
+		String deviceConfigFilePath =
+			sce.getServletContext().getRealPath( ConfigurationUtilities.DEVICE_FILE_NAME );
 		
 		// Set the path for the configuration file
-		ConfigurationUtilities.setSystemConfigFilePath(configFilePath);
-		LoggingUtilities.logInfo(this.getClass().getCanonicalName(), 
-				"contextInitialized", "Set Config File Path To " + configFilePath);
+		ConfigurationUtilities.setSystemConfigFilePath(sysConfigFilePath);
+		ConfigurationUtilities.setDeviceConfigFilePath(deviceConfigFilePath);
 		
+		LoggingUtilities.logInfo(this.getClass().getCanonicalName(), 
+				"contextInitialized", "Set System Config File Path To " + sysConfigFilePath);
+		LoggingUtilities.logInfo(this.getClass().getCanonicalName(), 
+				"contextInitialized", "Set Device Config File Path To " + deviceConfigFilePath);
 	}
 	
 	/** 

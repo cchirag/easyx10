@@ -4,11 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-import edu.bu.easyx10.device.Device;
+import edu.bu.easyx10.device.X10Device;
 import edu.bu.easyx10.gui.User;
 
 /**
@@ -21,15 +22,38 @@ import edu.bu.easyx10.gui.User;
  */
 public class ConfigurationUtilities {
 	
-	private static String SystemConfigFilePath = "web/WEB-INF/SysConfig.xml";
+	/** The name of the Device Configuration File */
+	public static final String DEVICE_FILE_NAME = "/WEB-INF/DeviceConfig.xml";
 
+	// The paths for the SysConfig and DeviceConfig files 
+	private static String systemConfigFilePath = "web/WEB-INF/SysConfig.xml";
+	private static String deviceConfigFilePath = "web/WEB-INF/DeviceConfig.xml";
+	
+	/**
+	 * Sets the path to the system configuration file.
+	 * 
+	 * @param filePath the system config file path to set
+	 */
+	public static void setSystemConfigFilePath(String filePath) {
+		systemConfigFilePath = filePath;
+	}
+	
+	/**
+	 * Sets the path to the device configuration file.
+	 * 
+	 * @param filePath the device config file path to set
+	 */
+	public static void setDeviceConfigFilePath(String filePath) {
+		deviceConfigFilePath = filePath;
+	}
+	
 	/**
 	 * Gets the SystemConfiguration data.
 	 * 
 	 * @return a system configuration object.
 	 */
 	public static SystemConfiguration getSystemConfiguration(){
-		return getSystemConfiguration(SystemConfigFilePath);
+		return getSystemConfiguration(systemConfigFilePath);
 	}
 	
 	/**
@@ -53,27 +77,49 @@ public class ConfigurationUtilities {
 	}
 	
 	/**
-	 * Sets the path to the system configuration file.
-	 * 
-	 * @param sys_config_file_path the SYS_CONFIG_FILE_PATH to set
+	 * Gets the Device configuration data.
+	 * @return
 	 */
-	public static void setSystemConfigFilePath(String filePath) {
-		SystemConfigFilePath = filePath;
+	public static List<X10Device> getDeviceConfiguration(){
+		return getDeviceConfiguration(deviceConfigFilePath);
 	}
 	
 	/**
-	 * @return
+	 * Gets the Device configuration data.
+	 * 
+	 * @param filePath the path to the config file.
+	 * @return a list of Device objects.
 	 */
-	public static ArrayList<Device> getDeviceConfiguration(){
-		// @ TODO Fill in Get Device Configuration Code
-		return new ArrayList<Device>();
+	public static List<X10Device> getDeviceConfiguration(String filePath){
+		XStream xs = new XStream(new DomDriver());
+        List<X10Device> devices = new ArrayList<X10Device>();
+
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            xs.fromXML(fis, devices);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        
+        return devices;
 	}
 
 	/**
-	 * @param deviceList
+	 * Sets the Device configuration data.
+	 * 
+	 * @param deviceList the list of devices to write to the config file.
 	 */
-	public static void setDeviceConfiguration(ArrayList<Device> deviceList){
-		// @ TODO Fill in Set Device Config Code
+	public static void setDeviceConfiguration(List<X10Device> deviceList){
+		//Create the xStream object
+        XStream xs = new XStream();
+
+        //Write the list of devices to the device config file
+        try {
+            FileOutputStream fs = new FileOutputStream(deviceConfigFilePath);
+            xs.toXML(deviceList, fs);
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
 	}
 	
 	/**
