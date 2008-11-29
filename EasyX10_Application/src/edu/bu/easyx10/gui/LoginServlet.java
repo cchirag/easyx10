@@ -13,9 +13,16 @@ import edu.bu.easyx10.util.ConfigurationUtilities;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.util.SystemConfiguration;
 
+
 /**
- * @author winderjj
+ * The LoginServlet class implements the functionality to process a user’s 
+ * request to log into the EasyX10 System.  The main method of the class 
+ * doPost() is called when the user submits a request to log in.  
+ * LoginServlet is a typical Java Servlet that extends HttpServlet.
  *
+ * @author winderjj
+ * @version Please Refer to Subversion
+ * @date Nov 29, 2008
  */
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -28,10 +35,11 @@ public class LoginServlet extends HttpServlet {
      */
     public LoginServlet() {
         super();
-        // TODO Auto-generated constructor stub 
     }
 
 	/**
+	 * Process a user's request to log into the system.
+	 * 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,6 +81,16 @@ public class LoginServlet extends HttpServlet {
 		
 	}
 	
+	/**
+	 * Validates a username and password against the user data 
+	 * stored in the system configuration file.
+	 * 
+	 * @param username the username to check.
+	 * @param password the password to check.
+	 * 
+	 * @return the User object if the validation was successful.
+	 * Otherwise, null is returned.
+	 */
 	private User validateUser(String username, String password){
 		// Retrieve the list of Users from Configuration
 		SystemConfiguration sysConfig = 

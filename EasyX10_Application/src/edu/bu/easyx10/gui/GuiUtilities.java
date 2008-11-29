@@ -18,7 +18,9 @@ import edu.bu.easyx10.device.X10Device;
 import edu.bu.easyx10.util.LoggingUtilities;
 
 /**
- * 
+ * This class implements serveral static help methods for the EasyX10 user 
+ * interface.  This includes methods to generate html code and create devices
+ * based on user input.
  *
  * @author winderjj
  * @version Please Refer to Subversion
@@ -48,8 +50,12 @@ public class GuiUtilities {
 	}
 	
 	/**
-	 * @param name
-	 * @return
+	 * This method retrieves a device from the DeviceManger.  It is provided 
+	 * as a helper method to the jsp pages.
+	 * 
+	 * @param name the device to retrieve
+	 * @return the device form the manager or null if no device with that name
+	 * exists.
 	 */
 	public static Device getDevice(String name){
 		return DeviceManagerFactory.getDeviceManager().getDevice(name);
@@ -251,6 +257,12 @@ public class GuiUtilities {
 		return newDevice;
 	}
 	
+	/**
+	 * Converts a time string to a Calendar object.
+	 * 
+	 * @param requestTime the time to convert.
+	 * @return the corresponding Calendar object.
+	 */
 	public static Calendar convertTimeString(String requestTime){
 		// Create a date format and calendar instance
 		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma");
@@ -265,6 +277,12 @@ public class GuiUtilities {
 		return theTime;
 	}
 	
+	/**
+	 * Converts a Calendar object into a time string.
+	 * 
+	 * @param theTime the Calendar object to convert.
+	 * @return a time string.
+	 */
 	public static String convertCalendarToString(Calendar theTime){
 		if(theTime == null){
 			return "12:00am";

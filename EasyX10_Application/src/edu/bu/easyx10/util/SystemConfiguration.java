@@ -23,6 +23,8 @@ public class SystemConfiguration {
 	private String cm11aPortName;
 	
 	/**
+	 * Gets the CM11a port name.
+	 * 
 	 * @return the port
 	 */
 	public String getCm11aPortName() {
@@ -30,6 +32,8 @@ public class SystemConfiguration {
 	}
 	
 	/**
+	 * Sets the CM11a port name.
+	 * 
 	 * @param port the port to set
 	 */
 	public void setCm11aPortName(String portName) {
@@ -37,6 +41,8 @@ public class SystemConfiguration {
 	}
 	
 	/**
+	 * Gets the list of user objects.
+	 * 
 	 * @return the users
 	 */
 	public ArrayList<User> getUsers() {
@@ -44,6 +50,8 @@ public class SystemConfiguration {
 	}
 	
 	/**
+	 * Sets the list of user objects.
+	 * 
 	 * @param users the users to set
 	 */
 	public void setUsers(ArrayList<User> users) {
@@ -51,14 +59,18 @@ public class SystemConfiguration {
 	}
 	
 	/**
-	 * @return
+	 * Gets the number of floors.
+	 * 
+	 * @return the number of floors.
 	 */
 	public int getFloorCount(){
 		return floorCount; 
 	}
 	
 	/**
-	 * @param floorCount
+	 * Sets the number of floors.
+	 * 
+	 * @param floorCount the number of floors.
 	 */
 	public void setFloorCount(int floorCount) {
 		this.floorCount = floorCount;

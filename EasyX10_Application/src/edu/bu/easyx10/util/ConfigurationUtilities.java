@@ -12,7 +12,8 @@ import edu.bu.easyx10.device.Device;
 import edu.bu.easyx10.gui.User;
 
 /**
- * 
+ * This class implements static methods that provide access to the EasyX10
+ * configuration data.
  *
  * @author winderjj
  * @version Please Refer to Subversion
@@ -23,15 +24,19 @@ public class ConfigurationUtilities {
 	private static String SystemConfigFilePath = "web/WEB-INF/SysConfig.xml";
 
 	/**
-	 * @return
+	 * Gets the SystemConfiguration data.
+	 * 
+	 * @return a system configuration object.
 	 */
 	public static SystemConfiguration getSystemConfiguration(){
 		return getSystemConfiguration(SystemConfigFilePath);
 	}
 	
 	/**
-	 * @param filePath
-	 * @return
+	 * Gets the SystemConfiguration data.
+	 * 
+	 * @param filePath the path to the system configuration file.
+	 * @return a system configuration object.
 	 */
 	public static SystemConfiguration getSystemConfiguration(String filePath){
 		XStream xs = new XStream(new DomDriver());
@@ -48,7 +53,9 @@ public class ConfigurationUtilities {
 	}
 	
 	/**
-	 * @param sys_config_file_path the sYS_CONFIG_FILE_PATH to set
+	 * Sets the path to the system configuration file.
+	 * 
+	 * @param sys_config_file_path the SYS_CONFIG_FILE_PATH to set
 	 */
 	public static void setSystemConfigFilePath(String filePath) {
 		SystemConfigFilePath = filePath;
@@ -70,7 +77,9 @@ public class ConfigurationUtilities {
 	}
 	
 	/**
-	 * @param args
+	 * Test method used to test the configuration file functionality.
+	 * 
+	 * @param args runtime parameters.
 	 */
 	public static void main(String[] args) {
 		LoggingUtilities.logInfo(ConfigurationUtilities.class.getCanonicalName(),
@@ -80,7 +89,7 @@ public class ConfigurationUtilities {
 	}
 	
 	/**
-	 * This method is used to read the Default System Configuration file.
+	 * A test method that is used to read the Default System Configuration file.
 	 */
 	private static void readDefaultSysConfigFile(){
 		
@@ -95,7 +104,7 @@ public class ConfigurationUtilities {
 	}
 
 	/**
-	 * This method is used to generate a template XML file for
+	 * A test method that is used to generate a template XML file for
 	 * the Configuration Data.
 	 */
 	private static void writeDefaultSysConfigFile(){
