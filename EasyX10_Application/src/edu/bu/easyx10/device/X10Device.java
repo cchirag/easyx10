@@ -170,5 +170,18 @@ public abstract class X10Device extends Device{
 			return ( state );
 	}
 
+	/**
+	 * Equality test used to see if two instances of this class are the
+	 * the same.
+	 * 
+	 * @param d the device to compare to this instance.
+	 * @return true if the name, house code and device code are all equal.
+	 * 		        otherwise false.
+	 */
+	public boolean equals(X10Device d){
+		return( this.getName().equals(d.getName()) &&
+				this.getHouseCode() == d.getHouseCode() &&
+				this.getDeviceCode() == d.getDeviceCode());
+	}
 	
 }
