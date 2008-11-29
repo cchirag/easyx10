@@ -18,9 +18,9 @@
 				ConfigurationUtilities.getSystemConfiguration();	
 	
 	// Get the current floor
-	String currentFloor = (String)session.getAttribute("currentFloor");
+	String currentFloor = request.getParameter("floor");
 	if( currentFloor == null ){
-		currentFloor = "floor1";
+		currentFloor = (String)session.getAttribute("currentFloor");
 	}
 %>
 
@@ -28,11 +28,14 @@
 
 <script type="text/javascript">
 
-	// Code to refresh the status page TODO FIX TO Use Selected Floor
-	setTimeout("location.replace('Status.jsp')",5000);
-
+	// Set the currentFloor
 	var currentFloor = "<%= currentFloor %>";
 
+	// Code to refresh the status page
+	var to = setTimeout(
+			"location.replace('Status.jsp?floor=" + currentFloor + "')",10000);
+
+	// Function used to process the selection of a new floor
     function processFloorSelect(){
     	currentFloor = document.getElementById("floorSelect").value;
     	var numFloors = <%= sysConfig.getFloorCount() %>;
@@ -49,10 +52,16 @@
 			}
 		}	
 
+		// Update the add device buttons to pass current floor info.
 		var addAppLink = document.getElementById("addApplianceLink");
 		addAppLink.href = "AddAppliance.jsp?selectedFloor=" + currentFloor;
 		var addMotionLink = document.getElementById("addMotionLink");
 		addMotionLink.href = "AddMotionSensor.jsp?selectedFloor=" + currentFloor;
+
+		// Reset the page refresh to use the new floor
+		clearTimeout(to);
+		to = setTimeout(
+				"location.replace('Status.jsp?floor=" + currentFloor + "')",10000);
 	}
 </script>
 <div id="masthead">
