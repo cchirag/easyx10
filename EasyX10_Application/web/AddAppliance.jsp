@@ -28,6 +28,8 @@
 	function updateLocation(){
 		document.detailsForm.top.value = document.getElementById("newAppliance").style.top;
 		document.detailsForm.left.value = document.getElementById("newAppliance").style.left;
+		document.detailsForm.startTime.disabled = false;
+		document.detailsForm.endTime.disabled = false;
 	}
 </script>
 <div id="masthead">
