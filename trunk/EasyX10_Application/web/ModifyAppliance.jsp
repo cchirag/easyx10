@@ -130,10 +130,10 @@
 					</td>
 					<td>
 						<select name="deviceStatus" tabindex="4">
-						<option value="ON" <%= device.getState().equals(X10Device.X10DeviceState.ON) ? "selected=\"selected\"" : "" %>>
+						<option value="ON" <%= device.getState() == X10Device.X10DeviceState.ON ? "selected=\"selected\"" : "" %>>
 							ON
 						</option>
-						<option value="OFF"	<%= device.getState().equals(X10Device.X10DeviceState.OFF) ? "selected=\"selected\"" : "" %>>
+						<option value="OFF"	<%= device.getState() == X10Device.X10DeviceState.OFF ? "selected=\"selected\"" : "" %>>
 							OFF
 						</option>
 						</select>
