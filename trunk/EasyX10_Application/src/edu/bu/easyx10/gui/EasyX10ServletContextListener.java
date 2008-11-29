@@ -8,7 +8,9 @@ import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.util.SystemConfiguration;
 
 /**
- * 
+ * This class implements a ServletContextListener for the EasxyX10 Application. The
+ * class only implements the contextInitialized method that is called on application
+ * initialization.
  *
  * @author winderjj
  * @version Please Refer to Subversion
@@ -16,10 +18,13 @@ import edu.bu.easyx10.util.SystemConfiguration;
  */
 public class EasyX10ServletContextListener implements ServletContextListener {
 
-	/* (non-Javadoc)
+	/**
+	 * This method is called on Servlet Initialization and sets the path for the
+	 * EasyX10 configuration files.
+	 * 
+	 * @param sce the reference to the context event 
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
-	//@Override
 	public void contextInitialized(ServletContextEvent sce) {
 
 		// Retrieve the file path for the configuration file
@@ -33,10 +38,12 @@ public class EasyX10ServletContextListener implements ServletContextListener {
 		
 	}
 	
-	/* (non-Javadoc)
+	/** 
+	 * This method is called when the application is terminated.  Not Implemented for EasyX10.
+	 * 
+	 * @param sce the reference to the context event
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
-	//@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		// Do nothing, not implemented for EasyX10
 	}
