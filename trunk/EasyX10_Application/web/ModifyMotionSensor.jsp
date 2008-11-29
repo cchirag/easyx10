@@ -311,13 +311,9 @@
 		</form>
 	</div>
 		<% 
-			String currentFloor = (String)request.getParameter("selectedFloor");
-			if( currentFloor != null ){
-				session.setAttribute("currentFloor", currentFloor);
-			} else {
-				currentFloor = (String)session.getAttribute("currentFloor");
-			}
-			
+			// Retrieve the current floor info.
+			String currentFloor = "floor" + device.getLocation().getFloorNumber();
+			session.setAttribute("currentFloor", currentFloor);	
 		%>
 	
 		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; 
