@@ -78,6 +78,9 @@
 	function preprocessForm(){
 		document.detailsForm.top.value = document.getElementById("newMotionSensor").style.top;
 		document.detailsForm.left.value = document.getElementById("newMotionSensor").style.left;
+		document.detailsForm.startTime.disabled = false;
+		document.detailsForm.endTime.disabled = false;
+		document.detailsForm.activityTimeoutPeriod = false;
 
 		var options = document.detailsForm.associatedList.options;
 		for(i=0; i<options.length; i++){
