@@ -138,47 +138,63 @@ public class X10Appliance extends X10Device{
 		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		
-		
-		/* 
-		 * If the mOnTimer is null setOnTimer is being called by the 
-		 * constructor so you must instantiate the TriggerTimer
+		/*
+		 * First check to see that anOnTime isn't null. It could be null if
+		 * update device determines that the Timer was enabled but now needs to
+		 * be disabled. As a result, passing in a null value means we need to
+		 * shut down the Timers.
 		 */
-		if(mOnTimer == null){
 		
-			System.out.println("mOnTimer has not been set - instantiating it here!!!");
+		if (anOnTime != null){
+			/* 
+			 * If the mOnTimer is null setOnTimer is being called by the 
+			 * constructor so you must instantiate the TriggerTimer
+			 */
+			if(mOnTimer == null){
 			
-			//instantiate the member TriggerTimer mOnTimer
+				System.out.println("mOnTimer has not been set - instantiating it here!!!");
 				
-			    mOnTimer = new TriggerTimer (mOnEvent);
+				//instantiate the member TriggerTimer mOnTimer
+					
+				    mOnTimer = new TriggerTimer (mOnEvent);
+					
+					mOnTimer.setTriggerTime(anOnTime);
+		
+					mOnTimer.startTimer();
 				
-				mOnTimer.setTriggerTime(anOnTime);
-	
-				mOnTimer.startTimer();
+				//Print the log message
+				 
+					LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+						 "setOnTimer()",getName() + "'s onTimer has been instantiated"
+						 + " and is now enabled. The appliance " + getHouseCode() 
+						 + getDeviceCode() + " is scheduled to turn ON at "
+						 + sdf.format(anOnTime.getTime()));
+			}
+			//Entering the else means the onTimer's already been instantiated
+			else{  
+				
+				//Just set the TriggerTimer to it's new value
+				
+					System.out.println("mOnTimer already instantiated!!!!!!");
+					mOnTimer.setTriggerTime(anOnTime);
+					mOnTimer.startTimer();
+				
+				
+				//Print the log message
+				 
+					LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+						 "setOnTimer()",getName() + "'s onTimer is enabled and is " +
+						 "scheduled to turn on " + getHouseCode() + getDeviceCode() +
+						 "at " + sdf.format(anOnTime.getTime()));			
+				
+			}
+		} else {
+			/* 
+			 * If we're in here, we were passed a null value for anOnTime
+			 * This means we need to destroy any instantiated triggerTimers
+			 */
 			
-			//Print the log message
-			 
-				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-					 "setOnTimer()",getName() + "'s onTimer has been instantiated"
-					 + " and is now enabled. The appliance " + getHouseCode() 
-					 + getDeviceCode() + " is scheduled to turn ON at "
-					 + sdf.format(anOnTime.getTime()));
-		}
-		//Entering the else means the onTimer's already been instantiated
-		else{  
-			
-			//Just set the TriggerTimer to it's new value
-			
-				System.out.println("mOnTimer already instantiated!!!!!!");
-				mOnTimer.setTriggerTime(anOnTime);
-				mOnTimer.startTimer();
-			
-			
-			//Print the log message
-			 
-				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-					 "setOnTimer()",getName() + "'s onTimer is enabled and is " +
-					 "scheduled to turn on " + getHouseCode() + getDeviceCode() +
-					 "at " + sdf.format(anOnTime.getTime()));			
+			mOnTimer = null;
 			
 		}
 
@@ -198,49 +214,65 @@ public class X10Appliance extends X10Device{
 		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		
-		
-		/* 
-		 * If the mOnTimer is null setOnTimer is being called by the 
-		 * constructor so you must instantiate the TriggerTimer
+		/*
+		 * First check to see that anOffTime isn't null. It could be null if
+		 * update device determines that the Timer was enabled but now needs to
+		 * be disabled. As a result, passing in a null value means we need to
+		 * shut down the Timers.
 		 */
-		if(mOffTimer == null){
 		
-			System.out.println("mOffTimer has not been set - instantiating it here!!!");
-			
-			//instantiate the member TriggerTimer mOffTimer
+		if (anOffTime != null){
+		
+				/* 
+				 * If the mOffTimer is null setOnTimer is being called by the 
+				 * constructor so you must instantiate the TriggerTimer
+				 */
+				if(mOffTimer == null){
 				
-			    mOffTimer = new TriggerTimer (mOffEvent);
-				
-				mOffTimer.setTriggerTime(anOffTime);
-	
-				mOffTimer.startTimer();
+					System.out.println("mOffTimer has not been set - instantiating it here!!!");
+					
+					//instantiate the member TriggerTimer mOffTimer
+						
+					    mOffTimer = new TriggerTimer (mOffEvent);
+						
+						mOffTimer.setTriggerTime(anOffTime);
 			
-			//Print the log message
-			 
-				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-					 "setOffTimer()",getName() + "'s offTimer has been instantiated"
-					 + " and is now enabled. The appliance " + getHouseCode() 
-					 + getDeviceCode() + " is scheduled to turn OFF at "
-					 + sdf.format(anOffTime.getTime()));
-		}
-		//Entering the else means the onTimer's already been instantiated
-		else{  
+						mOffTimer.startTimer();
+					
+					//Print the log message
+					 
+						LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+							 "setOffTimer()",getName() + "'s offTimer has been instantiated"
+							 + " and is now enabled. The appliance " + getHouseCode() 
+							 + getDeviceCode() + " is scheduled to turn OFF at "
+							 + sdf.format(anOffTime.getTime()));
+				}
+				//Entering the else means the onTimer's already been instantiated
+				else{  
+					
+					//Just set the TriggerTimer to it's new value
+					
+						System.out.println("mOnTimer already instantiated!!!!!!");
+						mOffTimer.setTriggerTime(anOffTime);
+						mOffTimer.startTimer();
+					
+					
+					//Print the log message
+					 
+						LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+							 "setOffTimer()",getName() + "'s offTimer is enabled and is " +
+							 "scheduled to turn OFF " + getHouseCode() + getDeviceCode() +
+							 "at " + sdf.format(anOffTime.getTime()));			
+					
+				}
+		} else {
+			/* 
+			 * If we're in here, we were passed a null value for anOffTime
+			 * This means we need to destroy any instantiated triggerTimers
+			 */
 			
-			//Just set the TriggerTimer to it's new value
-			
-				System.out.println("mOnTimer already instantiated!!!!!!");
-				mOffTimer.setTriggerTime(anOffTime);
-				mOffTimer.startTimer();
-			
-			
-			//Print the log message
-			 
-				LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-					 "setOffTimer()",getName() + "'s offTimer is enabled and is " +
-					 "scheduled to turn OFF " + getHouseCode() + getDeviceCode() +
-					 "at " + sdf.format(anOffTime.getTime()));			
-			
-		}
+			mOffTimer = null;		
+		}				
 	}
 	
 	/**
@@ -441,6 +473,7 @@ public class X10Appliance extends X10Device{
 				
 				//null it out
 				setOnTimer(null);
+				setOffTimer(null);
 			}
 				
 			setTriggerTimerEnabled(false);
