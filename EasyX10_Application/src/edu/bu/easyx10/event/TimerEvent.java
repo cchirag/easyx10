@@ -1,6 +1,8 @@
 package edu.bu.easyx10.event;
 
 import edu.bu.easyx10.event.Event;
+import edu.bu.easyx10.event.X10Event.X10_DEVICE_CODE;
+import edu.bu.easyx10.event.X10Event.X10_HOUSE_CODE;
 
 /**
  * This is the concrete class for the TimerEvent class.  This class inherits
@@ -85,6 +87,15 @@ public class TimerEvent extends Event {
 		return(equivalent);
 	}
 	
+	/**
+	 *   Produce a human-readable representation of the TimerEvent.
+	 *
+	 *   @return Something along the lines of "DeviceName::ON".
+	 */
+	public String toString() {
+		return ( getDeviceName( ) + "::" + getEventName( ) );
+	}
+
 	/**
 	 * Implementation of the fireEvent abstract method.  Call the processTimerEvent( )
 	 * method in the EventClassListener.
