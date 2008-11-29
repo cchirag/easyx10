@@ -65,7 +65,7 @@ public class X10MotionSensor extends X10Device {
 	private List<String> mDetectionWindowList; 
 
 	// system time
-	private Calendar calendar;                 
+	private Calendar currentTime;                 
 
 	// Use a semaphore to protect mApplianceList
 	private static Semaphore mListSemaphore;   
@@ -122,8 +122,8 @@ public class X10MotionSensor extends X10Device {
 		// initialize some miscellaneous state variables.
 		mDetectionWindowTrigger = false;
 
-		// Setup the calendar for time
-		calendar = Calendar.getInstance( );
+		// Setup the currentTime for time
+		currentTime = Calendar.getInstance( );
 
 		//set the initial device state
 		mState =  X10DeviceState.OFF;
@@ -323,10 +323,7 @@ public class X10MotionSensor extends X10Device {
 		 * need to send an ON event to all of the associated appliances.
 		 */
 		if ( getState( ) == X10DeviceState.ON ) {
-			// reset the activity timer when enabled
-			if (getInactivityTimeEnabled( )) { 
-				mInactivityTimer.startTimer( );
-			}
+
 			// Load some local time pieces from startTime and endTime to compare with current time
 			Calendar localStartTime = Calendar.getInstance();
 			localStartTime.set(Calendar.HOUR_OF_DAY, getStartTime( ).get(Calendar.HOUR_OF_DAY));
@@ -335,14 +332,23 @@ public class X10MotionSensor extends X10Device {
 			Calendar localEndTime = Calendar.getInstance();
 			localEndTime.set(Calendar.HOUR_OF_DAY, getEndTime( ).get(Calendar.HOUR_OF_DAY));
 			localEndTime.set(Calendar.MINUTE, getEndTime( ).get(Calendar.MINUTE));
+			
+			// Check for midnight wrap around, if so, advance localEndTime to next day
+			if (localEndTime.before(localStartTime)) {
+				localStartTime.add(Calendar.DAY_OF_WEEK_IN_MONTH, -1);
+			}
 
 			// Update the current time
-			calendar = Calendar.getInstance( ); 
+			currentTime = Calendar.getInstance( ); 
 			
 			// Check the detection window if applicable
 			if ( !getDetectionPeriodEnabled( ) || 
-					(calendar.after(localStartTime) && calendar.before(localEndTime)) ) {
+					(currentTime.after(localStartTime) && currentTime.before(localEndTime)) ) {
 
+				// reset the activity timer when enabled
+				if (getInactivityTimeEnabled( )) { 
+					mInactivityTimer.startTimer( );
+				}
 				// First, let's acquire the Mutex to allow only one updater of the list
 				mListSemaphore.acquireUninterruptibly();
 				/* set a member variable to identify that we have turned ON all
