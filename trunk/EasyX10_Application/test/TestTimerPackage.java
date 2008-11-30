@@ -9,6 +9,15 @@ import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.device.timer.*;
 import java.util.Calendar;
 
+
+/**
+ * The purpose of this package is to test TriggerTimer Events. It instantiates a 
+ * Calendar date and then passes it into the TriggerTimer.
+ * 
+ * @author dgabriel
+ * @date 11/30/2008
+ */
+
 public class TestTimerPackage {
 
 	/**
