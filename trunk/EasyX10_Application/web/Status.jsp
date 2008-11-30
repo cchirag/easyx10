@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page import="edu.bu.easyx10.util.*" %>
 <%@ page import="edu.bu.easyx10.device.*" %>
+<%@ page import="edu.bu.easyx10.gui.*" %>
 <%@ page import="java.util.List" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -117,6 +118,7 @@
 		
 		<% 
 			// Retrieve the Device List and the current floor
+			GuiUtilities.updateSessionDeviceList(session);
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 			
 			// Create each floor
