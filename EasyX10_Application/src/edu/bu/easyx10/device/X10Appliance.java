@@ -596,8 +596,7 @@ public class X10Appliance extends X10Device{
 	 */
 	public void processTimerEvent(TimerEvent e) {
 		
-		int count = 1;
-		
+	
 		// We only deal with timerEvents attached to this device name. 
 		if (e instanceof TimerEvent && e.getDeviceName().equals(getName())){
 				
