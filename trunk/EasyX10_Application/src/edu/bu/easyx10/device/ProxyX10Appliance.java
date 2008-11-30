@@ -115,20 +115,7 @@ public class ProxyX10Appliance extends X10Appliance{
 	 */
 	public synchronized void setState( X10DeviceState state ) {
 
-		//check to see if they're already the same
-		if (getState() != state){
-			
-			//set the new state of this X10Appliance
-			mState = state;
-			
-	    }
-		else{
-			 LoggingUtilities.logInfo(ProxyX10Appliance.class.getCanonicalName(),
-			 "setState()", "The state of " + getName() + " was ignored" +
-			 "because the current state is already" + getState().toString());
-		}	
-			
-		
+		mState = state;
 	}
 	
 	/**
