@@ -12,7 +12,7 @@
 <script src="javascripts/scriptaculous.js" type="text/javascript"></script>
 </head>
 
-<body onload="document.detailsForm.motionSensorName.focus()">
+<body onload="document.detailsForm.deviceName.focus()">
 
 <script type="text/javascript">
 	function processActivityWindowSelect(displayActivityWindow){
@@ -89,8 +89,7 @@
 	}
 </script>
 <div id="masthead">
-	<br />
-	<span>EasyX10 Project</span> </div>
+	<img alt="EasxyX10 Logo" src="resources/EasyX10.gif" />
 <div id="top_nav">
 	<div style="float: left">
 		<table border="0" cellpadding="0" cellspacing="0" class="nav1">

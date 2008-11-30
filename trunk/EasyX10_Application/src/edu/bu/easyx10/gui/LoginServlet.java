@@ -75,6 +75,9 @@ public class LoginServlet extends HttpServlet {
 			// Retrieve the list of devices and store in session
 			GuiUtilities.updateSessionDeviceList(session);
 			
+			// Clear out any error text
+			session.setAttribute("errorMessage", "");
+			
 			// Redirect the browser to the status page
 			response.sendRedirect("Status.jsp");
 		}

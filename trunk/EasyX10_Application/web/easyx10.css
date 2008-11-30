@@ -1,24 +1,24 @@
-﻿/* CSS layout */
+/* CSS layout */
 /* CSS Generic to Every Page */
 #masthead {
-	font: normal normal bolder xx-large Aharoni;
-	background-color: #CC3300;
-	height: 90px;
+    background-image: url(resources/gradient_tile.gif);
+    background-repeat: repeat-x;
+	height: 97px;
 	color: #FFFFFF;
-	text-align: center;
 }
 #top_nav {
 	height: 20px;
-	//background-color: #CCCCCC;
+	background-color: #999999;
 }
 #page_content {
 	height: 400px;
 	padding-top: 20px;
 	padding-bottom: 20px;
+	color: black;
 }
 #footer {
 	font: normal normal bold x-small Arial, Helvetica, sans-serif;
-	background-color: #CC3300;
+	background-color: #33ff33;
 	height: 53px;
 	position: relative;
 	/*top: 70%;*/
@@ -28,11 +28,12 @@
 /* CSS for default.htm */
 #loginDiv {
 	top: 50px;
-	width: 300px;
+	width: 282px;
+	height: 248px;
 	margin-left: auto;
 	margin-right: auto;
-	border: thin black solid;
 	text-align: center;
+	background-image: url(resources/signin.gif);
 }
 /* CSS for status.htm */
 /* Link CSS */
@@ -88,7 +89,7 @@ a:active {
 	color: #000000;
 	font-weight: bold;
 	font-size: 12px;
-	background-color: #CC3300;
+	background-color: #33ff33;
 	border: 1px solid #ffffff;
 	display: block;
 	padding: 3px;
@@ -97,7 +98,7 @@ a:active {
 	color: #000000;
 	font-weight: bold;
 	font-size: 12px;
-	background-color: #CC3300;
+	background-color: #33ff33;
 	border: 1px solid #ffffff;
 	display: block;
 	padding: 3px;
