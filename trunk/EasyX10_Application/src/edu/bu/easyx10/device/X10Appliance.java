@@ -17,6 +17,10 @@ import java.util.Calendar;
  * TriggerTimers to turn lights on and off during a particular time period. It's 
  * important to note that incoming events are processed regardless of whatever
  * Period is set in a TriggeTimer. 
+ * 
+ * @author dgabriel
+ * @version please refer to subversion
+ * @date:   11/06/08
 */
 
 public class X10Appliance extends X10Device{
@@ -173,15 +177,23 @@ public class X10Appliance extends X10Device{
 			//Entering the else means the onTimer's already been instantiated
 			else{  
 				
-				//Just set the TriggerTimer to it's new value
+				//before nulling out the timer, cancel the active threads
+				    mOnTimer.cancel();    
 				
-					System.out.println("mOnTimer already instantiated!!!!!!");
-					mOnTimer.setTriggerTime(anOnTime);
+				//now null out the timer itself
+					mOnTimer = null;
+				
+		        //create a new timer
+				    mOnTimer = new TriggerTimer (mOnEvent);
+							
+                //set the time to fire the event
+				    mOnTimer.setTriggerTime(anOnTime);
+				
+				//it's now ok to start it up
 					mOnTimer.startTimer();
 				
 				
 				//Print the log message
-				 
 					LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
 						 "setOnTimer()",getName() + "'s onTimer is enabled and is " +
 						 "scheduled to turn on " + getHouseCode() + getDeviceCode() +
@@ -250,15 +262,22 @@ public class X10Appliance extends X10Device{
 				//Entering the else means the onTimer's already been instantiated
 				else{  
 					
-					//Just set the TriggerTimer to it's new value
+					//before nulling out the timer, cancel the active threads
+					    mOffTimer.cancel();    
 					
-						System.out.println("mOnTimer already instantiated!!!!!!");
-						mOffTimer.setTriggerTime(anOffTime);
+					//now null out the timer itself
+						mOffTimer = null;
+					
+			        //create a new timer
+					    mOffTimer = new TriggerTimer (mOffEvent);
+								
+	                //set the time to fire the event
+					    mOffTimer.setTriggerTime(anOffTime);
+					
+					//it's now ok to start it up
 						mOffTimer.startTimer();
 					
-					
 					//Print the log message
-					 
 						LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
 							 "setOffTimer()",getName() + "'s offTimer is enabled and is " +
 							 "scheduled to turn OFF " + getHouseCode() + getDeviceCode() +
@@ -456,6 +475,7 @@ public class X10Appliance extends X10Device{
 		// Update the attributes from the Proxy Object
 		setHouseCode ( ((ProxyX10Appliance)proxyDevice).getHouseCode( ) );
 		setDeviceCode ( ((ProxyX10Appliance)proxyDevice).getDeviceCode( ) );
+		setLocation(proxyDevice.getLocation());
 		
 		//If the triggerTimer is enabled proceed with setting 
 		// the onTimer, OffTimer, onTime and OffTime attributes.
@@ -578,15 +598,9 @@ public class X10Appliance extends X10Device{
 		
 		int count = 1;
 		
-		System.out.println("The state within the timerEvent is " + e.getEventName());
-		System.out.println("The event holds appliance " + e.getDeviceName());
-		System.out.println("This appliances name is " + getName());
-		
 		// We only deal with timerEvents attached to this device name. 
 		if (e instanceof TimerEvent && e.getDeviceName().equals(getName())){
 				
-			System.out.println( "Method Call " + count + " within this if");
-			
 					//Now that we know the event was intended for this device
 					if (e.getEventName().equals("ON") ){
 						
