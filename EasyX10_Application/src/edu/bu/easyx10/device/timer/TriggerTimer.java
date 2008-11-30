@@ -6,6 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Timer;
 
+/**
+ * TriggerTimer is derived from Timer. It’s purpose is to Trigger events
+ * at a specific time of day. When instantiating a triggerTimer, you must
+ * pass in an event to fire. You must also set the trigger time after
+ * instantiation and then call startTimer() to turn on the timer.
+ * 
+ * @author dgabriel
+ * @version please refer to subversion
+ * @date:   11/29/08
+*/
 
 
 
@@ -74,11 +84,10 @@ public class TriggerTimer extends DeviceTimer{
 	@Override
 	public void startTimer() {
 		
-		
 		System.out.println("startTimer() was called. Next Line schedulesTimer");
 
 		//Schedule the TriggerTimer to fire once every 24 hrs from mTriggerTime
-		timer.scheduleAtFixedRate(this,mTriggerTime.getTime(), 86400000);
+		timer.schedule(this,mTriggerTime.getTime(), 86400000);
 		
 		//Log a message indicating the timer was started
 		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
