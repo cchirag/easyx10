@@ -19,6 +19,9 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 	/**
 	 * Constructor
 	 */
+	/**
+	 * 
+	 */
 	TestDeviceManagerProtocol ( ) {
 		
 		// private member variables
@@ -96,8 +99,8 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		*/
 		//Create an onTime
 		Calendar onTime = Calendar.getInstance();
-		onTime.set(Calendar.HOUR_OF_DAY, 00);
-		onTime.set(Calendar.MINUTE, 36);
+		onTime.set(Calendar.HOUR_OF_DAY, 18);
+		onTime.set(Calendar.MINUTE, 25);
 		onTime.set(Calendar.SECOND, 30);
 		onTime.set(Calendar.MILLISECOND, 0);
 
@@ -109,7 +112,7 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		offTime.set(Calendar.MILLISECOND, 0);
 	    
 		//Test creation of ProxyX10Appliance
-		ProxyX10Appliance applianceProxy4 = new ProxyX10Appliance("Appliance B1", 'B', 1);
+		ProxyX10Appliance applianceProxy4 = new ProxyX10Appliance("Appliance A2", 'A', 2);
 		applianceProxy4.setOnTime(onTime);
 		applianceProxy4.setOffTime(offTime);
 		applianceProxy4.setTriggerTimerEnabled(true);

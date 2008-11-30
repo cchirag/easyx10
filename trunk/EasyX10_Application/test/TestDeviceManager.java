@@ -3,8 +3,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.bu.easyx10.device.*;
-//import edu.bu.easyx10.event.*;
-//import edu.bu.easyx10.protocol.*;
+
+/**
+ * The purpose of the TestDeviceManager class is to test Device manager methods.
+ * It creates a proxyX10Appliance and runs through all the available methods
+ * in DeviceManager.
+ * 
+ * @author dgabriel
+ * @version please refer to subversion
+ * @date:   11/29/08
+ */
 
 public class TestDeviceManager {
 
