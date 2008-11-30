@@ -164,6 +164,8 @@
 		</form>
 	</div>
 		<% 
+			// Update and Retrieve the Device List
+			GuiUtilities.updateSessionDeviceList(session);
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 
 			String currentFloor = (String)request.getParameter("selectedFloor");
