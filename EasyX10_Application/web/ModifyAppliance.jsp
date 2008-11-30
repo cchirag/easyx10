@@ -27,7 +27,7 @@
 		(ProxyX10Appliance)GuiUtilities.getDevice(deviceName);			
 %>
 
-<body onload="document.detailsForm.applianceName.focus()">
+<body>
 
 <script type="text/javascript">
 	function processTimerSelect(displayTimer){
@@ -49,8 +49,7 @@
 	
 </script>
 <div id="masthead">
-	<br />
-	<span>EasyX10 Project</span> </div>
+	<img alt="EasxyX10 Logo" src="resources/EasyX10.gif" />
 <div id="top_nav">
 	<div style="float: left">
 		<table border="0" cellpadding="0" cellspacing="0" class="nav1">
