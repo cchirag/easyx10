@@ -168,7 +168,7 @@
 						<br />
 						<input name="update" type="submit" value="update" tabindex="8" onclick="updateLocation()" />
 						&nbsp;
-						<input name="delete" type="submit" value="delete" tabindex="9"/>
+						<input name="delete" type="submit" value="delete" tabindex="9" onclick="return confirm('Are you sure?');"/>
 						&nbsp;
 						<input name="CancelButton" type="button" value="Cancel" onclick="window.location='Status.jsp';" tabindex="10" />
 					</td>
@@ -181,7 +181,8 @@
 		</form>
 	</div>
 		<% 
-			// Retrieve the list of device
+			// Update and Retrieve the Device List
+			GuiUtilities.updateSessionDeviceList(session);
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 
 			// Retrieve the current floor info.

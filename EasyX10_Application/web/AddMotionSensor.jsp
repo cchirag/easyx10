@@ -272,10 +272,12 @@
 			<input name="associatedAppliances" type="hidden" value="" />
 		</form>
 	</div>
-		<% 
-			
+		<% 	
+			// Update and Retrieve the Device List
+			GuiUtilities.updateSessionDeviceList(session);
 			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
-
+			
+			// Retrieve the current floor
 			String currentFloor = (String)request.getParameter("selectedFloor");
 			if( currentFloor != null ){
 				session.setAttribute("currentFloor", currentFloor);

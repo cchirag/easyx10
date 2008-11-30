@@ -23,6 +23,10 @@
 	if( currentFloor == null ){
 		currentFloor = (String)session.getAttribute("currentFloor");
 	}
+	
+	// Update and Retrieve the Device List
+	GuiUtilities.updateSessionDeviceList(session);
+	List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
 %>
 
 <body>
@@ -116,11 +120,7 @@
 	</div>
 	<div id="house">
 		
-		<% 
-			// Retrieve the Device List and the current floor
-			GuiUtilities.updateSessionDeviceList(session);
-			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
-			
+		<% 			
 			// Create each floor
 			for(int i=0; i< sysConfig.getFloorCount(); i++) {
 		%>
