@@ -2,9 +2,9 @@ package edu.bu.easyx10.device;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
 import edu.bu.easyx10.protocol.ProtocolFactory;
-import edu.bu.easyx10.util.LoggingUtilities;
+import edu.bu.easyx10.util.*;
 
 
 
@@ -31,15 +31,26 @@ public final class DeviceManager {
 		// System.setProperty("DEBUG_WAITTIMER", "1");
 
 		try {
-			LoggingUtilities.logInfo("ProtocolFactory", "initProtocols",
+			LoggingUtilities.logInfo("DeviceManager", "initProtocols",
 			"Initializing the ProtocolFactory\n");
  		    ProtocolFactory.initProtocols();
 		} catch ( Exception e ) {
-			LoggingUtilities.logError("ProtocolFactory", "initProtocols",
+			LoggingUtilities.logError("DeviceManager", "initProtocols",
 					 "\nTrouble initializing ProtocolFactory" + e);
 		}
 		
+		LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(), "DeviceManager()",
+				 "Attempting to load DeviceConfig.xml");
+		loadConfig();
 		
+	}
+	
+	/**
+	 * Destructor for the DeviceManager.  The destructor will write out
+	 * it's config if DeviceManager is shut down gracefully.
+	 */
+	public void finalize ( ) {
+		saveConfig();
 	}
 	
     /**
@@ -262,12 +273,14 @@ public final class DeviceManager {
 				//write out the Hashmap to disk
 				saveConfig();
 				
+				
 				return true;  //TODO I know this return true is useless 
 				
 			}else{
 				//This is an unrecognized type of proxy Device
 				 LoggingUtilities.logError(DeviceManager.class.getCanonicalName(),
 				 "addDevice()","The proxy object type was invalid.");
+
 				 return false;
 			}
 			
@@ -304,6 +317,7 @@ public final class DeviceManager {
 					 "deleteDevice()","The proxy object " + deviceName + 
 					 " was deleted successfully.");
 			
+			saveConfig();
 			return true;
 			
 		}
@@ -349,10 +363,30 @@ public final class DeviceManager {
 	 * @return True if save is successful and false if unsuccessful.
 	 */
 	public final synchronized boolean saveConfig(){
+
+		ConfigurationUtilities.setDeviceConfiguration(getDevices());
 		
 		return true;		
 	}
 
+	public final synchronized boolean loadConfig(){
+		
+		System.out.println("I'm in load config");
+		
+		System.out.println("My Size is " + ConfigurationUtilities.getDeviceConfiguration().size());
+		
+		List<X10Device> deviceList = ConfigurationUtilities.getDeviceConfiguration();
+		
+		  int count = 1;
+		  for (X10Device device : deviceList) {
+			  System.out.println("adding "  + device.getName() );
+			  //addDevice(device);
+			  count++;
+		  }
+
+		return true;		
+	}
+	
 	/*
 	@Override
 	
