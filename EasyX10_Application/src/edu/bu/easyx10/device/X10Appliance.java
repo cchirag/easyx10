@@ -70,13 +70,7 @@ public class X10Appliance extends X10Device{
 			  proxyX10Appliance.getDeviceCode());
 		
 		// Set the member variables from the X10Appliance
-		
-			// Check to see if the location was instantiated in the proxyX10Appliance
-			if(proxyX10Appliance.getLocation()!= null){
-				
-				//Call base classes setMethod
-				setLocation(proxyX10Appliance.getLocation());			
-			}
+			setLocation(proxyX10Appliance.getLocation());			
 				
 			
 			/* 
@@ -155,8 +149,6 @@ public class X10Appliance extends X10Device{
 			 * constructor so you must instantiate the TriggerTimer
 			 */
 			if(mOnTimer == null){
-			
-				System.out.println("mOnTimer has not been set - instantiating it here!!!");
 				
 				//instantiate the member TriggerTimer mOnTimer
 					
@@ -468,8 +460,13 @@ public class X10Appliance extends X10Device{
 		 * We need to crash if we get an update for a device with a 
 		 * different name.  This means we found a bug.
 		 */
-		if ( proxyDevice.getName( ) != getName( ) ) {
-			assert(false);
+		if ( !proxyDevice.getName().equals(getName()) ) {
+			
+			 LoggingUtilities.logError(X10Appliance.class.getCanonicalName(),
+					 "updateDevice()","VERY BAD THINGS!! We got an update for " + 
+					 getName() + " from a device named " + proxyDevice.getName() );
+			
+			
 		}
 		
 		// Update the attributes from the Proxy Object
@@ -512,7 +509,7 @@ public class X10Appliance extends X10Device{
 		}
 		else{
 			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-			 "processDeviceEvent()","INFO: Skipping state change to " + 
+			 "updateDevice()","INFO: Skipping state change to " + 
 			 proxyDeviceState + " on device " + getName() );
 		}
 	}
@@ -628,7 +625,8 @@ public class X10Appliance extends X10Device{
 		}
 		else{
 			
-			System.out.println("What the F is wrong?");
+			 LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
+					 "processTimerEvent()","This Event was not a timerEvent ");
 		}
 	}
 	
