@@ -137,11 +137,11 @@
 						</select>
 					</td>
 					<td>
-						<span>Start Time:</span>
+						<span>ON Time:</span>
 					    <select name="startTime" disabled="disabled" tabindex=6">
 					    	<%= GuiUtilities.generateHtmlTimeOptions("05:00pm") %>
 					    </select>
-						<span>End Time:</span>
+						<span>OFF Time:</span>
 						<select name="endTime" disabled="disabled" tabindex="7">
 					    	<%= GuiUtilities.generateHtmlTimeOptions("12:00am") %>
 					    </select>

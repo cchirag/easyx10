@@ -153,11 +153,11 @@
 						</select>
 					</td>
 					<td>
-						<span>Start Time:</span>
+						<span>ON Time:</span>
 					    <select name="startTime" <%= device.getTriggerTimerEnabled() ? "" : "disabled=\"disabled\"" %> tabindex=6">
 					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getOnTime())) %>
 					    </select>
-						<span>End Time:</span>
+						<span>OFF Time:</span>
 						<select name="endTime" <%= device.getTriggerTimerEnabled() ? "" : "disabled=\"disabled\"" %> tabindex="7">
 					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getOffTime())) %>
 					    </select>
