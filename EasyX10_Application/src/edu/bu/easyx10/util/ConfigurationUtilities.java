@@ -96,7 +96,7 @@ public class ConfigurationUtilities {
 
         try {
             FileInputStream fis = new FileInputStream(filePath);
-            xs.fromXML(fis, devices);
+            devices = (List<X10Device>)xs.fromXML(fis);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
