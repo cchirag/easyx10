@@ -1,8 +1,6 @@
 package edu.bu.easyx10.event;
 
 import edu.bu.easyx10.event.Event;
-import edu.bu.easyx10.event.X10Event.X10_DEVICE_CODE;
-import edu.bu.easyx10.event.X10Event.X10_HOUSE_CODE;
 
 /**
  * This is the concrete class for the TimerEvent class.  This class inherits
