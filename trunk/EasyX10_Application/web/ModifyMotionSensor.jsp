@@ -210,11 +210,11 @@
 						</select>
 					</td>
 					<td>
-						<span>Start Time:</span>
+						<span>Activity From:</span>
 					    <select name="startTime" <%= device.getDetectionPeriodEnabled() ? "" : "disabled=\"disabled\"" %> tabindex=6">
 					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getStartTime())) %>
 					    </select>
-						<span>End Time:</span>
+						<span>Activity To:</span>
 						<select name="endTime" <%= device.getDetectionPeriodEnabled() ? "" : "disabled=\"disabled\"" %> tabindex="7">
 					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getEndTime())) %>
 					    </select>
