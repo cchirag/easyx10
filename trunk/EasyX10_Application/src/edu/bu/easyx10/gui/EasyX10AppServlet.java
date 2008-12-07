@@ -68,17 +68,28 @@ public class EasyX10AppServlet extends HttpServlet {
 			// Process ADD_DEVICE Action
 			if(selectedAction == ActionType.ADD_DEVICE) {
 				String deviceName = request.getParameter("deviceName");
+				String deviceType = request.getParameter("deviceType");
 				
 				// Report error if no name entered
 				if( (deviceName == null) || (deviceName.equals("")) ){
 					statusMessage = "Cannot leave Name Field Blank";
-					toPage = "/AddAppliance.jsp";
+					
+					// Determine the redirect page
+					toPage = "/AddMotionSensor.jsp";
+					if( deviceType.equals("APPLIANCE") ){
+						toPage = "/AddAppliance.jsp";
+					}
 					
 				// Report error if Device name already exists
 				} else if( !DeviceManagerFactory.getDeviceManager().isUnique(deviceName)){
 					// TODO Repopulate Add Fields
 					statusMessage = "Error: Device Name Already Exists";
-					toPage = "/AddAppliance.jsp";
+					
+					// Determine the redirect page
+					toPage = "/AddMotionSensor.jsp";
+					if( deviceType.equals("APPLIANCE") ){
+						toPage = "/AddAppliance.jsp";
+					}
 					
 				// Add the new device
 				} else{
