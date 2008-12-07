@@ -1,74 +1,59 @@
 <list>
-  <edu.bu.easyx10.device.ProxyX10Appliance>
-    <mName>app2</mName>
-    <eventGenerator/>
-    <mDeviceCode>2</mDeviceCode>
-    <mHouseCode>A</mHouseCode>
-    <mState>OFF</mState>
-    <mOnTime>
-      <time>1228537382265</time>
-      <timezone>America/New_York</timezone>
-    </mOnTime>
-    <mOffTime>
-      <time>1228537382265</time>
-      <timezone>America/New_York</timezone>
-    </mOffTime>
-    <mTriggerTimerEnabled>false</mTriggerTimerEnabled>
-    <mOnEvent>
-      <m__deviceName>app2</m__deviceName>
-      <m__eventName>ON</m__eventName>
-    </mOnEvent>
-    <mOffEvent>
-      <m__deviceName>app2</m__deviceName>
-      <m__eventName>OFF</m__eventName>
-    </mOffEvent>
-    <mSetStateForceFlag>false</mSetStateForceFlag>
-  </edu.bu.easyx10.device.ProxyX10Appliance>
-  <edu.bu.easyx10.device.ProxyX10Appliance>
-    <mName>app1</mName>
-    <eventGenerator/>
-    <mDeviceCode>1</mDeviceCode>
-    <mHouseCode>A</mHouseCode>
-    <mState>OFF</mState>
-    <mOnTime>
-      <time>1228537382265</time>
-      <timezone>America/New_York</timezone>
-    </mOnTime>
-    <mOffTime>
-      <time>1228537382265</time>
-      <timezone>America/New_York</timezone>
-    </mOffTime>
-    <mTriggerTimerEnabled>false</mTriggerTimerEnabled>
-    <mOnEvent>
-      <m__deviceName>app1</m__deviceName>
-      <m__eventName>ON</m__eventName>
-    </mOnEvent>
-    <mOffEvent>
-      <m__deviceName>app1</m__deviceName>
-      <m__eventName>OFF</m__eventName>
-    </mOffEvent>
-    <mSetStateForceFlag>false</mSetStateForceFlag>
-  </edu.bu.easyx10.device.ProxyX10Appliance>
   <edu.bu.easyx10.device.ProxyX10MotionSensor>
-    <mName>Motion C16</mName>
+    <mName>motion1 floor1</mName>
+    <mLocation>
+      <floorNumber>1</floorNumber>
+      <x>203</x>
+      <y>171</y>
+    </mLocation>
     <eventGenerator/>
-    <mDeviceCode>16</mDeviceCode>
-    <mHouseCode>C</mHouseCode>
+    <mDeviceCode>10</mDeviceCode>
+    <mHouseCode>F</mHouseCode>
     <mState>OFF</mState>
     <mInactivityTimeEnabled>true</mInactivityTimeEnabled>
-    <mInactivityTime>10</mInactivityTime>
+    <mInactivityTime>300</mInactivityTime>
     <mApplianceList>
-      <string>Appliance C1</string>
+      <string></string>
     </mApplianceList>
     <mStartTime>
-      <time>1228518002265</time>
+      <time>79200000</time>
       <timezone>America/New_York</timezone>
     </mStartTime>
     <mEndTime>
-      <time>1228521602265</time>
+      <time>18000000</time>
       <timezone>America/New_York</timezone>
     </mEndTime>
     <mDetectionPeriodEnabled>false</mDetectionPeriodEnabled>
     <mDetectionWindowTrigger>false</mDetectionWindowTrigger>
   </edu.bu.easyx10.device.ProxyX10MotionSensor>
+  <edu.bu.easyx10.device.ProxyX10Appliance>
+    <mName>app1 floor2</mName>
+    <mLocation>
+      <floorNumber>2</floorNumber>
+      <x>676</x>
+      <y>81</y>
+    </mLocation>
+    <eventGenerator reference="../../edu.bu.easyx10.device.ProxyX10MotionSensor/eventGenerator"/>
+    <mDeviceCode>8</mDeviceCode>
+    <mHouseCode>C</mHouseCode>
+    <mState>ON</mState>
+    <mOnTime>
+      <time>90000000</time>
+      <timezone>America/New_York</timezone>
+    </mOnTime>
+    <mOffTime>
+      <time>100800000</time>
+      <timezone>America/New_York</timezone>
+    </mOffTime>
+    <mTriggerTimerEnabled>true</mTriggerTimerEnabled>
+    <mOnEvent>
+      <m__deviceName>app1 floor2</m__deviceName>
+      <m__eventName>ON</m__eventName>
+    </mOnEvent>
+    <mOffEvent>
+      <m__deviceName>app1 floor2</m__deviceName>
+      <m__eventName>OFF</m__eventName>
+    </mOffEvent>
+    <mSetStateForceFlag>false</mSetStateForceFlag>
+  </edu.bu.easyx10.device.ProxyX10Appliance>
 </list>
