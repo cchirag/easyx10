@@ -367,7 +367,8 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	private void sendDeviceAddress ( byte houseCode, byte deviceCode ) throws IOException {
 
-		byte header, checksum, readByte;
+		byte header, checksum;
+		Byte readByte;
 		int  code;
 
 		debug ("sendDeviceAddress:: houseCode: " + Integer.toHexString(houseCode)
@@ -385,10 +386,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Fetch checksum and validate
 		try {
-			readByte = m_rxTxQueue.take();
+			readByte = m_rxTxQueue.poll(5, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			throw new IOException ( "sendDeviceAddress readByte:: " + e );
 		};
+		// Throw exception on TIMEOUT
+		if (readByte == null) {
+			throw new IOException ( "sendDeviceAddress readByte:: TIMEOUT" );
+		}
 		checksum = (byte)((header + code) & 0xff);
 		if (readByte != checksum) {
 			throw new IOException ( "sendDeviceAddress checksum failure:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString(checksum) );
@@ -405,7 +410,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	private void sendOkay ( )  throws IOException {
 
-		byte readByte;
+		Byte readByte;
 
 		debug ("sendOkay:: ");
 
@@ -417,10 +422,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Fetch READY
 		try {
-			readByte = m_rxTxQueue.take( );
+			readByte = m_rxTxQueue.poll(5, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			throw new IOException ( "sendOkay read:: " + e );
 		};
+		// Throw exception on TIMEOUT
+		if (readByte == null) {
+			throw new IOException ( "sendOkay readByte:: TIMEOUT" );
+		}
 		if (readByte != X10_INTERFACE_READY) {
 			throw new IOException ( "sendOkay bad value:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString ( X10_INTERFACE_READY) );
 		}
@@ -437,7 +446,8 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	 */
 	private void sendFunction ( byte houseCode, byte eventCode )  throws IOException {
 
-		byte header, checksum, readByte;
+		byte header, checksum;
+		Byte readByte;
 		int  code;
 
 		debug ("sendFunction:: houseCode: " + Integer.toHexString(houseCode)
@@ -453,11 +463,17 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		};
 
 		// Fetch checksum
+		debug ("sendFunction:: houseCode: " + Integer.toHexString(houseCode)
+				+ "deviceCode " + Integer.toHexString(eventCode)
+				+ " waiting on Checksum");
 		try {
-			readByte = m_rxTxQueue.take( );
+			readByte = m_rxTxQueue.poll(5, TimeUnit.SECONDS );
 		} catch (Exception e) {
 			throw new IOException ( "sendFunction read:: " + e );
 		};
+		if (readByte == null) {
+			throw new IOException ( "sendFunction readByte:: TIMEOUT" );
+		}
 		checksum = (byte)((header + code) & 0xff);
 		if (readByte != checksum) {
 			throw new IOException ( "sendDeviceAddress checksum failure:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString(checksum) );
@@ -620,7 +636,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 				protocolEvent = m_txQueue.take( );
 				debug ("run:: processing: " + protocolEvent );
 			} catch (Exception e) {
-				break;
+				continue;
 			}
 
 			// Convert the House/Device/Function codes from enumerations
