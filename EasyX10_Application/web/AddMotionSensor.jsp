@@ -4,6 +4,19 @@
 <%@ page import="java.util.List" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
+<% 	
+	// Update and Retrieve the Device List
+	GuiUtilities.updateSessionDeviceList(session);
+	List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
+			
+	// Retrieve the current floor
+	String currentFloor = (String)request.getParameter("selectedFloor");
+	if( currentFloor != null ){
+		session.setAttribute("currentFloor", currentFloor);
+	} else {
+		currentFloor = (String)session.getAttribute("currentFloor");
+	}	
+%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>EasyX10 - Add Motion Sensor</title>
@@ -266,26 +279,12 @@
 					</td>
 				</tr>
 			</table>
-			<input name="floorNumber" type="hidden" value="<%= (String)request.getParameter("selectedFloor") %>" />
+			<input name="floorNumber" type="hidden" value="<%= currentFloor %>" />
 			<input name="top" type="hidden" value="" />
 			<input name="left" type="hidden" value="" />
 			<input name="associatedAppliances" type="hidden" value="" />
 		</form>
 	</div>
-		<% 	
-			// Update and Retrieve the Device List
-			GuiUtilities.updateSessionDeviceList(session);
-			List<X10Device> devices = (List<X10Device>)session.getAttribute("deviceList");
-			
-			// Retrieve the current floor
-			String currentFloor = (String)request.getParameter("selectedFloor");
-			if( currentFloor != null ){
-				session.setAttribute("currentFloor", currentFloor);
-			} else {
-				currentFloor = (String)session.getAttribute("currentFloor");
-			}
-			
-		%>
 	
 		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; 
 				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left">
