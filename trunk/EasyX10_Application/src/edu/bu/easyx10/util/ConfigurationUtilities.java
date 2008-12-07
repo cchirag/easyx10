@@ -98,7 +98,10 @@ public class ConfigurationUtilities {
             FileInputStream fis = new FileInputStream(filePath);
             devices = (List<X10Device>)xs.fromXML(fis);
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+        	LoggingUtilities.logInfo("ConfigurationUtilities", 
+        			"setDeviceConfiguration", "WARNING: Device " +
+        					"Configuration File Not Found, will " +
+        					"Create new one");
         }
         
         return devices;
