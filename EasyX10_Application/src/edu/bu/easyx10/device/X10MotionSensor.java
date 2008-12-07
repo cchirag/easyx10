@@ -400,6 +400,18 @@ public class X10MotionSensor extends X10Device {
 	}
 
 	/**
+	 * This method is used to delete all the references to the deviceName 
+	 * from the Associated Appliances list.  This method is necessary when
+	 * an appliance is deleted but the motion sensor is not updated.  If
+	 * the deviceName is not in the current Appliance List, nothing happens.
+	 * 
+	 * @param String deviceName
+	 */
+	public void deleteAppliance ( String deviceName ) {
+		mApplianceList.remove(deviceName);
+	}
+	
+	/**
 	 * This method returns the current state as an X10DeviceState
 	 * enumeration.  It has values ON and OFF.
 	 * 
