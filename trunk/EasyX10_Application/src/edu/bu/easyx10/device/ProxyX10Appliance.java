@@ -1,6 +1,7 @@
 package edu.bu.easyx10.device;
 
 import edu.bu.easyx10.event.TimerEvent;
+import edu.bu.easyx10.event.X10DeviceEvent;
 import edu.bu.easyx10.util.LoggingUtilities;
 import java.util.Calendar;
 
@@ -204,7 +205,7 @@ public class ProxyX10Appliance extends X10Appliance{
 	/*
 	 * 
 	 */
-	public void processDeviceEvent(TimerEvent e) {}
+	public void processDeviceEvent(X10DeviceEvent deviceEvent){}
 	public void processTimerEvent(TimerEvent e) {}
 	
 	
