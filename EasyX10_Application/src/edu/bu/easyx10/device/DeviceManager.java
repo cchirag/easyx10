@@ -306,14 +306,40 @@ public final class DeviceManager {
 	 * @param Takes in either a ProxyX10Appliance or ProxyX10MotionSensor
 	 */
 	public final boolean deleteDevice(String deviceName){
-		
+
+		//The device exists in the list. Delete it!
 		if(!isUnique(deviceName)){
+
+			/* 
+			 * If it's an x10 appliance make sure you remove all motion sensor
+			 * references to it.
+			 * Check if it's an X10Appliance
+			 */
+			if (getDevice(deviceName) instanceof X10Appliance){
+				
+				/* 
+				 * Now that we know it's an appliance, remove 
+				 * the reference from all MotionSensors. 
+				 */
+				for (X10Device device : mDeviceHashMap.values() ) {
+					
+					//First check to see that we only call the method on x10MotionSensors
+					if (device instanceof X10MotionSensor){
+						((X10MotionSensor) device).deleteAppliance(deviceName);							
+					}
+					
+				}
+				
+			}
+			/* 
+			 * Now that All references to it have been removed
+			 * pull it out of the list and delete it
+			 */
 			
-			//The device exists in the list. Delete it!
-			
-			mDeviceHashMap.remove(deviceName);
-			
-			LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+			 X10Device deleteMe = mDeviceHashMap.remove(deviceName);
+			 deleteMe = null;
+			 
+			 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
 					 "deleteDevice()","The proxy object " + deviceName + 
 					 " was deleted successfully.");
 			
@@ -362,29 +388,32 @@ public final class DeviceManager {
 	 * 
 	 * @return True if save is successful and false if unsuccessful.
 	 */
-	public final synchronized boolean saveConfig(){
+	public final synchronized void saveConfig(){
 
+		 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+				 "saveConfig()","Attemping to write of the config to " +
+				 " deviceConfig.xml");
+		 
 		ConfigurationUtilities.setDeviceConfiguration(getDevices());
-		
-		return true;		
+
 	}
 
-	public final synchronized boolean loadConfig(){
-		
-		System.out.println("I'm in load config");
-		
-		System.out.println("My Size is " + ConfigurationUtilities.getDeviceConfiguration().size());
+	public final synchronized void loadConfig(){
+
 		
 		List<X10Device> deviceList = ConfigurationUtilities.getDeviceConfiguration();
 		
 		  int count = 1;
 		  for (X10Device device : deviceList) {
-			  System.out.println("adding "  + device.getName() );
-			  //addDevice(device);
+
+				 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
+						 "loadConfig()","Attemping to addDevice " + device.getName()
+						 + " to the list of devices.");
+			  
+			  addDevice(device);
 			  count++;
 		  }
 
-		return true;		
 	}
 	
 	/*
