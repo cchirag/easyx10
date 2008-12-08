@@ -26,8 +26,8 @@ public final class DeviceManager {
 	public DeviceManager(){
 
 		// Enable specific module level debugging.
-		// System.setProperty("DEBUG_EVENT", "1");
-		// System.setProperty("DEBUG_PROTOCOL", "1");
+		System.setProperty("DEBUG_EVENT", "1");
+		System.setProperty("DEBUG_PROTOCOL", "1");
 		// System.setProperty("DEBUG_WAITTIMER", "1");
 
 		try {
@@ -337,7 +337,7 @@ public final class DeviceManager {
 			 */
 			
 			 X10Device deleteMe = mDeviceHashMap.remove(deviceName);
-			 deleteMe = null;
+			 deleteMe.finalize();
 			 
 			 LoggingUtilities.logInfo(DeviceManager.class.getCanonicalName(),
 					 "deleteDevice()","The proxy object " + deviceName + 
