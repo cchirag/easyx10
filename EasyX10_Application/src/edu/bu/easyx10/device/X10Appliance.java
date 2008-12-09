@@ -567,7 +567,7 @@ public class X10Appliance extends X10Device{
 						setState ( X10DeviceState.ON );
 					}
 					else if (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_OFF ){
-						setState ( X10DeviceState.ON );
+						setState ( X10DeviceState.OFF );
 					}
 					else{
 						 LoggingUtilities.logError(X10Appliance.class.getCanonicalName(),
