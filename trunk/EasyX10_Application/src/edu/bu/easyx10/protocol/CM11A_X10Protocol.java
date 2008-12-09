@@ -582,8 +582,8 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 					byte addr = addrList.get(j);
 					addr &= 0xff;
 					debug ( "handleStatusPoll:: processAddresses: addr: " + Integer.toHexString(addr));
-					X10_HOUSE_CODE houseCode = BinaryToHouseCode ( (byte)(addr>>4));
-					X10_DEVICE_CODE deviceCode = BinaryToDeviceCode ((byte)(addr & 0xf));
+					X10_HOUSE_CODE houseCode = BinaryToHouseCode ( (byte)((addr>>4) & 0x0f));
+					X10_DEVICE_CODE deviceCode = BinaryToDeviceCode ((byte)(addr & 0x0f));
 					X10_EVENT_CODE eventCode = BinaryToEventCode ((byte)(readBuffer[i] & 0x0f));
 					debug ( "handleStatusPoll:: processAddresses: command: "
 							+ houseCode + " "
