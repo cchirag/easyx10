@@ -32,21 +32,27 @@
 <script type="text/javascript">
 	function processTimerSelect(displayTimer){
 		if( displayTimer == 'ON' ){
-			document.detailsForm.startTime.disabled = false;
-			document.detailsForm.endTime.disabled = false;
+			document.detailsForm.startHour.disabled = false;
+			document.detailsForm.startMinute.disabled = false;
+			document.detailsForm.startAmOrPm.disabled = false;
+			document.detailsForm.endHour.disabled = false;
+			document.detailsForm.endMinute.disabled = false;
+			document.detailsForm.endAmOrPm.disabled = false;
 		} else {
-			document.detailsForm.startTime.disabled = true;
-			document.detailsForm.endTime.disabled = true;
+			document.detailsForm.startHour.disabled = true;
+			document.detailsForm.startMinute.disabled = true;
+			document.detailsForm.startAmOrPm.disabled = true;
+			document.detailsForm.endHour.disabled = true;
+			document.detailsForm.endMinute.disabled = true;
+			document.detailsForm.endAmOrPm.disabled = true;
 		}
 	}
 
 	function updateLocation(){
 		document.detailsForm.top.value = document.getElementById("<%= deviceName %>").style.top;
 		document.detailsForm.left.value = document.getElementById("<%= deviceName %>").style.left;
-		document.detailsForm.startTime.disabled = false;
-		document.detailsForm.endTime.disabled = false;
+		processTimerSelect("ON");
 	}
-	
 </script>
 <div id="masthead">
 	<img alt="EasxyX10 Logo" src="resources/EasyX10.gif" />
@@ -153,14 +159,16 @@
 						</select>
 					</td>
 					<td>
+						<% 
+							String[] onTime =  GuiUtilities.convertCalendarToString(device.getOnTime()); 
+							String[] offTime =  GuiUtilities.convertCalendarToString(device.getOffTime()); 
+						%>
 						<span>ON Time:</span>
-					    <select name="startTime" <%= device.getTriggerTimerEnabled() ? "" : "disabled=\"disabled\"" %> tabindex=6">
-					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getOnTime())) %>
-					    </select>
+					    <%= GuiUtilities.generateHtmlTimeOptions("start", device.getTriggerTimerEnabled(), 
+					    		onTime[0], onTime[1], onTime[2]) %>
 						<span>OFF Time:</span>
-						<select name="endTime" <%= device.getTriggerTimerEnabled() ? "" : "disabled=\"disabled\"" %> tabindex="7">
-					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getOffTime())) %>
-					    </select>
+					    <%= GuiUtilities.generateHtmlTimeOptions("end", device.getTriggerTimerEnabled(),
+					    		offTime[0], offTime[1], offTime[2]) %>
 					</td>
 				</tr>
 				<tr>

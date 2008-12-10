@@ -30,19 +30,26 @@
 <script type="text/javascript">
 	function processTimerSelect(displayTimer){
 		if( displayTimer == 'ON' ){
-			document.detailsForm.startTime.disabled = false;
-			document.detailsForm.endTime.disabled = false;
+			document.detailsForm.startHour.disabled = false;
+			document.detailsForm.startMinute.disabled = false;
+			document.detailsForm.startAmOrPm.disabled = false;
+			document.detailsForm.endHour.disabled = false;
+			document.detailsForm.endMinute.disabled = false;
+			document.detailsForm.endAmOrPm.disabled = false;
 		} else {
-			document.detailsForm.startTime.disabled = true;
-			document.detailsForm.endTime.disabled = true;
+			document.detailsForm.startHour.disabled = true;
+			document.detailsForm.startMinute.disabled = true;
+			document.detailsForm.startAmOrPm.disabled = true;
+			document.detailsForm.endHour.disabled = true;
+			document.detailsForm.endMinute.disabled = true;
+			document.detailsForm.endAmOrPm.disabled = true;
 		}
 	}
 
 	function updateLocation(){
 		document.detailsForm.top.value = document.getElementById("newAppliance").style.top;
 		document.detailsForm.left.value = document.getElementById("newAppliance").style.left;
-		document.detailsForm.startTime.disabled = false;
-		document.detailsForm.endTime.disabled = false;
+		processTimerSelect("ON");
 	}
 </script>
 <div id="masthead">
@@ -151,13 +158,9 @@
 					</td>
 					<td>
 						<span>ON Time:</span>
-					    <select name="startTime" disabled="disabled" tabindex=6">
-					    	<%= GuiUtilities.generateHtmlTimeOptions("05:00pm") %>
-					    </select>
+					    <%= GuiUtilities.generateHtmlTimeOptions("start", false, "05", "00", "pm") %>
 						<span>OFF Time:</span>
-						<select name="endTime" disabled="disabled" tabindex="7">
-					    	<%= GuiUtilities.generateHtmlTimeOptions("12:00am") %>
-					    </select>
+					    <%= GuiUtilities.generateHtmlTimeOptions("end", false, "12", "00", "am") %>
 					</td>
 				</tr>
 				<tr>

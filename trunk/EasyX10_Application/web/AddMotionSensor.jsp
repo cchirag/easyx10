@@ -30,11 +30,19 @@
 <script type="text/javascript">
 	function processActivityWindowSelect(displayActivityWindow){
 		if( displayActivityWindow == 'true' ){
-			document.detailsForm.startTime.disabled = false;
-			document.detailsForm.endTime.disabled = false;
+			document.detailsForm.startHour.disabled = false;
+			document.detailsForm.startMinute.disabled = false;
+			document.detailsForm.startAmOrPm.disabled = false;
+			document.detailsForm.endHour.disabled = false;
+			document.detailsForm.endMinute.disabled = false;
+			document.detailsForm.endAmOrPm.disabled = false;
 		} else {
-			document.detailsForm.startTime.disabled = true;
-			document.detailsForm.endTime.disabled = true;
+			document.detailsForm.startHour.disabled = true;
+			document.detailsForm.startMinute.disabled = true;
+			document.detailsForm.startAmOrPm.disabled = true;
+			document.detailsForm.endHour.disabled = true;
+			document.detailsForm.endMinute.disabled = true;
+			document.detailsForm.endAmOrPm.disabled = true;
 		}
 	}
 
@@ -91,8 +99,7 @@
 	function preprocessForm(){
 		document.detailsForm.top.value = document.getElementById("newMotionSensor").style.top;
 		document.detailsForm.left.value = document.getElementById("newMotionSensor").style.left;
-		document.detailsForm.startTime.disabled = false;
-		document.detailsForm.endTime.disabled = false;
+		processActivityWindowSelect("true");
 		document.detailsForm.activityTimeoutPeriod = false;
 
 		var options = document.detailsForm.associatedList.options;
@@ -207,26 +214,26 @@
 					</td>
 					<td>
 						<span>Activity From:</span>
-					    <select name="startTime" disabled="disabled" tabindex=6">
-					    	<%= GuiUtilities.generateHtmlTimeOptions("05:00pm") %>
-					    </select>
-						<span>Activity To:</span>
-						<select name="endTime" disabled="disabled" tabindex="7">
-					    	<%= GuiUtilities.generateHtmlTimeOptions("12:00am") %>
-					    </select>
+					    <%= GuiUtilities.generateHtmlTimeOptions("start", false, "05", "00", "pm") %>
+					    <br /><br />
+						<span>Activity To:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<%= GuiUtilities.generateHtmlTimeOptions("end", false, "12", "00", "am") %>
 					</td>
 				</tr>
 				<tr>
 					<td>
+						<br />
 						<span>Inactivity Timeout:</span>
 					</td>
 					<td>
+						<br />
 						<select name="activityTimeout" onchange="processActivityTimeoutSelect(this.value);" tabindex="5">
 						<option value="true">ON</option>
 						<option value="false" selected="selected">OFF</option>
 						</select>
 					</td>
 					<td>
+						<br />
 						<span>Timeout Period:</span>
 						<select id="activityTimeoutPeriod" name="activityTimeoutPeriod" disabled="disabled">
                         	<option value="30">30 Seconds</option>
