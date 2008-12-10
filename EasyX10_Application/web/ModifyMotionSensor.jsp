@@ -36,11 +36,19 @@
 <script type="text/javascript">
 	function processActivityWindowSelect(displayActivityWindow){
 		if( displayActivityWindow == 'true' ){
-			document.detailsForm.startTime.disabled = false;
-			document.detailsForm.endTime.disabled = false;
+			document.detailsForm.startHour.disabled = false;
+			document.detailsForm.startMinute.disabled = false;
+			document.detailsForm.startAmOrPm.disabled = false;
+			document.detailsForm.endHour.disabled = false;
+			document.detailsForm.endMinute.disabled = false;
+			document.detailsForm.endAmOrPm.disabled = false;
 		} else {
-			document.detailsForm.startTime.disabled = true;
-			document.detailsForm.endTime.disabled = true;
+			document.detailsForm.startHour.disabled = true;
+			document.detailsForm.startMinute.disabled = true;
+			document.detailsForm.startAmOrPm.disabled = true;
+			document.detailsForm.endHour.disabled = true;
+			document.detailsForm.endMinute.disabled = true;
+			document.detailsForm.endAmOrPm.disabled = true;
 		}
 	}
 
@@ -97,8 +105,7 @@
 	function preprocessForm(){
 		document.detailsForm.top.value = document.getElementById("<%= deviceName %>").style.top;
 		document.detailsForm.left.value = document.getElementById("<%= deviceName %>").style.left;
-		document.detailsForm.startTime.disabled = false;
-		document.detailsForm.endTime.disabled = false;
+		processActivityWindowSelect("true");
 		document.detailsForm.activityTimeoutPeriod = false;
 
 		var options = document.detailsForm.associatedList.options;
@@ -210,21 +217,26 @@
 						</select>
 					</td>
 					<td>
+						<% 
+							String[] startTime =  GuiUtilities.convertCalendarToString(device.getStartTime()); 
+							String[] endTime =  GuiUtilities.convertCalendarToString(device.getEndTime()); 
+						%>
 						<span>Activity From:</span>
-					    <select name="startTime" <%= device.getDetectionPeriodEnabled() ? "" : "disabled=\"disabled\"" %> tabindex=6">
-					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getStartTime())) %>
-					    </select>
-						<span>Activity To:</span>
-						<select name="endTime" <%= device.getDetectionPeriodEnabled() ? "" : "disabled=\"disabled\"" %> tabindex="7">
-					    	<%= GuiUtilities.generateHtmlTimeOptions(GuiUtilities.convertCalendarToString(device.getEndTime())) %>
-					    </select>
+					    <%= GuiUtilities.generateHtmlTimeOptions("start", device.getDetectionPeriodEnabled(), 
+					    		startTime[0], startTime[1], startTime[2]) %>
+					    <br /><br />
+						<span>Activity To:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<%= GuiUtilities.generateHtmlTimeOptions("end", device.getDetectionPeriodEnabled(), 
+					    		endTime[0], endTime[1], endTime[2]) %>
 					</td>
 				</tr>
 				<tr>
 					<td>
+						<br />
 						<span>Inactivity Timeout:</span>
 					</td>
 					<td>
+						<br />
 						<select name="activityTimeout" onchange="processActivityTimeoutSelect(this.value);" tabindex="5">
 						<option value="true"
 							<%= (device.getInactivityTimeEnabled() == true) ? "selected=\"selected\"" : "" %>>ON</option>
@@ -233,6 +245,7 @@
 						</select>
 					</td>
 					<td>
+						<br />
 						<span>Timeout Period:</span>
 						<select id="activityTimeoutPeriod" name="activityTimeoutPeriod" 
 							<%= device.getInactivityTimeEnabled() ? "" : "disabled=\"disabled\"" %>>

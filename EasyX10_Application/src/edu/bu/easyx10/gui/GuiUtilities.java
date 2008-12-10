@@ -92,44 +92,56 @@ public class GuiUtilities {
 	 * @param selectedValue the value to be selected
 	 * @return html for time options.
 	 */
-	public static String generateHtmlTimeOptions(String selectedValue){
+	public static String generateHtmlTimeOptions(String fieldPrefix, boolean enabled, String hour, 
+			String minutes, String amOrPm){
 		String timeOptionsHtml = "";
 		
-		// Define the list of times the user can select
-		String[] times = {
-				"12:00am","12:30am",
-				"01:00am","01:30am",
-				"02:00am","02:30am",
-				"03:00am","03:30am",
-				"04:00am","04:30am",
-				"05:00am","05:30am",
-				"06:00am","06:30am",
-				"07:00am","07:30am",
-				"08:00am","08:30am",
-				"09:00am","09:30am",
-				"10:00am","10:30am",
-				"11:00am","11:30am",
-				"12:00pm","12:30pm",
-				"01:00pm","01:30pm",
-				"02:00pm","02:30pm",
-				"03:00pm","03:30pm",
-				"04:00pm","04:30pm",
-				"05:00pm","05:30pm",
-				"06:00pm","06:30pm",
-				"07:00pm","07:30pm",
-				"08:00pm","08:30pm",
-				"09:00pm","09:30pm",
-				"10:00pm","10:30pm",
-				"11:00pm","11:30pm",
-		};
-		
-		// Generate the html for the time options
-		for( int i=0; i< times.length; i++){
+		// Create dropdown for Hours
+		timeOptionsHtml += "<select name=\"" + fieldPrefix + 
+						"Hour\" " + (enabled ? "" : "disabled=\"disabled\"") + " tabindex=6\">\n";
+		for(int i=1; i<=12; i++){
+			String hr;
+			if (i<10){
+				hr = "0" + i;
+			} else {
+				hr = String.valueOf(i);
+			}
+			
 			timeOptionsHtml += "<option value=\"" +
-				times[i] + "\" " +
-				(selectedValue.equalsIgnoreCase(times[i]) ? "selected=\"selected\"" : "") + 
-				">" + times[i] + "</option>";
+			hr + "\" " +
+			(hour.equalsIgnoreCase(hr) ? "selected=\"selected\"" : "") + 
+			">" + hr + "</option>\n";
 		}
+		timeOptionsHtml += "</select>:";
+		
+		// Create dropdown for Minutes
+		timeOptionsHtml += "<select name=\"" + fieldPrefix + 
+						"Minute\" " + (enabled ? "" : "disabled=\"disabled\"") + " tabindex=7\">\n";
+		for(int i=0; i<=59; i++){
+			String min;
+			if (i<10){
+				min = "0" + i;
+			} else {
+				min = String.valueOf(i);
+			}
+			
+			timeOptionsHtml += "<option value=\"" +
+			min + "\" " +
+			(minutes.equalsIgnoreCase(min) ? "selected=\"selected\"" : "") + 
+			">" + min + "</option>\n";
+		}
+		timeOptionsHtml += "</select>";
+		
+		// Create dropdown for am and pm
+		timeOptionsHtml += "<select name=\"" + fieldPrefix + 
+							"AmOrPm\" " + (enabled ? "" : "disabled=\"disabled\"") + " tabindex=8\">\n";
+		timeOptionsHtml += "<option value=\"am\" " +
+			(amOrPm.equalsIgnoreCase("am") ? "selected=\"selected\"" : "") + 
+			">am</option>\n";
+		timeOptionsHtml += "<option value=\"pm\" " +
+		(amOrPm.equalsIgnoreCase("pm") ? "selected=\"selected\"" : "") + 
+		">pm</option>\n";
+		timeOptionsHtml += "</select>";
 		
 		return timeOptionsHtml;
 	}
@@ -159,16 +171,18 @@ public class GuiUtilities {
 		newDevice.setTriggerTimerEnabled(request.getParameter("timer").equals("ON"));
 			
 		// Retrieve the time strings
-		String startTime = request.getParameter("startTime");
-		String endTime = request.getParameter("endTime");
+		String startHour = request.getParameter("startHour");
+		String startMinute = request.getParameter("startMinute");
+		String startAmOrPm = request.getParameter("startAmOrPm");
+		String endHour = request.getParameter("endHour");
+		String endMinute = request.getParameter("endMinute");
+		String endAmOrPm = request.getParameter("endAmOrPm");
 		
 		// Set the On and Off Time
-		if( startTime != null ){
-			newDevice.setOnTime(convertTimeString(startTime));
-		}
-		if( endTime != null ){
-			newDevice.setOffTime(convertTimeString(endTime));
-		}
+		newDevice.setOnTime(convertTimeString(startHour + ":" + 
+							startMinute + startAmOrPm));
+		newDevice.setOffTime(convertTimeString(endHour + ":" + 
+				endMinute + endAmOrPm));
 			
 		// Set the Location
 		String leftString = request.getParameter("left");
@@ -209,17 +223,19 @@ public class GuiUtilities {
 		String activityWindow = request.getParameter("activityWindow");
 		newDevice.setDetectionPeriodEnabled(Boolean.parseBoolean(activityWindow));
 
-		// Set the start time
-		String startTime = request.getParameter("startTime");
-		if( startTime != null){
-			newDevice.setStartTime(convertTimeString(startTime));
-		}
+		// Retrieve the time strings
+		String startHour = request.getParameter("startHour");
+		String startMinute = request.getParameter("startMinute");
+		String startAmOrPm = request.getParameter("startAmOrPm");
+		String endHour = request.getParameter("endHour");
+		String endMinute = request.getParameter("endMinute");
+		String endAmOrPm = request.getParameter("endAmOrPm");
 		
-		// Set the end time
-		String endTime = request.getParameter("endTime");
-		if( endTime != null){
-			newDevice.setEndTime(convertTimeString(endTime));
-		}
+		// Set the On and Off Time
+		newDevice.setStartTime(convertTimeString(startHour + ":" + 
+							startMinute + startAmOrPm));
+		newDevice.setEndTime(convertTimeString(endHour + ":" + 
+				endMinute + endAmOrPm));
 		
 		// Set the Inactivity Timeout
 		String activityTimeout = request.getParameter("activityTimeout");
@@ -278,21 +294,31 @@ public class GuiUtilities {
 	}
 	
 	/**
-	 * Converts a Calendar object into a time string.
+	 * Converts a Calendar object into a array of strings.
 	 * 
 	 * @param theTime the Calendar object to convert.
-	 * @return a time string.
+	 * @return a time string array.
 	 */
-	public static String convertCalendarToString(Calendar theTime){
+	public static String[] convertCalendarToString(Calendar theTime){
+		String[] dateArray = new String[3];
+		
 		if(theTime == null){
-			return "12:00am";
+			dateArray[0] = "12";
+			dateArray[1] = "00";
+			dateArray[2] = "am";
+			return dateArray;
 		}
 		
 		// Create a date format
 		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma");
 		
-		// Convert the calendar to a string value
-		return dateFormat.format(theTime.getTime());
+		// Convert the calendar to a string array
+		String dateString = dateFormat.format(theTime.getTime());
+		dateArray[0] = dateString.substring(0, 2);
+		dateArray[1] = dateString.substring(3,5);
+		dateArray[2] = dateString.substring(5,7);
+
+		return dateArray;
 	}
 
 }
