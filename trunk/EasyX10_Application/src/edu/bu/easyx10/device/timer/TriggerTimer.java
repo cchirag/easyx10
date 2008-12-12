@@ -1,98 +1,102 @@
 package edu.bu.easyx10.device.timer;
 
-import edu.bu.easyx10.event.*;
-import edu.bu.easyx10.util.LoggingUtilities;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Timer;
+import edu.bu.easyx10.event.Event;
+import java.util.*;
 
 /**
- * TriggerTimer is derived from Timer. It’s purpose is to Trigger events
- * at a specific time of day. When instantiating a triggerTimer, you must
- * pass in an event to fire. You must also set the trigger time after
- * instantiation and then call startTimer() to turn on the timer.
- * 
- * @author dgabriel
- * @version please refer to subversion
- * @date:   11/29/08
-*/
+ * This is the concrete class for the TriggerTimer class.  This version
+ * of the DeviceTimer provides a very simple function.  The object
+ * is given a time (Hour/Minute) to wait for.  Once the time has
+ * has arrived, the Event defined by eventToFire is sent to the
+ * EventGenerator.
+ *
+ * @author:  Jim Duda
+ * @version: please refer to subversion
+ * @date:    10/30/08
+ *
+ */
+public class TriggerTimer extends DeviceTimer {
 
+	// define our member variables
+	private Calendar mTriggerTime;
+	private Calendar mCalendar;
+	private boolean  mTimerActive;
+	private Thread mThread;
 
-
-public class TriggerTimer extends DeviceTimer{
-
-	// private member variables
-	   
-	private Calendar mTriggerTime = Calendar.getInstance();
-	private Timer timer = new Timer();
-	String DATE_FORMAT_NOW = "H:mm:ss:SSS";
-	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-
-	
-	//public TriggerTimer(Event eventToFire, Calendar triggerTime){
-	public TriggerTimer(Event eventToFire){
+	/**
+	 * Construct a new TriggerTimer object.  This object is given a
+	 * specific time to wait for and an EventToFire when the specific
+	 * time has arrived.
+	 *
+	 * @param Calendar stores the Hour and Minute of the day.
+	 * @param Event eventToFire
+	 */
+	public TriggerTimer (Event eventToFire, Calendar triggerTime){
 		super(eventToFire);
+		mCalendar = Calendar.getInstance( );
+		mTriggerTime = triggerTime;
+		mTimerActive = false;
+		// Create a new runnable thread.
+		mThread = new Thread(this);
+		mThread.start( );
 	}
-	
-	
-	public Calendar getTriggerTime() {
+
+	/**
+	 * This method sets the current Trigger Time.  We wait
+	 * for TriggerTime then fire eventToFire.
+	 *
+	 * @param Calendar triggerTime
+	 */
+	public void setTriggerTime(Calendar triggerTime) {
+		mTriggerTime = triggerTime;
+	}
+
+	/**
+	 * This method returns the current Trigger Time.
+	 *
+	 * @return Calendar
+	 */
+	public Calendar getTriggerTime( ) {
 		return mTriggerTime;
 	}
 
-	public void setTriggerTime(Calendar triggerTime) {
-		
-		/* 
-		 * We don't really restrict which Calendar fields are set on triggerTime
-		 * when it's passed in. However, we only care about time of day
-		 * so we should only set those values in mTriggerTime.
-		 */
-		
-		mTriggerTime.set(Calendar.HOUR_OF_DAY, triggerTime.get(Calendar.HOUR_OF_DAY));
-		mTriggerTime.set(Calendar.MINUTE, triggerTime.get(Calendar.MINUTE));
-		mTriggerTime.set(Calendar.SECOND, triggerTime.get(Calendar.SECOND));
-		mTriggerTime.set(Calendar.MILLISECOND, triggerTime.get(Calendar.MILLISECOND));
-		
-	}
-	
-
-	@Override
-	public void run() {
-		
-		//Log a message indicating the timer was started
-		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
-				 "run()","Trigger Timer is firing an " + ((TimerEvent)mEventToFire).getEventName() + 
-				 " event to " + mEventToFire.getDeviceName());
-
-		eventGenerator.fireEvent(getEventToFire());
-		
+	/**
+	 * The run method provides the main timer function.  The run
+	 * method runs once per second.  Each second, the mTriggerTime
+	 * is 
+	 
+	  to the current time.  If they match, we send
+	 * the eventToFire.
+	 */
+	public void run( ) {
+		while (true) {
+			// refresh the current TOD
+			mCalendar = Calendar.getInstance( );
+			if (  mTimerActive &&
+					(mCalendar.get(Calendar.HOUR_OF_DAY) == mTriggerTime.get(Calendar.HOUR_OF_DAY)) &&
+					(mCalendar.get(Calendar.MINUTE) == mTriggerTime.get(Calendar.MINUTE))  &&
+					(mCalendar.get(Calendar.SECOND) == 0)
+					) {
+				eventGenerator.fireEvent( getEventToFire( ));
+			}
+			try {
+				Thread.sleep(1000);
+			} catch ( InterruptedException e ) {};
+		}
 	}
 
-	@Override
-	public Event getEventToFire() {
-		
-		
-		return mEventToFire;
+	/**
+	 * This method simply allows the timer to operate.
+	 */
+	public void startTimer( ) {
+		mTimerActive = true;
 	}
 
-	@Override
-	public void setEventToFire(Event eventToFire) {
-
-		mEventToFire = eventToFire;
-		
-	}
-
-	@Override
-	public void startTimer() {
-		
-		System.out.println("startTimer() was called. Next Line schedulesTimer");
-
-		//Schedule the TriggerTimer to fire once every 24 hrs from mTriggerTime
-		timer.schedule(this,mTriggerTime.getTime(), 86400000);
-		
-		//Log a message indicating the timer was started
-		LoggingUtilities.logInfo(TriggerTimer.class.getCanonicalName(),
-				 "startTimer()","TriggerTimer was started. An event will " +
-				 "fire at " + sdf.format(mTriggerTime.getTime()));
+	/**
+	 * This method simply disables the timer from operating.
+	 */
+	public void stopTimer( ) {
+		mTimerActive = false;
 	}
 
 }
