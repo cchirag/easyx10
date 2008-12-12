@@ -37,6 +37,10 @@ public abstract class DeviceTimer extends TimerTask {
 		
 	}
 	
+	/**
+	 * Abstract class intended to be overridden to start
+	 * the derived classes timer.
+	 */
 	public abstract void startTimer();
 	
 	/**
