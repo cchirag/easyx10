@@ -4,7 +4,6 @@ import edu.bu.easyx10.event.*;
 import edu.bu.easyx10.event.X10Event.*;
 import edu.bu.easyx10.util.LoggingUtilities;
 import edu.bu.easyx10.device.timer.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -29,7 +28,7 @@ public class X10Appliance extends X10Device{
 	
 	protected Calendar mOnTime = Calendar.getInstance();  // Time to turn appliance on
 	protected Calendar mOffTime = Calendar.getInstance(); // Time to shut appliance off
-	private boolean mTriggerTimerEnabled;                 // Check if TriggerTimer is Enabled 
+	protected boolean mTriggerTimerEnabled;                 // Check if TriggerTimer is Enabled 
 	
 	//Create the onEvent and offEvents to be passed to the TriggerTimer
 	TimerEvent mOnEvent = new TimerEvent ( getName(), "ON" );
@@ -70,42 +69,31 @@ public class X10Appliance extends X10Device{
 			  proxyX10Appliance.getDeviceCode());
 		
 		// Set the member variables from the X10Appliance
-			setLocation(proxyX10Appliance.getLocation());			
-				
+
+				setLocation(proxyX10Appliance.getLocation());					
 			
-			/* 
-			 * If the triggerTimer is enabled proceed with setting onTime 
-			 *  offTime. setOnTimer and setOffTimer get called within
-			 *  setOnTime and setOffTime methods so there is no need to 
-			 *  set them here. 
-			 */
-			if(proxyX10Appliance.getTriggerTimerEnabled()){
+				mOnTimer = new TriggerTimer(mOnEvent, proxyX10Appliance.getOnTime( ) );
 				
-				setTriggerTimerEnabled(true);                   //call to parent Method
-			
-				setOnTime(proxyX10Appliance.getOnTime());       //call to overridden Method
+				mOffTimer = new TriggerTimer(mOffEvent, proxyX10Appliance.getOffTime( ) );
 				
-				setOffTime(proxyX10Appliance.getOffTime());     //call to overridden Method
+				setOnTime(proxyX10Appliance.getOnTime());
 				
-			}
-			else {
-				setTriggerTimerEnabled(false);
-			}
-			
+				setOffTime(proxyX10Appliance.getOffTime());
+
+				setTriggerTimerEnabled(proxyX10Appliance.getTriggerTimerEnabled());
 			/*
 			 * Call a special version of setState. This method is only
 			 * called from within this constructor. See method itself for 
 			 * further details 
 			 */
+
+				setStateForceFlag(true);
 			
-			//Enable on the setStateForceFlag
-			setStateForceFlag(true);
-			
-			setState ( proxyX10Appliance.getState( ) );
+				setState ( proxyX10Appliance.getState( ) );
 		
 		    //Disable the setStateForeceFlag;
 			
-			setStateForceFlag(false);
+				setStateForceFlag(false);
 		
 	}
 	
@@ -120,170 +108,6 @@ public class X10Appliance extends X10Device{
 		// Call super in X10Device and pass in the required attributes
 		super(name,houseCode,deviceCode);
 		
-	}
-	
-
-	/**
-	 * This method instantiates a TriggerTimer object containing the time
-	 * to turn this appliance on. When the system time reaches the time specified
-	 * an event will be fired to turn the appliance on.
-	 * 
-	 * @param Pass in a Time object equal to the time to turn the Appliance on.
-	 */
-	private void setOnTimer(Calendar anOnTime){
-
-		//Make the Calendar object nice n' printable for the log messages
-		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-		
-		/*
-		 * First check to see that anOnTime isn't null. It could be null if
-		 * update device determines that the Timer was enabled but now needs to
-		 * be disabled. As a result, passing in a null value means we need to
-		 * shut down the Timers.
-		 */
-		
-		if (anOnTime != null){
-			/* 
-			 * If the mOnTimer is null setOnTimer is being called by the 
-			 * constructor so you must instantiate the TriggerTimer
-			 */
-			if(mOnTimer == null){
-				
-				//instantiate the member TriggerTimer mOnTimer
-					
-				    mOnTimer = new TriggerTimer (mOnEvent);
-					
-					mOnTimer.setTriggerTime(anOnTime);
-		
-					mOnTimer.startTimer();
-				
-				//Print the log message
-				 
-					LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-						 "setOnTimer()",getName() + "'s onTimer has been instantiated"
-						 + " and is now enabled. The appliance " + getHouseCode() 
-						 + getDeviceCode() + " is scheduled to turn ON at "
-						 + sdf.format(anOnTime.getTime()));
-			}
-			//Entering the else means the onTimer's already been instantiated
-			else{  
-				
-				//before nulling out the timer, cancel the active threads
-				    mOnTimer.cancel();    
-				
-				//now null out the timer itself
-					mOnTimer = null;
-				
-		        //create a new timer
-				    mOnTimer = new TriggerTimer (mOnEvent);
-							
-                //set the time to fire the event
-				    mOnTimer.setTriggerTime(anOnTime);
-				
-				//it's now ok to start it up
-					mOnTimer.startTimer();
-				
-				
-				//Print the log message
-					LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-						 "setOnTimer()",getName() + "'s onTimer is enabled and is " +
-						 "scheduled to turn on " + getHouseCode() + getDeviceCode() +
-						 "at " + sdf.format(anOnTime.getTime()));			
-				
-			}
-		} else {
-			/* 
-			 * If we're in here, we were passed a null value for anOnTime
-			 * This means we need to destroy any instantiated triggerTimers
-			 */
-			
-			mOnTimer = null;
-			
-		}
-
-		
-	}
-	
-	/**
-	 * This method instantiates a TriggerTimer object containing the time
-	 * to turn this appliance off. When the system time reaches the time specified
-	 * an event will be fired to turn the appliance on.
-	 * 
-	 * @param Pass in a Time object equal to the time to turn the Appliance on.
-	 */
-	private void setOffTimer(Calendar anOffTime){
-		
-		//Make the Calendar object nice n' printable for the log messages
-		String DATE_FORMAT_NOW = "H:mm:ss:SSS";
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-		
-		/*
-		 * First check to see that anOffTime isn't null. It could be null if
-		 * update device determines that the Timer was enabled but now needs to
-		 * be disabled. As a result, passing in a null value means we need to
-		 * shut down the Timers.
-		 */
-		
-		if (anOffTime != null){
-		
-				/* 
-				 * If the mOffTimer is null setOnTimer is being called by the 
-				 * constructor so you must instantiate the TriggerTimer
-				 */
-				if(mOffTimer == null){
-				
-					System.out.println("mOffTimer has not been set - instantiating it here!!!");
-					
-					//instantiate the member TriggerTimer mOffTimer
-						
-					    mOffTimer = new TriggerTimer (mOffEvent);
-						
-						mOffTimer.setTriggerTime(anOffTime);
-			
-						mOffTimer.startTimer();
-					
-					//Print the log message
-					 
-						LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-							 "setOffTimer()",getName() + "'s offTimer has been instantiated"
-							 + " and is now enabled. The appliance " + getHouseCode() 
-							 + getDeviceCode() + " is scheduled to turn OFF at "
-							 + sdf.format(anOffTime.getTime()));
-				}
-				//Entering the else means the onTimer's already been instantiated
-				else{  
-					
-					//before nulling out the timer, cancel the active threads
-					    mOffTimer.cancel();    
-					
-					//now null out the timer itself
-						mOffTimer = null;
-					
-			        //create a new timer
-					    mOffTimer = new TriggerTimer (mOffEvent);
-								
-	                //set the time to fire the event
-					    mOffTimer.setTriggerTime(anOffTime);
-					
-					//it's now ok to start it up
-						mOffTimer.startTimer();
-					
-					//Print the log message
-						LoggingUtilities.logInfo(X10Appliance.class.getCanonicalName(),
-							 "setOffTimer()",getName() + "'s offTimer is enabled and is " +
-							 "scheduled to turn OFF " + getHouseCode() + getDeviceCode() +
-							 "at " + sdf.format(anOffTime.getTime()));			
-					
-				}
-		} else {
-			/* 
-			 * If we're in here, we were passed a null value for anOffTime
-			 * This means we need to destroy any instantiated triggerTimers
-			 */
-			
-			mOffTimer = null;		
-		}				
 	}
 	
 	/**
@@ -304,9 +128,8 @@ public class X10Appliance extends X10Device{
 	public void setOnTime(Calendar onTime) {
 		
 		mOnTime= onTime;
-		
-		//now hand off the onTime to the onTimer;
-		setOnTimer(mOnTime);
+
+		mOnTimer.setTriggerTime(mOnTime);
 	}
 	
 	/**
@@ -330,8 +153,7 @@ public class X10Appliance extends X10Device{
 		
 		mOffTime = offTime;
 		
-		//now hand off the offTime to pass to the offTimer
-		setOffTimer(mOffTime);
+		mOffTimer.setTriggerTime(mOffTime);
 	}
 
 	public boolean getTriggerTimerEnabled() {
@@ -339,16 +161,23 @@ public class X10Appliance extends X10Device{
 	}
 
 	/**
-	 * This method sets the TriggerTimerEnabled Attribute. Regardless of whether
-	 * setOntime and setOffTime are called, the triggerTimerEnabled variable must
-	 * be explicitly called in order for the values in setOnTime and setOffTime
-	 * to be used.
+	 * This method sets the TriggerTimerEnabled Attribute and starts or 
+	 * stops the TriggerTimers accordingly.
 	 * 
 	 * @param A boolean value. A boolean value of true enables the TriggerTimer
 	 * and a false value disables it.
 	 */
 	public void setTriggerTimerEnabled(boolean triggerTimerEnabled) {
+
 		mTriggerTimerEnabled = triggerTimerEnabled;
+		if (mTriggerTimerEnabled) {
+			mOnTimer.startTimer( );
+			mOffTimer.startTimer( );
+		} else {
+			mOnTimer.stopTimer( );
+			mOffTimer.stopTimer( );
+		}
+
 	}
 
 	/**
@@ -473,29 +302,17 @@ public class X10Appliance extends X10Device{
 		setHouseCode ( ((ProxyX10Appliance)proxyDevice).getHouseCode( ) );
 		setDeviceCode ( ((ProxyX10Appliance)proxyDevice).getDeviceCode( ) );
 		setLocation(proxyDevice.getLocation());
+	
+		// Now proceed with setting the onTimer, OffTimer, onTime and OffTime attributes.
+		setOnTime(((ProxyX10Appliance)proxyDevice).getOnTime());
+		setOffTime(((ProxyX10Appliance)proxyDevice).getOffTime());
 		
-		//If the triggerTimer is enabled proceed with setting 
-		// the onTimer, OffTimer, onTime and OffTime attributes.
-		if(((ProxyX10Appliance)proxyDevice).getTriggerTimerEnabled()){
-			setTriggerTimerEnabled(true);
-			setOnTime(((ProxyX10Appliance)proxyDevice).getOnTime());
-			setOffTime(((ProxyX10Appliance)proxyDevice).getOffTime());
-		}
-		else {
-			//If we're in here we assume the TriggerTimer is not enabled
-			//However if it was previously enabled we need to shut the timer
-			//down otherwise we'll have a memory leak if subsequent updates
-			//instantiate new timers
-			if(getTriggerTimerEnabled()){
-				
-				//null it out
-				setOnTimer(null);
-				setOffTimer(null);
-			}
-				
-			setTriggerTimerEnabled(false);
-
-		}
+		/*
+		 * Always ensure that setTriggerTimerEnabled is called AFTER setOntime
+		 * and Offtime. This ensures we don't restart the timer with the old
+		 * values
+		 */
+		setTriggerTimerEnabled(((ProxyX10Appliance)proxyDevice).getTriggerTimerEnabled());
 		
 		//Store the proxyDevice state and this objects current state in 
 		//instance variables to make the if statement easier to read
