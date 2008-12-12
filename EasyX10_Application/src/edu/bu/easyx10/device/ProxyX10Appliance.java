@@ -57,23 +57,11 @@ public class ProxyX10Appliance extends X10Appliance{
 		// unregister the Device with the EventGenerator
 	    eventGenerator.deleteEventListener(this);
 		
-		/* 
-		 * Load our member variables from the X10ApplianceDevice
-		 * If the triggerTimer is enabled proceed with setting 
-		 * the onTimer, OffTimer, onTime and OffTime attributes.
-		 */
-		if(applianceDevice.getTriggerTimerEnabled()){
-				
-			setTriggerTimerEnabled(true);                 //call to parent Method
+		setTriggerTimerEnabled(applianceDevice.getTriggerTimerEnabled()); //call to parent Method
 			
-			setOnTime(applianceDevice.getOnTime());       //call to overridden Method
+		setOnTime(applianceDevice.getOnTime());       //call to overridden Method
 			
-			setOffTime(applianceDevice.getOffTime());     //call to overridden Method
-			
-		}
-		else {
-			setTriggerTimerEnabled(false);
-		}
+		setOffTime(applianceDevice.getOffTime());     //call to overridden Method
 
 		setLocation(applianceDevice.getLocation());			
 			
@@ -105,6 +93,19 @@ public class ProxyX10Appliance extends X10Appliance{
 		
 		mOffTime = offTime;
 
+	}
+	
+	/**
+	 *  This method overrides X10Appliance setTriggerTimerEnabled method
+	 *  so that the member variable is set but no TriggerTimer is
+	 *  actually started.
+	 * 
+	 *  @override X10Appliance setTriggerTimerEnabled
+	 *  @param A boolean representing enabled or disabled
+	 */
+	
+	public void setTriggerTimerEnabled ( boolean enabled ) {
+		mTriggerTimerEnabled = enabled;
 	}
 	
 	/**
@@ -171,17 +172,10 @@ public class ProxyX10Appliance extends X10Appliance{
 		 * If the triggerTimer is enabled proceed with setting
 		 * the onTimer, OffTimer, onTime and OffTime attributes. 
 		 */
-		if(((ProxyX10Appliance)proxyDevice).getTriggerTimerEnabled()){
-			setTriggerTimerEnabled(true);
+			
 			setOnTime(((ProxyX10Appliance)proxyDevice).getOnTime());  //Call overridden setOnTime
 			setOffTime(((ProxyX10Appliance)proxyDevice).getOffTime());//Call overridden setOffTime
-		}
-		else {
-				
-			setTriggerTimerEnabled(false);
-	
-		}
-		
+			setTriggerTimerEnabled(((ProxyX10Appliance)proxyDevice).getTriggerTimerEnabled()); // call overridden method
 		/*
 		 * Store the proxyDevice state and this objects current state in 
 		 * instance variables to make the if statement easier to read.
@@ -202,10 +196,23 @@ public class ProxyX10Appliance extends X10Appliance{
 			 proxyDeviceState + " on device " + getName() );
 		 }
 	}
-	/*
+	
+	/**
+	 * This is an empty method. It's purpose is to ensure that proxyX10Appliances
+	 * never attempt to process a device event.
 	 * 
+	 * @override X10Appliance processDeviceEvent()
+	 * @param X10DeviceEvent
 	 */
 	public void processDeviceEvent(X10DeviceEvent deviceEvent){}
+	
+	/**
+	 * This is an empty method. It's purpose is to ensure that proxyX10Appliances
+	 * never attempt to process a Timer event.
+	 * 
+	 * @override X10Appliance processTimerEvent()
+	 * @param TimerEvent
+	 */
 	public void processTimerEvent(TimerEvent e) {}
 	
 	
