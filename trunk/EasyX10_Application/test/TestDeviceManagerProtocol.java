@@ -99,24 +99,24 @@ public class TestDeviceManagerProtocol implements EventHandlerListener {
 		*/
 		//Create an onTime
 		Calendar onTime = Calendar.getInstance();
-		onTime.set(Calendar.HOUR_OF_DAY, 18);
-		onTime.set(Calendar.MINUTE, 25);
-		onTime.set(Calendar.SECOND, 30);
+		onTime.set(Calendar.HOUR_OF_DAY, 10);
+		onTime.set(Calendar.MINUTE, 12);
+		onTime.set(Calendar.SECOND, 00);
 		onTime.set(Calendar.MILLISECOND, 0);
 
 		//Create an offTime
 		Calendar offTime = Calendar.getInstance();
-		offTime.set(Calendar.HOUR_OF_DAY, 00);
-		offTime.set(Calendar.MINUTE, 1);
-		offTime.set(Calendar.SECOND, 30);
+		offTime.set(Calendar.HOUR_OF_DAY, 12);
+		offTime.set(Calendar.MINUTE, 13);
+		offTime.set(Calendar.SECOND, 00);
 		offTime.set(Calendar.MILLISECOND, 0);
 	    
 		//Test creation of ProxyX10Appliance
-		ProxyX10Appliance applianceProxy4 = new ProxyX10Appliance("Appliance A2", 'A', 2);
-		applianceProxy4.setOnTime(onTime);
-		applianceProxy4.setOffTime(offTime);
-		applianceProxy4.setTriggerTimerEnabled(true);
-		deviceManager.addDevice(applianceProxy4);
+		ProxyX10Appliance natalieslamp = new ProxyX10Appliance("Appliance A2", 'A', 2);
+		//applianceProxy4.setOnTime(onTime);
+		//applianceProxy4.setOffTime(offTime);
+		//applianceProxy4.setTriggerTimerEnabled(true);
+		deviceManager.addDevice(natalieslamp);
 		//applianceProxy4.setState(X10DeviceState.ON);
 		//deviceManager.updateDevice(applianceProxy4);
 
