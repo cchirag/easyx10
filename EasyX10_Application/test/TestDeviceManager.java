@@ -21,10 +21,9 @@ public class TestDeviceManager {
 		
 		
 		DeviceManager dm = DeviceManagerFactory.getDeviceManager();
-		//EventGenerator eg = EventGeneratorFactory.getEventGenerator();
-		
-		
-/*		//Create an onTime
+		//EventGenerator eg = EventGeneratorFactory.getEventGenerator();	
+	
+    	//Create an onTime
 		Calendar onTime = Calendar.getInstance();
 		onTime.set(Calendar.HOUR_OF_DAY, 9);
 		onTime.set(Calendar.MINUTE, 59);
@@ -39,7 +38,7 @@ public class TestDeviceManager {
 		offTime.set(Calendar.MILLISECOND, 0);
 	    
 		//Test creation of ProxyX10Appliance
-		ProxyX10Appliance proxyApp = new ProxyX10Appliance("app1", 'A', 1);
+		ProxyX10Appliance proxyApp = new ProxyX10Appliance("APP3", 'B', 1);
 		proxyApp.setOnTime(onTime);
 		proxyApp.setOffTime(offTime);
 		proxyApp.setTriggerTimerEnabled(false);
@@ -68,7 +67,7 @@ public class TestDeviceManager {
 		  
 		//Create another appliance
 		  
-		  ProxyX10Appliance proxyApp2 = new ProxyX10Appliance("app2", 'A', 2);
+		  ProxyX10Appliance proxyApp2 = new ProxyX10Appliance("APP4", 'B', 2);
 		  proxyApp2.setOnTime(onTime);
 		  proxyApp2.setOffTime(offTime);
 		  proxyApp2.setTriggerTimerEnabled(false);
@@ -78,7 +77,7 @@ public class TestDeviceManager {
 		  dm.addDevice(proxyApp2);
 		  
 		//Add an X10Motion Sensor
-		    ProxyX10MotionSensor motionSensorProxy = new ProxyX10MotionSensor ("Motion C16", 'C', 16);
+		    ProxyX10MotionSensor motionSensorProxy = new ProxyX10MotionSensor ("MOTION B16", 'B', 16);
 			motionSensorProxy.addAppliance ("Appliance C1");
 			motionSensorProxy.setDetectionPeriodEnabled(false);
 			Calendar startTime = Calendar.getInstance( );
@@ -98,22 +97,17 @@ public class TestDeviceManager {
 		  System.out.println("Next Line should be INFO");
 		  ProxyX10Appliance proxyApp1 = (ProxyX10Appliance)dm.getDevice("app1");
 		  System.out.println("The proxyApp1's name is " + proxyApp1.getName());
-*/		  
-       //Test load config
-		  System.out.println("Attempting to load Config");
-          dm.loadConfig();
-		
-		
+  
+	
 		//Test getDevices
 		  ArrayList<X10Device> deviceList = new ArrayList<X10Device>();
 		  System.out.println("Next Line should be INFO");
 		  deviceList = dm.getDevices();
 		  
 
-		  
+		  System.out.println("Here are the contents of the Arraylist");		  
           int count = 1;
 		  for (X10Device device : deviceList) {
-			  System.out.println("Here are the contents of the Arraylist");
 			  System.out.println("Item " + count + " is named " + device.getName());
 			  count++;
 		  }
