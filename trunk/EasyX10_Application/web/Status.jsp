@@ -126,10 +126,10 @@
 		%>
 	
 		<div id="<%= "floor" + (i+1) %>" style="display: <%= ("floor" + (i+1)).equals(currentFloor) ? "block" : "none" %>; position: relative; width : 800px; 
-				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left">
+				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left; background-image:url(resources/FloorPlan.jpg)">
 			
 			
-			<span><%= "Floor #" + (i+1) %></span>
+			<span style="top:20px; left: 700px; position: absolute"><%= "Floor #" + (i+1) %></span>
 			
 			<%
 				// Create each device in each floor
