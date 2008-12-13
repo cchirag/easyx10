@@ -360,7 +360,7 @@ public class X10MotionSensor extends X10Device {
 				 * which appliance devices we have turned off.  We'll use the copy
 				 * of the list when we turn appliances off.
 				 */
-				mDetectionWindowTrigger = getInactivityTimeEnabled( );
+				mDetectionWindowTrigger = true;
 				mDetectionWindowList.clear( );
 				mDetectionWindowList.addAll ( getApplianceList( ) );
 		
@@ -384,7 +384,7 @@ public class X10MotionSensor extends X10Device {
 		 * defined by ApplianceList, only if we had previously turned
 		 * then on with an ON event.
 		 */
-		if ( (getState( ) == X10DeviceState.OFF) && (mDetectionWindowTrigger == true) ) {
+		if ( (getState( ) == X10DeviceState.OFF) && mDetectionWindowTrigger ) {
 			// clear the state variable which indicates that motion has been triggered
 			mDetectionWindowTrigger = false;
 			// Iterate through all the devices we previously turned on.
@@ -492,7 +492,7 @@ public class X10MotionSensor extends X10Device {
 			} 
 			if ( (deviceEvent.getEventCode( ) == X10_EVENT_CODE.X10_OFF ) &&
 					!getInactivityTimeEnabled() &&
-					!mDetectionWindowTrigger) {
+					 mDetectionWindowTrigger) {
 				setState ( X10DeviceState.OFF );
 			} 
 		}
