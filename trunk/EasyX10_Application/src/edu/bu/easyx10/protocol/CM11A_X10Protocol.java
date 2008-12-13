@@ -27,6 +27,9 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	private static final byte X10_STANDARD_HEADER_FUNCTION = (byte)0x06;
 //	private static final byte X10_EXTENDED_HEADER_FUNCTION = (byte)0x07;
 
+	private static final int  READY_TIMEOUT = 10;
+	private static final int  CHECKSUM_TIMEOUT = 10;
+
 	private static final int  X10_MAX_RETRIES     = 20;
 
 	private static final byte X10_INTERFACE_OKAY  = (byte)0x00;
@@ -41,6 +44,7 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	private InputStream         m_inputStream;
 	private OutputStream        m_outputStream;
 	private BlockingQueue<Byte> m_rxTxQueue;
+	private BlockingQueue<Byte> m_rxExpectQueue;
 	private Thread              m_txThread;
 
 	/**
@@ -292,6 +296,9 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		// Create the rxTxQueue
 		m_rxTxQueue = new LinkedBlockingQueue<Byte>( );
 
+		// Create the rxExpectQueue
+		m_rxExpectQueue = new LinkedBlockingQueue<Byte>( );
+
 		// Create a new runnable thread.
 		m_txThread = new Thread(this);
 		m_txThread.start( );
@@ -352,7 +359,62 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 	private void debug ( String Message ) {
 		if (System.getProperty("DEBUG_PROTOCOL") != null) {
 			LoggingUtilities.logInfo(this.getClass( ).getCanonicalName(), "Debug",
-			 this.getClass().getName( ) + ":: " + Message );
+					this.getClass().getName( ) + ":: " + Message );
+		}
+	}
+
+	/**
+	 * This method fetches the expected ready from the CM11A interface.
+	 * An exception is thrown on an error or unexpected data value.
+	 * 
+	 * @param checksum
+	 * @throws IOException
+	 */
+	private void fetchReady ( ) throws IOException {
+		byte readByte;	
+		// Fetch ready
+		try {
+			readByte = m_rxTxQueue.poll(READY_TIMEOUT, TimeUnit.SECONDS );
+		} catch (Exception e) {
+			throw new IOException ( "fetchReady read:: " + e );
+		};
+		if (readByte != X10_INTERFACE_READY) {
+			throw new IOException ( "fetchReady failure:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString(X10_INTERFACE_READY) );
+		}
+	}
+
+	private void prepChecksum ( byte checksum ) {
+		// Dump expected values to the m_rxExpectedQueue
+		switch (checksum) {
+		case X10_STATUS_POLL:
+		case X10_POWER_FAIL_POLL:
+		case X10_INTERFACE_READY:
+			debug ("prepChecksum:: " + Integer.toHexString(checksum));
+			try {
+				m_rxExpectQueue.put ( checksum );
+			} catch ( InterruptedException e) {
+				debug ( e.toString( ) );
+			}
+			break;
+		}
+	}
+	/**
+	 * This method fetches the expected checksum from the CM11A interface.
+	 * An exception is thrown on an error or unexpected data value.
+	 * 
+	 * @param checksum
+	 * @throws IOException
+	 */
+	private void fetchChecksum ( byte checksum ) throws IOException {
+		byte readByte;	
+		// Fetch checksum
+		try {
+			readByte = m_rxTxQueue.poll(CHECKSUM_TIMEOUT, TimeUnit.SECONDS );
+		} catch (Exception e) {
+			throw new IOException ( "fetchChecksum read:: " + e );
+		};
+		if (readByte != checksum) {
+			throw new IOException ( "fetchChecksum checksum failure:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString(checksum) );
 		}
 	}
 
@@ -377,6 +439,9 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		// Send Header:Code (Address)
 		header = X10_STANDARD_HEADER_ADDRESS;
 		code   = (houseCode << 4) | deviceCode;
+		// Prepare checksum
+		checksum = (byte)((header + code) & 0xff);
+		prepChecksum ( checksum );
 		try {
 			m_outputStream.write ( header );
 			m_outputStream.write ( (byte)code );
@@ -386,18 +451,10 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		// Fetch checksum and validate
 		try {
-			readByte = m_rxTxQueue.poll(5, TimeUnit.SECONDS);
+			fetchChecksum( checksum );
 		} catch (Exception e) {
-			throw new IOException ( "sendDeviceAddress readByte:: " + e );
+			throw new IOException ( "sendDeviceAddress checksum:: " + e );
 		};
-		// Throw exception on TIMEOUT
-		if (readByte == null) {
-			throw new IOException ( "sendDeviceAddress readByte:: TIMEOUT" );
-		}
-		checksum = (byte)((header + code) & 0xff);
-		if (readByte != checksum) {
-			throw new IOException ( "sendDeviceAddress checksum failure:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString(checksum) );
-		}
 	}
 
 	/**
@@ -419,20 +476,12 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 		} catch (Exception e) {
 			throw new IOException ( "sendOkay write:: " + e );
 		};
-
 		// Fetch READY
 		try {
-			readByte = m_rxTxQueue.poll(5, TimeUnit.SECONDS);
+			fetchReady( );
 		} catch (Exception e) {
-			throw new IOException ( "sendOkay read:: " + e );
+			throw new IOException ( "sendOkay ready:: " + e );
 		};
-		// Throw exception on TIMEOUT
-		if (readByte == null) {
-			throw new IOException ( "sendOkay readByte:: TIMEOUT" );
-		}
-		if (readByte != X10_INTERFACE_READY) {
-			throw new IOException ( "sendOkay bad value:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString ( X10_INTERFACE_READY) );
-		}
 	}
 
 	/**
@@ -455,6 +504,9 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 
 		header = X10_STANDARD_HEADER_FUNCTION;
 		code   = (houseCode << 4) | eventCode;
+		// Prepare checksum
+		checksum = (byte)((header + code) & 0xff);
+		prepChecksum ( checksum );
 		try {
 			m_outputStream.write ( header );
 			m_outputStream.write ( (byte)code );
@@ -467,17 +519,10 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 				+ "deviceCode " + Integer.toHexString(eventCode)
 				+ " waiting on Checksum");
 		try {
-			readByte = m_rxTxQueue.poll(5, TimeUnit.SECONDS );
+			fetchChecksum ( checksum );
 		} catch (Exception e) {
 			throw new IOException ( "sendFunction read:: " + e );
 		};
-		if (readByte == null) {
-			throw new IOException ( "sendFunction readByte:: TIMEOUT" );
-		}
-		checksum = (byte)((header + code) & 0xff);
-		if (readByte != checksum) {
-			throw new IOException ( "sendDeviceAddress checksum failure:: " + Integer.toHexString(readByte) + " expected: " + Integer.toHexString(checksum) );
-		}
 	}
 
 	/**
@@ -734,6 +779,14 @@ public class CM11A_X10Protocol extends Protocol implements Runnable, SerialPortE
 					// -1 indicates no data is available, other it's the read value
 					if (readByte >= 0) {
 
+						// Check to see if the byte is expected
+						Byte rxExpectData = m_rxExpectQueue.peek( );
+						if ((rxExpectData != null) && (rxExpectData == (byte)readByte)) {
+							rxExpectData = m_rxExpectQueue.take( );
+							debug ( "m_serialPortEvent:: forwarding expected received byte to transmit: " + Integer.toHexString( readByte ) );
+							m_rxTxQueue.put ( (byte)readByte );
+							continue;
+						}
 						// Check for specific read values
 						switch ((byte)readByte) {
 
