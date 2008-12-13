@@ -293,11 +293,11 @@
 		</form>
 	</div>
 	
-		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; 
+		<div id="<%= currentFloor  %>" style="position: relative; width : 800px; background-image:url(resources/FloorPlan.jpg);
 				height: 400px; border: thin black solid; margin: 20px 20px 20px 20px; float: left">
 			
 			
-			<span><%= currentFloor %></span>
+			<span style="top:20px; left: 700px; position: absolute"><%= currentFloor %></span>
 			
 			<% 
 				for(int j=0; j< devices.size(); j++) { 
