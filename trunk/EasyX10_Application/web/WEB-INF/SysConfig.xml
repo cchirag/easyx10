@@ -18,5 +18,5 @@
     </edu.bu.easyx10.gui.User>
   </users>
   <floorCount>3</floorCount>
-  <cm11aPortName>COM4</cm11aPortName>
+  <cm11aPortName>/dev/ttyS0</cm11aPortName>
 </edu.bu.easyx10.util.SystemConfiguration>
